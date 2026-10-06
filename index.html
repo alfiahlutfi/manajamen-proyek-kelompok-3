@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Café Ácala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <!-- HERO: carousel event -->
+    <section class="hero" id="event">
+      <div class="hero-bg" id="hero-bg"></div>
+      <div class="hero-text">
+        <h1 id="hero-judul"></h1>
+        <a id="hero-btn" class="btn-hijau" href="#">Join the Class</a>
+      </div>
+      <div class="hero-slider" id="hero-slider"></div>
+    </section>
+
+    <!-- TENTANG -->
+    <section class="tembok">
+      <h2 class="judul-kecil" id="nama">Cafe Acala</h2>
+
+      <div class="blok">
+        <figure class="foto-wrap kiri"><img src="assets/acala.png" alt="Tampak depan Café Ácala"></figure>
+        <div class="blok-teks">
+          <h3>Unfinished Escape</h3>
+          <p id="deskripsi"></p>
+          <a class="btn-garis" href="menu.html">Menu</a>
+        </div>
+      </div>
+
+      <div class="blok balik">
+        <div class="blok-teks">
+          <h3>Acala Reservation</h3>
+          <p>Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.</p>
+          <a class="btn-garis" href="reservasi.html">Reservasi</a>
+        </div>
+        <figure class="foto-wrap kanan"><img src="assets/duduk.jpg" alt="Area indoor Café Ácala"></figure>
+      </div>
+    </section>
+
+    <!-- OPEN HOURS -->
+    <section class="tembok jam-wrap">
+      <div class="retak">
+        <svg class="retak-svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="rimg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9b5ad"/><stop offset="1" stop-color="#6f6b64"/></linearGradient>
+            <linearGradient id="lampg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2b2b2b"/><stop offset=".5" stop-color="#5a5a5a"/><stop offset="1" stop-color="#1a1a1a"/></linearGradient>
+          </defs>
+          <g fill="none" stroke="#111" stroke-linejoin="miter" stroke-width="3" opacity=".9"><polyline points="727,92 752,81 778,81 803,71 818,49" /><polyline points="578,481 596,497 619,502 643,498 667,503 691,504" /><polyline points="527,477 511,504 513,536 511,568 510,600 526,628" /><polyline points="908,285 925,291 942,291 956,302 969,313 979,328" /><polyline points="419,484 392,510 356,517 323,535 294,558 279,592" /><polyline points="626,481 641,502 649,527 669,542 692,553" /><polyline points="169,406 155,412 146,423 141,436 128,444 114,444 100,446 86,450" /><polyline points="527,47 534,21 548,-2 565,-23 591,-29" /><polyline points="721,473 741,489 764,501 787,513 803,533 828,542 848,558 860,581" /><polyline points="191,436 174,479 156,521 147,565 159,609" /><polyline points="239,453 218,453 197,459 175,456 154,450 136,437 116,430" /><polyline points="264,84 255,86 246,84 236,85 227,89 218,91 211,97 201,97" /><polyline points="760,118 763,93 775,71 797,60 821,53 845,56" /><polyline points="785,469 803,488 827,502 851,515 861,540" /><polyline points="578,481 574,497 575,514 581,530 587,546 584,563 591,579 589,596" /><polyline points="472,42 486,27 491,7 497,-12 502,-32 509,-51 516,-70 511,-89" /><polyline points="124,316 100,319 76,316 52,320 28,324 4,319 -18,308" /><polyline points="191,436 170,437 154,450 138,463 126,480 111,494" /><polyline points="219,104 198,99 179,91 164,77 156,57 145,40 143,19" /><polyline points="863,224 880,221 898,218 913,208 930,206 946,214 962,222" /><polyline points="863,224 875,207 893,197 913,188 933,184 954,178 974,176 995,181" /><polyline points="760,118 773,82 783,46 801,13 805,-25 818,-61" /></g>
+          <polygon points="908,285 892,317 888,350 860,379 835,407 822,443 785,469 721,473 687,478 626,481 578,481 527,477 473,486 419,484 369,476 322,482 266,475 239,453 191,436 169,406 150,376 126,348 124,316 99,285 119,254 115,220 152,194 174,166 179,128 219,104 264,84 326,83 366,58 420,54 472,42 527,47 582,48 635,56 681,75 727,92 760,118 802,137 824,166 851,193 863,224 886,253" fill="url(#rimg)" stroke="#2a2a2a" stroke-width="2"/>
+          <polygon points="890,285 875,315 871,346 845,373 820,399 808,432 773,457 711,461 679,465 621,468 575,468 526,464 474,473 423,471 375,463 330,469 276,463 251,442 204,426 183,398 165,370 142,344 140,314 116,285 135,256 132,224 167,200 188,174 193,138 231,116 274,97 334,96 372,73 424,69 474,58 526,62 578,64 629,71 673,89 717,104 748,129 789,147 810,174 835,199 847,228 870,255" fill="#244027"/>
+          <line x1="500" y1="70" x2="500" y2="150" stroke="#111" stroke-width="2"/>
+          <polygon points="445,205 555,205 500,150" fill="url(#lampg)"/>
+          <ellipse cx="500" cy="205" rx="55" ry="8" fill="#111"/>
+        </svg>
+        <div class="retak-isi">
+          <h2>Open Hours</h2>
+          <div class="jam-grid" id="open-hours"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEST SELLERS -->
+    <section class="best">
+      <h2>Our Best Sellers</h2>
+      <p>Nikmati vibe santai dengan menu andalan Acala</p>
+      <div class="best-list" id="best-list"></div>
+    </section>
+
+    <!-- LOKASI -->
+    <section class="tembok lokasi">
+      <div class="lokasi-teks">
+        <h2>Lokasi</h2>
+        <p id="alamat"></p>
+        <a id="btn-maps" class="btn-garis" target="_blank" rel="noopener">Maps</a>
+      </div>
+      <div class="peta-wrap">
+        <iframe id="peta" title="Peta lokasi Café Ácala" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/beranda.js"></script>
+</body>
+</html>
