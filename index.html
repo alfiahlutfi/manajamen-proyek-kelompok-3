@@ -69,26 +69,70 @@
     </section>
 
     <!-- BEST SELLERS -->
-    <section class="best">
+    <div class="best-header-wrapper">
       <h2>Our Best Sellers</h2>
+    </div>
+
+    <section class="best">
       <p>Nikmati vibe santai dengan menu andalan Acala</p>
       <div class="best-list" id="best-list"></div>
     </section>
 
     <!-- LOKASI -->
-    <section class="tembok lokasi">
-      <div class="lokasi-teks">
-        <h2>Lokasi</h2>
-        <p id="alamat"></p>
-        <a id="btn-maps" class="btn-garis" target="_blank" rel="noopener">Maps</a>
-      </div>
-      <div class="peta-wrap">
-        <iframe id="peta" title="Peta lokasi Café Ácala" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      </div>
-    </section>
+    <section class="lokasi-section">
+  <div class="lokasi-container">
+    <div class="lokasi-info">
+      <h2>Lokasi</h2>
+      <p>Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559</p>
+      <a href="https://maps.app.goo.gl/fpt4zMppHTDTgp8d6?g_st=aw" target="_blank" class="btn-maps">Maps</a>
+    </div>
+    <div class="lokasi-map">
+      <img src="assets/peta.png" alt="Peta Lokasi Acala" />
+    </div>
+  </div>
+</section>
   </main>
 
-  <footer id="footer" class="footer"></footer>
+  <footer class="footer-section">
+  <div class="footer-container">
+    <!-- Kolom 1: Logo & Nama Brand -->
+    <div class="footer-col footer-brand">
+      <img src="assets/logo_acala.png" alt="Logo Acala" class="footer-logo" />
+    </div>
+
+    <!-- Kolom 2: Get to Know Us -->
+    <div class="footer-col">
+      <h3>GET TO KNOW US</h3>
+      <ul class="footer-links">
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#event">Event</a></li>
+        <li><a href="#galeri">Galeri</a></li>
+        <li><a href="#reservasi">Reservasi</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <!-- Kolom 3: Connect With Us -->
+    <div class="footer-col">
+      <h3>CONNECT WITH US</h3>
+      <p class="footer-contact">+62 857 9727 5590</p>
+      <p class="footer-contact">acalacafe@gmail.com</p>
+      <div class="footer-socials">
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+          <img src="assets/Instagram_logo_2022.svg.webp" alt="Instagram" />
+        </a>
+        <a href="https://tiktok.com" target="_blank" aria-label="TikTok">
+          <img src="assets/tiktok-icon2.png" alt="TikTok" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copyright di bagian paling bawah -->
+  <div class="footer-bottom">
+    <p>&copy; 2021-2026 Cafe Acala & Eatery</p>
+  </div>
+</footer>
 
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>

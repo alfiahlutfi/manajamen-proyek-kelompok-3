@@ -11,7 +11,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
-body { margin: 0; font-family: var(--font); font-style: italic; color: var(--teks); background: var(--hitam); line-height: 1.5; }
+body { margin: 0; font-family: var(--font); font-style: normal; color: var(--teks); background: var(--hitam); line-height: 1.5; }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 h1, h2, h3, h4 { font-weight: 400; margin: 0; }
@@ -34,14 +34,18 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
 /* ---------- tombol ---------- */
 .btn-garis { display: inline-block; padding: 6px 20px; border: 1.5px solid #222; border-radius: 6px; text-decoration: none; background: transparent; font-style: normal; font-size: 15px; }
 .btn-garis:hover { background: rgba(0,0,0,.12); }
-.btn-hijau { display: inline-block; padding: 4px 14px; border: 1.5px solid #4cae4c; border-radius: 4px; color: #7ddc7d; background: rgba(0,0,0,.35); text-decoration: none; font-size: 14px; }
+.btn-hijau { display: inline-block; padding: 4px 14px; border: 1.5px solid #4cae4c; border-radius: 4px; color: #FFE77B; background: rgba(0,0,0,.35); text-decoration: none; font-size: 14px; }
 .btn-hijau:hover { background: rgba(76,174,76,.25); }
 
 /* ---------- hero ---------- */
 .hero { position: relative; overflow: hidden; min-height: 460px; padding: 40px 5vw 48px; text-align: center; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 28px; }
 .hero-bg { position: absolute; inset: -20px; background: #2a1d14 center/cover; filter: blur(6px) brightness(.45); transition: background-image .4s; }
 .hero-text, .hero-slider { position: relative; }
-.hero-text h1 { font-size: clamp(28px, 5vw, 48px); margin-bottom: 10px; }
+.hero-text h1 {
+    font-family: "Montserrat";
+    font-size: clamp(28px, 5vw, 48px);
+    margin-bottom: 10px;
+}
 .hero-slider { display: flex; align-items: center; justify-content: center; gap: 16px; width: 100%; max-width: 1100px; }
 .slide { border: 0; padding: 0; background: none; cursor: pointer; flex: 1 1 0; border-radius: 12px; overflow: hidden; }
 .slide img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
@@ -61,83 +65,424 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
     background-repeat: no-repeat;
     padding: 28px 7vw 60px;
 }
-.judul-kecil { text-align: center; font-size: 18px; font-style: normal; font-weight: 700; margin-bottom: 20px; }
+.judul-kecil { text-align: center; font-size: 32px; font-s.judul-kecil {
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 5px;
+}tyle: normal; font-weight: 700; margin-bottom: 20px; }
 .blok { display: flex; align-items: center; justify-content: center; gap: 6vw; margin: 40px auto; max-width: 1000px; }
 .blok.balik { flex-direction: row; }
-.blok-teks { flex: 1; text-align: left; }
+.blok-teks {
+  flex: 1;
+  text-align: left;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  letter-spacing: 3px;
+}
 .blok.balik .blok-teks { text-align: right; }
-.blok h3 { font-size: clamp(26px, 4vw, 36px); margin-bottom: 10px; }
+.blok h3 { font-weight: 700; font-size: clamp(26px, 4vw, 36px); margin-bottom: 10px; }
 .blok p { margin: 0 0 18px; font-size: 15px; }
 .foto-wrap {
     flex: 0 0 38%;
     max-width: 380px;
     margin: 0;
 }
+
 .foto-wrap img {
     width: 100%;
     aspect-ratio: 4/3;
     object-fit: cover;
+    border-radius: 0 70px 0 70px;
     box-shadow: 0 6px 18px rgba(0,0,0,.4);
+}
 
-    clip-path: polygon(
-        8% 0,
-        92% 0,
-        100% 8%,
-        100% 92%,
-        92% 100%,
-        8% 100%,
-        0 92%,
-        0 8%
-    );
+.foto-wrap.kiri img {
+    transform: rotate(-4deg);
+}
+
+.foto-wrap.kanan img {
+    transform: rotate(5deg);
 }
 
 /* ---------- open hours ---------- */
-.jam-wrap { padding-top: 10px; }
-.retak { position: relative; max-width: 900px; margin: 0 auto; padding: 120px 12% 90px; text-align: center; color: #8e8e8e; background: var(--hijau-tua);
-  clip-path: polygon(94.2% 50.0%, 92.6% 54.2%, 90.8% 58.1%, 90.9% 62.4%, 88.6% 66.0%, 87.1% 69.8%, 85.4% 73.6%, 85.7% 79.3%, 82.8% 82.8%, 80.3% 87.0%, 75.4% 88.0%, 71.7% 90.6%, 68.4% 94.4%, 62.9% 92.5%, 58.6% 93.4%, 54.4% 95.0%, 50.0% 95.6%, 45.3% 97.3%, 40.5% 97.6%, 36.3% 95.1%, 31.3% 95.1%, 27.4% 92.3%, 23.9% 89.0%, 20.6% 85.8%, 19.5% 80.5%, 17.8% 76.4%, 17.8% 71.5%, 15.6% 68.4%, 14.6% 64.7%, 12.4% 61.4%, 10.8% 57.8%, 7.9% 54.1%, 5.2% 50.0%, 6.1% 45.7%, 5.3% 41.1%, 5.0% 36.3%, 5.8% 31.7%, 6.8% 26.9%, 9.4% 22.9%, 13.0% 19.6%, 16.1% 16.1%, 21.4% 15.2%, 24.4% 11.7%, 29.0% 10.7%, 32.3% 7.2%, 37.1% 7.5%, 41.3% 6.1%, 45.4% 2.9%, 50.0% 4.1%, 54.2% 7.7%, 58.4% 7.8%, 61.7% 11.5%, 65.9% 11.5%, 70.1% 12.4%, 72.8% 15.8%, 76.3% 17.9%, 81.5% 18.5%, 86.1% 20.4%, 89.2% 23.8%, 90.4% 28.4%, 93.3% 32.0%, 96.8% 35.8%, 96.7% 40.7%, 96.6% 45.4%); }
-.lampu { position: absolute; top: 0; left: 50%; width: 3px; height: 50px; background: #222; transform: translateX(-50%); }
-.lampu::after { content: ""; position: absolute; top: 48px; left: 50%; transform: translateX(-50%); border-left: 34px solid transparent; border-right: 34px solid transparent; border-top: 0; border-bottom: 30px solid #1a1a1a; }
-.retak h2 { font-size: clamp(30px, 5vw, 44px); padding-bottom: 12px; border-bottom: 1px solid #8e8e8e; margin-bottom: 24px; }
-.jam-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px 48px; }
-.jam-grid h3 { font-size: 18px; }
-.jam-grid p { margin: 2px 0 0; font-size: 14px; }
+.retak {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 10%;
+    text-align: center;
+    background: #1f3d24;
+    border-radius: 30px; /* dibuat lebih tumpul */
+}
+.retak-svg {
+    display: none;
+}
+.lampu {
+    display: none;
+}
+.retak h2 {
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(50px, 5vw, 44px);
+    color: #F5D76E; /* kuning */
+    font-weight: 700;
+    margin-bottom: 55px;
+    border-bottom: none;
+    letter-spacing: 5px;
+}
+.jam-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px 80px;
+}
+.jam-grid h3 {
+    font-family: "Montserrat", sans-serif;
+    color: #F5D76E;
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: 3px;
+}
+.jam-grid p {
+    font-family: "Montserrat", sans-serif;
+    color: #F5D76E;
+    margin: 2px 0 0;
+    font-size: 18px;
+    font-weight: 90;
+    letter-spacing: 3px;
+}
 
-/* ---------- best sellers ---------- */
-.best { background: var(--hijau-tua); color: #fff; text-align: center; padding: 48px 5vw 56px; }
-.best h2 { font-size: clamp(32px, 5vw, 48px); }
-.best > p { margin: 4px 0 34px; font-size: 18px; }
-.best-list { display: flex; align-items: flex-end; justify-content: center; gap: 14px; max-width: 900px; margin: 0 auto; padding-top: 20px; }
-.best-card { position: relative; flex: 1 1 0; max-width: 170px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; padding: 0 8px 16px; color: #111; text-decoration: none; }
-.best-card::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; top: 38%; background: #A9BA9D; clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%); }
-.best-card > * { position: relative; }
-.best-card img { height: 170px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 8px; }
-.best-card h3 { font-size: 16px; }
-.best-card small { font-size: 14px; font-style: normal; }
-.best-card.sorot { flex: 1.3 1 0; max-width: 220px; padding-bottom: 22px; }
-.best-card.sorot::before { background: var(--kuning); top: 30%; }
-.best-card.sorot img { height: 230px; }
-.best-card.sorot h3 { font-size: 20px; }
+/* ---------- best sellers section ---------- */
+/* Container khusus bagian judul di luar section hijau tua */
+/* Wrapper untuk judul "Our Best Sellers" */
+.best-header-wrapper {
+  background: var(--tembok); /* Latar hijau muda */
+  text-align: center;
+  padding-top: 30px;    /* Jarak dari atas (konten sebelumnya) */
+  padding-bottom: 12px; /* Jarak bawah diperkecil agar rapat dengan card hijau */
+}
 
-/* ---------- lokasi ---------- */
-.lokasi { display: flex; align-items: center; justify-content: center; gap: 6vw; padding-top: 60px; }
-.lokasi-teks { flex: 0 1 340px; text-align: center; }
-.lokasi h2 { font-size: 36px; margin-bottom: 10px; }
-.lokasi p { margin: 0 0 16px; font-size: 18px; }
-.lokasi iframe { flex: 0 1 460px; width: 100%; height: 320px; border: 0; border-radius: 4px; background: #333; }
+.best-header-wrapper h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--hijau2);
+  font-weight: 700;
+  letter-spacing: 10px; /* Jarak antar huruf seperti gambar 2 */
+  margin: 0;            /* Menghilangkan margin bawaan agar tidak berjarak */
+}
 
-/* ---------- footer ---------- */
-.footer { background: var(--hitam); color: var(--kuning); padding: 40px 7vw 18px; }
-.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; max-width: 1000px; margin: 0 auto; }
-.footer h4 { font-size: 18px; text-transform: uppercase; margin-bottom: 14px; }
-.footer a { text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
-.footer ul { list-style: none; margin: 0; padding: 0; }
-.footer p { margin: 0 0 6px; font-size: 14px; }
-.jam-list li { display: flex; align-items: baseline; gap: 6px; font-size: 14px; margin-bottom: 8px; }
-.jam-list i { flex: 1; border-bottom: 1px solid rgba(232,197,42,.5); }
-.link-list li { margin-bottom: 6px; font-size: 14px; }
-.sosmed { display: flex; gap: 14px; margin-top: 12px; }
-.copy { text-align: center; color: #888; font-size: 12px; font-style: normal; margin-top: 28px !important; }
+/* Card hijau tua */
+.best { 
+  background: var(--hijau-tua); 
+  color: #fff; 
+  text-align: center; 
+  padding-top: 14px;    /* Padding atas diperkecil agar teks mepet ke atas */
+  padding-bottom: 56px;
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+/* Teks di dalam card hijau tua */
+.best > p { 
+  margin-top: 0;        /* Menghilangkan jarak atas */
+  margin-bottom: 30px;  /* Jarak teks ke produk di bawahnya */
+  font-size: 18px; 
+  color: #fff; 
+  font-style: normal;
+  letter-spacing: 8px;
+}
+.best-list { 
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: center; 
+  gap: 8px; 
+  max-width: 1100px; 
+  margin: 0 auto; 
+  padding-top: 18px; 
+}
+
+.best-card { 
+  position: relative; 
+  flex: 1 1 0; 
+  max-width: 190px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: flex-end; 
+  text-align: center; 
+  padding: 0 10px 20px; 
+  color: #111; 
+  text-decoration: none; 
+}
+
+.best-card > * { 
+  position: relative; 
+}
+
+.best-card img { 
+  height: 190px; 
+  width: auto; 
+  max-width: 100%; 
+  object-fit: contain; 
+  margin-bottom: 10px; 
+}
+
+.best-card h3 { 
+  font-size: 17px; 
+  font-style: normal; 
+}
+
+.best-card small { 
+  font-size: 15px; 
+  font-style: normal; 
+}
+
+.best-card:nth-child(1)::before {
+  content: ""; 
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: -6px; 
+  top: 35%; 
+  background: #C4C4C4; 
+  clip-path: polygon(round 16px, 22% 0%, 78% 0%, 100% 100%, 0% 100%);
+}
+
+.best-card:nth-child(2)::before {
+  content: ""; 
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: -6px; 
+  top: 35%; 
+  background: #C4C4C4; 
+  clip-path: polygon(round 16px, 0% 0%, 100% 0%, 78% 100%, 22% 100%);
+}
+
+.best-card.sorot { 
+  flex: 1.6 1 0; 
+  max-width: 290px; 
+  padding-bottom: 28px; 
+}
+.best-card.sorot::before { 
+  content: ""; 
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: -14px; 
+  top: 32%; 
+  background: var(--kuning); 
+  clip-path: polygon(round 22px, 20% 0%, 80% 0%, 100% 100%, 0% 100%); 
+}
+.best-card.sorot img { 
+  height: 290px; 
+}
+.best-card.sorot h3 { 
+  font-size: 23px; 
+  font-style: normal; 
+}
+.best-card.sorot small { 
+  font-size: 17px; 
+  font-style: normal; 
+}
+
+.best-card:nth-child(4)::before {
+  content: ""; 
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: -6px; 
+  top: 35%; 
+  background: #C4C4C4; 
+  clip-path: polygon(round 16px, 0% 0%, 100% 0%, 78% 100%, 22% 100%);
+}
+
+/* ---------- LOKASI SECTION (Dibuat besar memenuhi layar sesuai UI/UX) ---------- */
+.lokasi-section {
+  padding: 50px 5vw;
+  background:
+    linear-gradient(
+      rgba(142, 166, 126, 0.8),
+      rgba(142, 166, 126, 0.8)
+    ),
+    url("../assets/background.jpg"); /* Menggunakan background gambar yang sama */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+}
+
+.lokasi-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: 5px solid var(--hijau-tua); 
+  border-radius: 28px; 
+  padding: 45px 55px; 
+  max-width: 1100px; 
+  width: 100%;
+  gap: 40px;
+}
+
+.lokasi-info {
+  flex: 1.1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lokasi-info h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 38px; 
+  color: var(--hijau-tua);
+  font-weight: 700;
+  letter-spacing: 8px;
+  margin-bottom: 16px;
+}
+
+.lokasi-info p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px; 
+  line-height: 1.6;
+  color: var(--hijau-tua);
+  margin-bottom: 24px;
+  max-width: 400px;
+}
+
+.btn-maps {
+  display: inline-block;
+  background: var(--hijau-tua); 
+  color: #8EA67E;
+  padding: 10px 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  transition: opacity 0.2s;
+}
+
+.btn-maps:hover {
+  opacity: 0.9;
+}
+
+.lokasi-map {
+  flex: 1.2;
+  display: flex;
+  justify-content: center;
+}
+
+.lokasi-map img {
+  width: 100%;
+  max-width: 440px; 
+  height: 280px; 
+  object-fit: cover;
+  border-radius: 18px; 
+}
+
+/* ---------- FOOTER SECTION (Disesuaikan dengan referensi UI/UX) ---------- */
+.footer-section {
+  background: var(--hijau-footer); 
+  padding: 60px 5vw 25px;
+  color: var(--hijau-tua);
+  font-family: inherit;
+  border-top: 1px solid rgba(31, 61, 36, 0.15);
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  padding-bottom: 30px;
+}
+
+.footer-col {
+  flex: 1;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+}
+
+.footer-logo {
+  max-width: 160px;
+  height: auto;
+  object-fit: contain;
+}
+
+.footer-col h3 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--hijau-tua);
+  margin-bottom: 20px;
+  font-style: normal;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: var(--hijau-tua);
+  text-decoration: none;
+  font-size: 15px;
+  font-style: normal;
+  transition: opacity 0.2s;
+}
+
+.footer-links a:hover {
+  opacity: 0.7;
+}
+
+.footer-contact {
+  font-size: 15px;
+  color: var(--hijau-tua);
+  margin-bottom: 10px;
+  font-style: normal;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.footer-socials img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.footer-socials img:hover {
+  transform: scale(1.08);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  font-size: 13px;
+  color: var(--hijau-tua);
+  opacity: 0.8;
+  font-style: normal;
+}
 
 /* ---------- halaman lain (menu, galeri, faq, event, detail) ---------- */
 .section { padding: 24px 5vw; background: var(--tembok); min-height: 60vh; }
@@ -160,7 +505,27 @@ figure.card { cursor: pointer; }
 .lightbox p { color: #fff; text-align: center; }
 
 /* ---------- mobile ---------- */
-@media (max-width: 720px) {
+@media (max-width: 768px) {
+  .lokasi-container {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .lokasi-info {
+    text-align: center;
+  }
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+  }
+  .footer-brand {
+    justify-content: center;
+  }
+  .footer-socials {
+    justify-content: center;
+  }
   .navbar nav { gap: 4px 14px; }
   .navbar nav a { font-size: 14px; }
   .hero { min-height: 0; padding-bottom: 32px; }
