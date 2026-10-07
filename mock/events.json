@@ -1,8 +1,0 @@
-{
-  "success": true,
-  "data": [
-    { "id": 1, "nama": "Live Music Night", "tanggal": "2026-10-17", "gambar": "assets/live music.png", "deskripsi": "Malam musik akustik bersama band lokal." },
-    { "id": 2, "nama": "Coffee Workshop", "tanggal": "2026-10-24", "gambar": "assets/seduh.JPG", "deskripsi": "Belajar membuat kopi dari barista kami." },
-    { "id": 3, "nama": "Open Mic", "tanggal": "2026-11-01", "gambar": "assets/meeting.png", "deskripsi": "Panggung terbuka untuk semua pengunjung." }
-  ]
-}

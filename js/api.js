@@ -4,25 +4,28 @@ const BASE_URL = "api/";
 |--------------------------------------------------------------------------
 | PEMETAAN ENDPOINT FRONTEND → API BACKEND
 |--------------------------------------------------------------------------
-|
-| Frontend tetap bisa memanggil:
-|   fetchData("/cafe")
-|   fetchData("/menu")
-|   fetchData("/events")
-|
-| Tetapi api.js akan meneruskannya ke file PHP milik BE.
-|
 */
 
 const API_MAP = {
+
     "/cafe": "cafe.php",
+
     "/menu": "menu.php",
+
     "/gallery": "gallery.php",
+
     "/areas": "area.php",
+
     "/events": "event.php",
+
+    "/carousel": "carousel.php",
+
     "/faqs": "faq.php",
+
     "/menu-category": "menu_category.php",
+
     "/operating-hours": "operating_hours.php"
+
 };
 
 
@@ -37,9 +40,10 @@ async function fetchData(endpoint) {
     try {
 
         // Hilangkan slash awal
-        const cleanEndpoint = endpoint.startsWith("/")
-            ? endpoint
-            : "/" + endpoint;
+        const cleanEndpoint =
+            endpoint.startsWith("/")
+                ? endpoint
+                : "/" + endpoint;
 
 
         /*
@@ -50,22 +54,25 @@ async function fetchData(endpoint) {
         | Contoh:
         | fetchData("/events/2")
         |
-        | Untuk sekarang kita tetap dukung format detail.
-        |
         */
 
         const detailMatch =
             cleanEndpoint.match(/^(.+)\/(\d+)$/);
 
-        let apiEndpoint = cleanEndpoint;
-        let detailId = null;
+        let apiEndpoint =
+            cleanEndpoint;
+
+        let detailId =
+            null;
 
 
         if (detailMatch) {
 
-            apiEndpoint = detailMatch[1];
-            detailId = Number(detailMatch[2]);
+            apiEndpoint =
+                detailMatch[1];
 
+            detailId =
+                Number(detailMatch[2]);
         }
 
 
@@ -75,7 +82,8 @@ async function fetchData(endpoint) {
         |--------------------------------------------------------------------------
         */
 
-        const fileName = API_MAP[apiEndpoint];
+        const fileName =
+            API_MAP[apiEndpoint];
 
         if (!fileName) {
 
@@ -88,7 +96,8 @@ async function fetchData(endpoint) {
         }
 
 
-        const url = BASE_URL + fileName;
+        const url =
+            BASE_URL + fileName;
 
 
         /*
@@ -97,7 +106,8 @@ async function fetchData(endpoint) {
         |--------------------------------------------------------------------------
         */
 
-        const res = await fetch(url);
+        const res =
+            await fetch(url);
 
 
         if (!res.ok) {
@@ -105,33 +115,25 @@ async function fetchData(endpoint) {
             throw new Error(
                 "HTTP " + res.status
             );
-
         }
 
 
-        const json = await res.json();
+        const json =
+            await res.json();
 
 
         /*
         |--------------------------------------------------------------------------
         | CEK RESPONSE BACKEND
         |--------------------------------------------------------------------------
-        |
-        | Format API BE:
-        |
-        | {
-        |     "success": true,
-        |     "data": [...]
-        | }
-        |
         */
 
         if (!json.success) {
 
             throw new Error(
-                json.message || "Gagal mengambil data"
+                json.message ||
+                "Gagal mengambil data"
             );
-
         }
 
 
@@ -139,12 +141,6 @@ async function fetchData(endpoint) {
         |--------------------------------------------------------------------------
         | DETAIL DATA
         |--------------------------------------------------------------------------
-        |
-        | Contoh:
-        | fetchData("/events/2")
-        |
-        | Akan mengambil data event dengan id = 2
-        |
         */
 
         if (detailId !== null) {
@@ -155,10 +151,11 @@ async function fetchData(endpoint) {
 
             return (
                 json.data.find(
-                    item => Number(item.id) === detailId
+                    item =>
+                        Number(item.id) ===
+                        detailId
                 ) || null
             );
-
         }
 
 
@@ -174,7 +171,9 @@ async function fetchData(endpoint) {
     } catch (err) {
 
         console.error(
-            "Gagal mengambil " + endpoint + ":",
+            "Gagal mengambil " +
+            endpoint +
+            ":",
             err
         );
 
@@ -187,16 +186,15 @@ async function fetchData(endpoint) {
 |--------------------------------------------------------------------------
 | ESCAPE HTML
 |--------------------------------------------------------------------------
-|
-| Mencegah data dari database dianggap sebagai HTML.
-|
 */
 
 function esc(text) {
 
-    const d = document.createElement("div");
+    const d =
+        document.createElement("div");
 
-    d.textContent = text ?? "";
+    d.textContent =
+        text ?? "";
 
     return d.innerHTML;
 }

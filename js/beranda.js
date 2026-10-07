@@ -1,91 +1,298 @@
-function rupiahSingkat(n) { return Math.round(n / 1000) + "K"; }
+/* =======================================================
+   FORMAT RUPIAH
+======================================================= */
 
-/* ---------- peta Google Maps ---------- */
-// Urutan: (1) map_embed_url yang valid, (2) peta otomatis dari alamat.
-function urlPeta(cafe) {
-  let u = String(cafe.map_embed_url || "").trim();
-
-  // kalau yang ditempel seluruh tag <iframe ...>, ambil isi src-nya saja
-  const m = u.match(/src=["']([^"']+)["']/i);
-  if (m) u = m[1];
-
-  if (u.startsWith("https://www.google.com/maps/embed")) return u;
-
-  // fallback: embed berdasarkan alamat (tanpa API key)
-  return "https://maps.google.com/maps?q=" + encodeURIComponent(cafe.alamat || cafe.nama) + "&t=k&z=16&output=embed";
+function rupiahSingkat(n) {
+  return Math.round(Number(n || 0) / 1000) + "K";
 }
 
-/* ---------- info café ---------- */
+
+/* =======================================================
+   FORMAT JAM
+======================================================= */
+
+function formatJam(jam) {
+  if (!jam) {
+    return "";
+  }
+
+  const parts = String(jam).split(":");
+
+  if (parts.length < 2) {
+    return jam;
+  }
+
+  let hour = parseInt(parts[0], 10);
+  const minute = parts[1];
+
+  const suffix = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+
+  if (hour === 0) {
+    hour = 12;
+  }
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
+
+/* =======================================================
+   GOOGLE MAPS
+======================================================= */
+
+function urlPeta(cafe) {
+
+  let u =
+    String(cafe.maps_embed_url || "").trim();
+
+  /*
+   * Jika database menyimpan seluruh tag iframe,
+   * ambil URL dari atribut src.
+   */
+  const m =
+    u.match(/src=["']([^"']+)["']/i);
+
+  if (m) {
+    u = m[1];
+  }
+
+  return u;
+}
+
+
+/* =======================================================
+   INFO CAFE
+======================================================= */
+
 async function tampilkanBeranda() {
 
-  /* ---------- data café ---------- */
+  /* =====================================================
+     AMBIL DATA CAFE DARI DATABASE
+  ===================================================== */
 
-  const cafeData = await fetchData("/cafe");
+  const cafeData =
+    await fetchData("/cafe");
 
   if (!cafeData || cafeData.length === 0) {
-    console.warn("Data café tidak ditemukan.");
+
+    console.warn(
+      "Data café tidak ditemukan."
+    );
+
     return;
   }
 
-  // API cafe.php mengembalikan array
-  const cafe = cafeData[0];
+  const cafe =
+    cafeData[0];
 
 
-  /* =======================================================
-     NAMA CAFÉ — PNG
-  ======================================================= */
+  /* =====================================================
+     ABOUT
+  ===================================================== */
 
-  const namaCafe =
-    document.getElementById("nama-cafe");
+  /* GAMBAR ABOUT */
 
-  if (namaCafe) {
-    namaCafe.src = cafe.nama || "";
-    namaCafe.alt = "Acala Coffee & Eatery";
+  const gambarAbout =
+    document.getElementById("gambar-about");
+
+  if (gambarAbout) {
+
+    gambarAbout.src =
+      cafe.gambar_about || "";
+
+    gambarAbout.alt =
+      "Tampak depan " +
+      (cafe.nama || "Café Ácala");
   }
 
 
-  /* =======================================================
-     LOGO CAFÉ — PNG
-  ======================================================= */
+  /* JUDUL ABOUT */
 
-  const logoCafe =
-    document.getElementById("logo-cafe");
+  const judulAbout =
+    document.getElementById("judul-about");
 
-  if (logoCafe) {
-    logoCafe.src = cafe.logo || "";
-    logoCafe.alt = "Acala Coffee & Eatery";
+  if (judulAbout) {
+
+    judulAbout.textContent =
+      cafe.judul_about || "";
   }
 
 
-  /* =======================================================
-     DESKRIPSI
-  ======================================================= */
+  /* DESKRIPSI ABOUT */
 
   const deskripsi =
     document.getElementById("deskripsi");
 
   if (deskripsi) {
+
     deskripsi.textContent =
       cafe.deskripsi || "";
   }
 
 
-  /* =======================================================
+  /* =====================================================
+     RESERVASI
+  ===================================================== */
+
+  /* GAMBAR RESERVASI */
+
+  const gambarReservasi =
+    document.getElementById("gambar-reservasi");
+
+  if (gambarReservasi) {
+
+    gambarReservasi.src =
+      cafe.gambar_reservasi || "";
+
+    gambarReservasi.alt =
+      "Area indoor " +
+      (cafe.nama || "Café Ácala");
+  }
+
+
+  /* JUDUL RESERVASI */
+
+  const judulReservasi =
+    document.getElementById("judul-reservasi");
+
+  if (judulReservasi) {
+
+    judulReservasi.textContent =
+      cafe.judul_reservasi || "";
+  }
+
+
+  /* DESKRIPSI RESERVASI */
+
+  const deskripsiReservasi =
+    document.getElementById(
+      "deskripsi-reservasi"
+    );
+
+  if (deskripsiReservasi) {
+
+    deskripsiReservasi.textContent =
+      cafe.deskripsi_reservasi || "";
+  }
+
+
+  /* =====================================================
+     FOOTER - WHATSAPP
+     
+     TIDAK MENGUBAH DATA DATABASE
+  ===================================================== */
+
+  const footerWhatsapp =
+    document.getElementById(
+      "footer-whatsapp"
+    );
+
+  if (footerWhatsapp && cafe.whatsapp) {
+
+    footerWhatsapp.textContent =
+      cafe.whatsapp;
+
+    const nomor =
+      cafe.whatsapp.replace(/\D/g, "");
+
+    footerWhatsapp.href =
+      "https://wa.me/" + nomor;
+
+    footerWhatsapp.target =
+      "_blank";
+
+    footerWhatsapp.rel =
+      "noopener noreferrer";
+  }
+
+
+  /* =====================================================
+     FOOTER - EMAIL
+     
+     TIDAK MENGUBAH DATA DATABASE
+  ===================================================== */
+
+  const footerEmail =
+    document.getElementById(
+      "footer-email"
+    );
+
+  if (footerEmail && cafe.email) {
+
+    footerEmail.textContent =
+      cafe.email;
+
+    footerEmail.href =
+      "mailto:" + cafe.email;
+  }
+
+
+  /* =====================================================
+     FOOTER - INSTAGRAM
+     
+     LINK DIAMBIL LANGSUNG DARI DATABASE
+  ===================================================== */
+
+  const footerInstagram =
+    document.getElementById(
+      "footer-instagram"
+    );
+
+  if (footerInstagram && cafe.instagram) {
+
+    footerInstagram.href =
+      cafe.instagram;
+
+    footerInstagram.target =
+      "_blank";
+
+    footerInstagram.rel =
+      "noopener noreferrer";
+  }
+
+
+  /* =====================================================
+     FOOTER - TIKTOK
+     
+     LINK DIAMBIL LANGSUNG DARI DATABASE
+  ===================================================== */
+
+  const footerTiktok =
+    document.getElementById(
+      "footer-tiktok"
+    );
+
+  if (footerTiktok && cafe.tiktok) {
+
+    footerTiktok.href =
+      cafe.tiktok;
+
+    footerTiktok.target =
+      "_blank";
+
+    footerTiktok.rel =
+      "noopener noreferrer";
+  }
+
+
+  /* =====================================================
      ALAMAT
-  ======================================================= */
+  ===================================================== */
 
   const alamat =
     document.getElementById("alamat");
 
   if (alamat) {
+
     alamat.textContent =
       cafe.alamat || "";
   }
 
 
-  /* =======================================================
+  /* =====================================================
      GOOGLE MAPS BUTTON
-  ======================================================= */
+  ===================================================== */
 
   const btnMaps =
     document.getElementById("btn-maps");
@@ -95,37 +302,60 @@ async function tampilkanBeranda() {
     btnMaps.href =
       cafe.link_maps || "#";
 
-    btnMaps.target = "_blank";
-    btnMaps.rel = "noopener noreferrer";
+    btnMaps.target =
+      "_blank";
+
+    btnMaps.rel =
+      "noopener noreferrer";
   }
 
 
-  /* =======================================================
+  /* =====================================================
      GOOGLE MAPS EMBED
-  ======================================================= */
+  ===================================================== */
 
   const peta =
     document.getElementById("peta");
 
   if (peta) {
-    peta.src = urlPeta(cafe);
+
+    const mapUrl =
+      urlPeta(cafe);
+
+    if (mapUrl) {
+
+      peta.src =
+        mapUrl;
+
+    } else {
+
+      peta.removeAttribute("src");
+    }
   }
 
 
-  /* =======================================================
+  /* =====================================================
      JAM OPERASIONAL
-  ======================================================= */
+  ===================================================== */
 
   const hours =
-    await fetchData("/operating-hours");
+    await fetchData(
+      "/operating-hours"
+    );
 
   const openHours =
-    document.getElementById("open-hours");
+    document.getElementById(
+      "open-hours"
+    );
 
   if (!openHours) {
     return;
   }
 
+
+  /* =====================================================
+     JIKA DATA JAM KOSONG
+  ===================================================== */
 
   if (!hours || hours.length === 0) {
 
@@ -137,7 +367,10 @@ async function tampilkanBeranda() {
   }
 
 
-  // Ambil jam operasional sesuai cafe_id
+  /* =====================================================
+     FILTER BERDASARKAN CAFE ID
+  ===================================================== */
+
   const cafeHours =
     hours.filter(
       item =>
@@ -156,119 +389,238 @@ async function tampilkanBeranda() {
   }
 
 
+  /* =====================================================
+     TAMPILKAN JAM
+  ===================================================== */
+
   openHours.innerHTML =
-    cafeHours.map(j => `
-      <div>
-        <h3>${esc(j.hari)}</h3>
-        <p>
-          ${esc(j.jam_buka)} -
-          ${esc(j.jam_tutup)}
-        </p>
-      </div>
-    `).join("");
+    cafeHours.map(j => {
+
+      if (
+        Number(j.is_closed) === 1
+      ) {
+
+        return `
+          <div>
+            <h3>${esc(j.hari)}</h3>
+            <p>Tutup</p>
+          </div>
+        `;
+      }
+
+
+      return `
+        <div>
+          <h3>${esc(j.hari)}</h3>
+
+          <p>
+            ${esc(
+              formatJam(j.jam_buka)
+            )}
+            -
+            ${esc(
+              formatJam(j.jam_tutup)
+            )}
+          </p>
+        </div>
+      `;
+
+    }).join("");
 }
 
 
+/* =======================================================
+   HERO CAROUSEL
+======================================================= */
 
-/* ---------- hero: carousel event ---------- */
 async function tampilkanHero() {
 
-  const events =
-    await fetchData("/events");
+  const carousel =
+    await fetchData("/carousel");
+
 
   const judul =
-    document.getElementById("hero-judul");
+    document.getElementById(
+      "hero-judul"
+    );
 
   const slider =
-    document.getElementById("hero-slider");
+    document.getElementById(
+      "hero-slider"
+    );
 
   const bg =
-    document.getElementById("hero-bg");
+    document.getElementById(
+      "hero-bg"
+    );
 
   const btn =
-    document.getElementById("hero-btn");
+    document.getElementById(
+      "hero-btn"
+    );
 
 
-  if (!judul || !slider || !bg || !btn) {
+  if (
+    !judul ||
+    !slider ||
+    !bg ||
+    !btn
+  ) {
     return;
   }
 
 
-  if (!events || events.length === 0) {
+  /* =====================================================
+     JIKA CAROUSEL KOSONG
+  ===================================================== */
+
+  if (
+    !carousel ||
+    carousel.length === 0
+  ) {
 
     judul.textContent =
       "Café Ácala";
 
+    slider.innerHTML =
+      "";
+
+    bg.style.backgroundImage =
+      "";
+
+    btn.href =
+      "#";
+
     return;
   }
 
 
-  const n = events.length;
+  const n =
+    carousel.length;
 
   let i = 0;
+
   let timer;
 
 
+  /* =====================================================
+     RENDER CAROUSEL
+  ===================================================== */
+
   function render() {
 
-    const ev = events[i];
+    const item =
+      carousel[i];
 
 
-    /* ---------- judul ---------- */
+    /* ===================================================
+       JUDUL
+    =================================================== */
 
     judul.textContent =
-      ev.nama || "Café Ácala";
+      item.nama ||
+      "Café Ácala";
 
 
-    /* ---------- tombol ---------- */
+    /* ===================================================
+       BUTTON EVENT
+    =================================================== */
 
-    btn.href =
-      "event.html?id=" +
-      encodeURIComponent(ev.id);
+    if (item.id_event) {
 
+      btn.href =
+        "event.html?id=" +
+        encodeURIComponent(
+          item.id_event
+        );
 
-    /* ---------- background ---------- */
+    } else {
 
-    if (ev.gambar) {
-
-      bg.style.backgroundImage =
-        `url("${ev.gambar}")`;
+      btn.href =
+        "#";
     }
 
 
-    /* ---------- posisi slide ---------- */
+    /* ===================================================
+       BACKGROUND
+    =================================================== */
 
-    const posisi = n === 1
-      ? [
-          ["tengah", i]
-        ]
-      : [
-          ["kiri", (i - 1 + n) % n],
-          ["tengah", i],
-          ["kanan", (i + 1) % n]
-        ];
+    if (item.gambar) {
+
+      bg.style.backgroundImage =
+        `url("${item.gambar}")`;
+
+    } else {
+
+      bg.style.backgroundImage =
+        "";
+    }
 
 
-    /* ---------- render slide ---------- */
+    /* ===================================================
+       POSISI SLIDE
+    =================================================== */
 
-    slider.innerHTML = posisi.map(
-      ([kelas, idx]) => `
-        <button
-          class="slide ${kelas}"
-          data-idx="${idx}"
-          aria-label="${esc(events[idx].nama)}"
-        >
-          <img
-            src="${esc(events[idx].gambar)}"
-            alt="${esc(events[idx].nama)}"
-          >
-        </button>
-      `
-    ).join("");
+    const posisi =
+      n === 1
+        ? [
+            ["tengah", i]
+          ]
+        : [
+            [
+              "kiri",
+              (i - 1 + n) % n
+            ],
+            [
+              "tengah",
+              i
+            ],
+            [
+              "kanan",
+              (i + 1) % n
+            ]
+          ];
+
+
+    /* ===================================================
+       RENDER SLIDE
+    =================================================== */
+
+    slider.innerHTML =
+      posisi.map(
+        ([kelas, idx]) => {
+
+          const data =
+            carousel[idx];
+
+          return `
+            <button
+              class="slide ${kelas}"
+              data-idx="${idx}"
+              aria-label="${esc(
+                data.nama || "Event"
+              )}"
+            >
+
+              <img
+                src="${esc(
+                  data.gambar || ""
+                )}"
+                alt="${esc(
+                  data.nama || "Event"
+                )}"
+              >
+
+            </button>
+          `;
+        }
+      ).join("");
   }
 
 
-  /* ---------- autoplay ---------- */
+  /* =====================================================
+     AUTOPLAY
+  ===================================================== */
 
   function mulai() {
 
@@ -278,6 +630,7 @@ async function tampilkanHero() {
         "(prefers-reduced-motion: reduce)"
       ).matches
     ) {
+
       return;
     }
 
@@ -285,58 +638,186 @@ async function tampilkanHero() {
     clearInterval(timer);
 
 
-    timer = setInterval(() => {
+    timer =
+      setInterval(() => {
 
-      i = (i + 1) % n;
+        i =
+          (i + 1) % n;
 
-      render();
+        render();
 
-    }, 5000);
+      }, 5000);
   }
 
 
-  /* ---------- klik slide ---------- */
+  /* =====================================================
+     KLIK SLIDE
+  ===================================================== */
 
-  slider.addEventListener("click", e => {
+  slider.addEventListener(
+    "click",
+    e => {
 
-    const s =
-      e.target.closest(".slide");
+      const s =
+        e.target.closest(
+          ".slide"
+        );
 
-    if (!s) {
-      return;
+
+      if (!s) {
+        return;
+      }
+
+
+      i =
+        Number(
+          s.dataset.idx
+        );
+
+
+      render();
+
+      mulai();
     }
+  );
 
 
-    i =
-      Number(s.dataset.idx);
-
-    render();
-
-    mulai();
-  });
-
+  /* =====================================================
+     START
+  ===================================================== */
 
   render();
 
   mulai();
 }
 
-/* ---------- best sellers ---------- */
-async function tampilkanBest() {
-  const menu = await fetchData("/menu");
-  const wadah = document.getElementById("best-list");
-  if (!menu) { wadah.textContent = "Menu gagal dimuat."; return; }
 
-  const best = menu.filter(m => m.label === "Best Seller").slice(0, 4);
-  const sorot = best.length >= 3 ? 2 : 0; // kartu kuning (seperti di desain)
-  wadah.innerHTML = best.map((m, k) => `
-    <a class="best-card${k === sorot ? " sorot" : ""}" href="menu-detail.html?id=${m.id}">
-      <img src="${esc(m.gambar)}" alt="${esc(m.nama)}" loading="lazy">
-      <h3>${esc(m.nama)}</h3>
-      <small>${rupiahSingkat(m.harga)}</small>
-    </a>`).join("");
+/* =======================================================
+   BEST SELLER
+======================================================= */
+
+async function tampilkanBest() {
+
+  const menu =
+    await fetchData("/menu");
+
+
+  const wadah =
+    document.getElementById(
+      "best-list"
+    );
+
+
+  if (!wadah) {
+    return;
+  }
+
+
+  if (!menu) {
+
+    wadah.textContent =
+      "Menu gagal dimuat.";
+
+    return;
+  }
+
+
+  /* =====================================================
+     FILTER BEST SELLER
+  ===================================================== */
+
+  const best =
+    menu
+      .filter(
+        m =>
+          m.label ===
+          "best_seller"
+      )
+      .sort(
+        (a, b) =>
+          Number(a.urutan) -
+          Number(b.urutan)
+      )
+      .slice(0, 4);
+
+
+  if (best.length === 0) {
+
+    wadah.innerHTML = `
+      <p>
+        Menu best seller belum tersedia.
+      </p>
+    `;
+
+    return;
+  }
+
+
+  /* =====================================================
+     KARTU YANG DISOROT
+  ===================================================== */
+
+  const sorot =
+    best.length >= 3
+      ? 2
+      : 0;
+
+
+  /* =====================================================
+     RENDER MENU
+  ===================================================== */
+
+  wadah.innerHTML =
+    best.map(
+      (m, k) => {
+
+        return `
+          <a
+            class="best-card${
+              k === sorot
+                ? " sorot"
+                : ""
+            }"
+            href="menu-detail.html?id=${
+              encodeURIComponent(m.id)
+            }"
+          >
+
+            <img
+              src="${esc(
+                m.gambar || ""
+              )}"
+              alt="${esc(
+                m.nama || "Menu"
+              )}"
+              loading="lazy"
+            >
+
+            <h3>
+              ${esc(
+                m.nama || ""
+              )}
+            </h3>
+
+            <small>
+              ${rupiahSingkat(
+                m.harga
+              )}
+            </small>
+
+          </a>
+        `;
+      }
+    ).join("");
 }
 
+
+/* =======================================================
+   JALANKAN SEMUA
+======================================================= */
+
 tampilkanBeranda();
+
 tampilkanHero();
+
 tampilkanBest();

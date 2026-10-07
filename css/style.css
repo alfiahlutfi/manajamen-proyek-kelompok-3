@@ -22,14 +22,29 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
 .navbar .brand {display: flex; align-items: center; gap: 10px; color: #5b9a5b; text-decoration: none;}
 .navbar .brand .logo-icon { height: 50px; width: auto;}
 .navbar .brand .logo-text { height: 23px; width: auto;}
-.navbar nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
 .navbar nav a {
   color: var(--hijau2);
   text-decoration: none;
   font-size: 16px;
   font-style: normal;
+  padding: 8px 18px;
+  border-radius: 999px;
+  transition: 0.2s ease;
 }
-.navbar nav a:hover, .navbar nav a.aktif { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Saat kursor diarahkan */
+.navbar nav a:hover {
+  color: var(--kuning);
+  background: var(--hijau-tua);
+  text-decoration: none;
+}
+
+/* Menu yang sedang aktif */
+.navbar nav a.aktif {
+  color: var(--kuning);
+  background: var(--hijau-tua);
+  text-decoration: none;
+}
 
 /* ---------- tombol ---------- */
 .btn-garis { display: inline-block; padding: 6px 20px; border: 1.5px solid #222; border-radius: 6px; text-decoration: none; background: transparent; font-style: normal; font-size: 15px; }
@@ -378,12 +393,13 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
   justify-content: center;
 }
 
-.lokasi-map img {
+.lokasi-map iframe {
   width: 100%;
-  max-width: 440px; 
-  height: 280px; 
-  object-fit: cover;
-  border-radius: 18px; 
+  max-width: 440px;
+  height: 280px;
+  border: 0;
+  border-radius: 18px;
+  display: block;
 }
 
 /* ---------- FOOTER SECTION (Disesuaikan dengan referensi UI/UX) ---------- */
@@ -452,6 +468,7 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
 }
 
 .footer-contact {
+  display: block;
   font-size: 15px;
   color: var(--hijau-tua);
   margin-bottom: 10px;
@@ -547,9 +564,10 @@ figure.card { cursor: pointer; }
   .best-card small { font-size: 11px; }
   .best-card.sorot img { height: 140px; }
   .best-card.sorot h3 { font-size: 13px; }
-  .lokasi { flex-direction: column; gap: 24px; padding-top: 36px; }
-  .lokasi-teks { flex: 0 0 auto; }
-  .lokasi iframe { flex: 0 0 auto; height: 260px; }
+  .lokasi-container { flex-direction: column; text-align: center; padding: 30px 20px; }
+  .lokasi-info { text-align: center; }
+  .lokasi-map { width: 100%; }
+  .lokasi-map iframe { width: 100%; max-width: 440px; height: 260px; }
   .footer-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .hero-bg { transition: none; } }
