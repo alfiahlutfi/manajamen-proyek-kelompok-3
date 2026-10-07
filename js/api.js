@@ -1,49 +1,202 @@
-const USE_MOCK = true; // ganti false kalau backend sudah siap
-const BASE_URL = "/api";
+const BASE_URL = "api/";
 
-// pemetaan endpoint ke file mock
-const MOCK_MAP = {
-  "/cafe": "mock/cafe.json",
-  "/menu": "mock/menu.json",
-  "/gallery": "mock/gallery.json",
-  "/areas": "mock/areas.json",
-  "/events": "mock/events.json",
-  "/faqs": "mock/faqs.json",
+/*
+|--------------------------------------------------------------------------
+| PEMETAAN ENDPOINT FRONTEND → API BACKEND
+|--------------------------------------------------------------------------
+|
+| Frontend tetap bisa memanggil:
+|   fetchData("/cafe")
+|   fetchData("/menu")
+|   fetchData("/events")
+|
+| Tetapi api.js akan meneruskannya ke file PHP milik BE.
+|
+*/
+
+const API_MAP = {
+    "/cafe": "cafe.php",
+    "/menu": "menu.php",
+    "/gallery": "gallery.php",
+    "/areas": "area.php",
+    "/events": "event.php",
+    "/faqs": "faq.php",
+    "/menu-category": "menu_category.php",
+    "/operating-hours": "operating_hours.php"
 };
 
+
+/*
+|--------------------------------------------------------------------------
+| FETCH DATA
+|--------------------------------------------------------------------------
+*/
+
 async function fetchData(endpoint) {
-  let url = BASE_URL + endpoint;
-  let detailId = null;
 
-  if (USE_MOCK) {
-    // endpoint detail, contoh: /events/2
-    const m = endpoint.match(/^(\/\w+)\/(\d+)$/);
-    if (m) {
-      url = MOCK_MAP[m[1]];
-      detailId = Number(m[2]);
-    } else {
-      url = MOCK_MAP[endpoint];
+    try {
+
+        // Hilangkan slash awal
+        const cleanEndpoint = endpoint.startsWith("/")
+            ? endpoint
+            : "/" + endpoint;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CEK DETAIL
+        |--------------------------------------------------------------------------
+        |
+        | Contoh:
+        | fetchData("/events/2")
+        |
+        | Untuk sekarang kita tetap dukung format detail.
+        |
+        */
+
+        const detailMatch =
+            cleanEndpoint.match(/^(.+)\/(\d+)$/);
+
+        let apiEndpoint = cleanEndpoint;
+        let detailId = null;
+
+
+        if (detailMatch) {
+
+            apiEndpoint = detailMatch[1];
+            detailId = Number(detailMatch[2]);
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CARI FILE API BACKEND
+        |--------------------------------------------------------------------------
+        */
+
+        const fileName = API_MAP[apiEndpoint];
+
+        if (!fileName) {
+
+            console.error(
+                "Endpoint tidak terdaftar:",
+                endpoint
+            );
+
+            return null;
+        }
+
+
+        const url = BASE_URL + fileName;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | REQUEST KE BACKEND
+        |--------------------------------------------------------------------------
+        */
+
+        const res = await fetch(url);
+
+
+        if (!res.ok) {
+
+            throw new Error(
+                "HTTP " + res.status
+            );
+
+        }
+
+
+        const json = await res.json();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CEK RESPONSE BACKEND
+        |--------------------------------------------------------------------------
+        |
+        | Format API BE:
+        |
+        | {
+        |     "success": true,
+        |     "data": [...]
+        | }
+        |
+        */
+
+        if (!json.success) {
+
+            throw new Error(
+                json.message || "Gagal mengambil data"
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DETAIL DATA
+        |--------------------------------------------------------------------------
+        |
+        | Contoh:
+        | fetchData("/events/2")
+        |
+        | Akan mengambil data event dengan id = 2
+        |
+        */
+
+        if (detailId !== null) {
+
+            if (!Array.isArray(json.data)) {
+                return null;
+            }
+
+            return (
+                json.data.find(
+                    item => Number(item.id) === detailId
+                ) || null
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA LIST
+        |--------------------------------------------------------------------------
+        */
+
+        return json.data;
+
+
+    } catch (err) {
+
+        console.error(
+            "Gagal mengambil " + endpoint + ":",
+            err
+        );
+
+        return null;
     }
-  }
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const json = await res.json();
-    if (!json.success) throw new Error(json.error || json.message);
-
-    // di mode mock, detail diambil dari list berdasarkan id
-    if (detailId !== null) return json.data.find(i => i.id === detailId) || null;
-    return json.data;
-  } catch (err) {
-    console.error("Gagal mengambil " + endpoint, err);
-    return null;
-  }
 }
 
-// cegah karakter HTML dari data masuk sebagai kode
+
+/*
+|--------------------------------------------------------------------------
+| ESCAPE HTML
+|--------------------------------------------------------------------------
+|
+| Mencegah data dari database dianggap sebagai HTML.
+|
+*/
+
 function esc(text) {
-  const d = document.createElement("div");
-  d.textContent = text ?? "";
-  return d.innerHTML;
+
+    const d = document.createElement("div");
+
+    d.textContent = text ?? "";
+
+    return d.innerHTML;
 }
