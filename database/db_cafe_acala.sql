@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 07, 2026 at 09:47 AM
+-- Generation Time: Oct 08, 2026 at 02:02 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -322,7 +322,7 @@ ALTER TABLE `cafe`
 --
 ALTER TABLE `carousel`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_carousel_event` (`id_event`);
+  ADD UNIQUE KEY `unique_id_event` (`id_event`);
 
 --
 -- Indexes for table `event`
