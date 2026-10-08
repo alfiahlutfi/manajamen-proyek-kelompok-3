@@ -393,40 +393,20 @@ async function tampilkanBeranda() {
      TAMPILKAN JAM
   ===================================================== */
 
-  openHours.innerHTML =
-    cafeHours.map(j => {
+  openHours.innerHTML = `
+  <div>
+    <h3>Monday - Thursday</h3>
+    <p>11 AM - 11 PM</p>
+  </div>
 
-      if (
-        Number(j.is_closed) === 1
-      ) {
+  <div>
+    <h3>Friday - Sunday</h3>
+    <p>09 AM - 10 PM</p>
+  </div>
+`;
 
-        return `
-          <div>
-            <h3>${esc(j.hari)}</h3>
-            <p>Tutup</p>
-          </div>
-        `;
-      }
+}   // ← INI PENUTUP function tampilkanBeranda()
 
-
-      return `
-        <div>
-          <h3>${esc(j.hari)}</h3>
-
-          <p>
-            ${esc(
-              formatJam(j.jam_buka)
-            )}
-            -
-            ${esc(
-              formatJam(j.jam_tutup)
-            )}
-          </p>
-        </div>
-      `;
-
-    }).join("");
-}
 
 
 /* =======================================================

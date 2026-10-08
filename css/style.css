@@ -153,6 +153,7 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px 80px;
+    text-align: center;
 }
 .jam-grid h3 {
     font-family: "Montserrat", sans-serif;
@@ -164,9 +165,9 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
 .jam-grid p {
     font-family: "Montserrat", sans-serif;
     color: #F5D76E;
-    margin: 2px 0 0;
+    margin: 8px 0 0;
     font-size: 18px;
-    font-weight: 90;
+    font-weight: 400;
     letter-spacing: 3px;
 }
 
