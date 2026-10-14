@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Café Ácala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+
+    <!-- HERO: carousel event -->
+    <section class="hero" id="event">
+      <div class="hero-bg" id="hero-bg"></div>
+      <div class="hero-text">
+        <h1 id="hero-judul"></h1>
+        <a id="hero-btn" class="btn-hijau" href="#">Join the Class</a>
+      </div>
+      <div class="hero-slider" id="hero-slider"></div>
+    </section>
+
+    <!-- TENTANG -->
+    <section class="tembok">
+      <h2 class="judul-kecil" id="nama">Cafe Acala</h2>
+
+      <!-- ABOUT -->
+      <div class="blok">
+        <figure class="foto-wrap kiri">
+          <img id="gambar-about" src="" alt="Tampak depan Café Ácala">
+          <span class="lubang" aria-hidden="true"></span>
+        </figure>
+
+        <div class="blok-teks">
+          <h3 id="judul-about">Unfinished Escape</h3>
+          <p id="deskripsi"></p>
+          <a class="btn-garis" href="menu.html">Menu</a>
+        </div>
+      </div>
+
+      <!-- RESERVASI -->
+      <div class="blok balik">
+        <div class="blok-teks">
+          <h3 id="judul-reservasi">Acala Reservation</h3>
+          <p id="deskripsi-reservasi"></p>
+          <a class="btn-garis" href="reservasi.html">Reservasi</a>
+        </div>
+
+        <figure class="foto-wrap kanan">
+          <img id="gambar-reservasi" src="" alt="Area indoor Café Ácala">
+          <span class="lubang" aria-hidden="true"></span>
+        </figure>
+      </div>
+    </section>
+
+    <!-- OPEN HOURS -->
+    <section class="tembok jam-wrap">
+      <div class="retak">
+        <div class="retak-isi">
+          <h2>Open Hours</h2>
+          <div class="jam-grid" id="open-hours"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEST SELLERS -->
+    <div class="best-header-wrapper">
+      <h2>Our Best Sellers</h2>
+    </div>
+
+    <section class="best">
+      <p>Nikmati vibe santai dengan menu andalan Acala</p>
+      <div class="best-list" id="best-list"></div>
+    </section>
+
+    <!-- LOKASI -->
+    <section class="lokasi-section">
+      <div class="lokasi-container">
+
+        <div class="lokasi-info">
+          <h2>Lokasi</h2>
+          <p id="alamat"></p>
+          <a id="btn-maps" class="btn-maps" href="#" target="_blank" rel="noopener noreferrer">Maps</a>
+        </div>
+
+        <div class="lokasi-map">
+          <iframe
+            id="peta"
+            title="Lokasi Cafe Acala"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-section">
+
+    <div class="footer-container">
+
+      <!-- Kolom 1: Logo -->
+      <div class="footer-col footer-brand">
+        <img src="assets/logo_acala.png" alt="Logo Acala" class="footer-logo">
+      </div>
+
+      <!-- Kolom 2: Get to Know Us -->
+      <div class="footer-col">
+        <h3>GET TO KNOW US</h3>
+        <ul class="footer-links">
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="index.html#event">Event</a></li>
+          <li><a href="galeri.html">Galeri</a></li>
+          <li><a href="reservasi.html">Reservasi</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Kolom 3: Connect With Us -->
+      <div class="footer-col">
+        <h3>CONNECT WITH US</h3>
+
+        <a id="footer-whatsapp" class="footer-contact" href="#"
+           target="_blank" rel="noopener noreferrer"></a>
+
+        <a id="footer-email" class="footer-contact" href="#"></a>
+
+        <div class="footer-socials">
+          <a id="footer-instagram" href="#" target="_blank"
+             rel="noopener noreferrer" aria-label="Instagram">
+            <img src="assets/Instagram_logo_2022.svg.webp" alt="Instagram">
+          </a>
+          <a id="footer-tiktok" href="#" target="_blank"
+             rel="noopener noreferrer" aria-label="TikTok">
+            <img src="assets/tiktok-icon2.png" alt="TikTok">
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2021-2026 Cafe Acala &amp; Eatery</p>
+    </div>
+
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/beranda.js"></script>
+</body>
+</html>
