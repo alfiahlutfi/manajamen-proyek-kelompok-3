@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
+<<<<<<< HEAD:database/db_cafe_acala.sql
 -- Generation Time: Oct 13, 2026 at 08:13 AM
+=======
+-- Generation Time: Oct 13, 2026 at 08:23 AM
+>>>>>>> e9a7b8b383ddd335df6e73264da9c80c22ea6061:backend/database/db_cafe_acala.sql
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
