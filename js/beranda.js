@@ -11,29 +11,114 @@ function rupiahSingkat(n) {
    FORMAT JAM
 ======================================================= */
 
-function formatJam(jam) {
-  if (!jam) {
-    return "";
+function formatJam(teksJam) {
+  if (!teksJam) return "";
+
+  const bagianJam = String(teksJam).split(":");
+  let angkaJam = parseInt(bagianJam[0], 10);
+
+  if (isNaN(angkaJam)) return teksJam;
+
+  const penanda = angkaJam >= 12 ? "PM" : "AM";
+  angkaJam = angkaJam % 12 || 12;
+
+  const menit = bagianJam[1];
+  const teksMenit = menit && menit !== "00" ? ":" + menit : "";
+
+  return String(angkaJam).padStart(2, "0") + teksMenit + " " + penanda;
+}
+
+
+/* =======================================================
+   KELOMPOK HARI
+======================================================= */
+
+const NAMA_HARI = [
+  ["Monday", "senin"],
+  ["Tuesday", "selasa"],
+  ["Wednesday", "rabu"],
+  ["Thursday", "kamis"],
+  ["Friday", "jumat"],
+  ["Saturday", "sabtu"],
+  ["Sunday", "minggu"]
+];
+
+function indexHari(namaHari) {
+  const namaBersih = String(namaHari || "")
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+
+  return NAMA_HARI.findIndex(
+    ([namaInggris, namaIndonesia]) =>
+      namaBersih === namaInggris.toLowerCase() ||
+      namaBersih === namaIndonesia
+  );
+}
+
+function kelompokJam(daftarJam) {
+
+  const daftarDenganUrutan = daftarJam.map(baris => ({
+    ...baris,
+    urutanHari: indexHari(baris.hari)
+  }));
+
+  // Jika nama hari tidak dikenali, tampilkan apa adanya
+  const adaHariTidakDikenali = daftarDenganUrutan.some(
+    baris => baris.urutanHari < 0
+  );
+
+  if (adaHariTidakDikenali) {
+    return daftarJam.map(baris => ({
+      label: baris.hari || "",
+      buka: baris.jam_buka,
+      tutup: baris.jam_tutup
+    }));
   }
 
-  const parts = String(jam).split(":");
+  daftarDenganUrutan.sort(
+    (barisPertama, barisKedua) =>
+      barisPertama.urutanHari - barisKedua.urutanHari
+  );
 
-  if (parts.length < 2) {
-    return jam;
-  }
+  const daftarKelompok = [];
 
-  let hour = parseInt(parts[0], 10);
-  const minute = parts[1];
+  daftarDenganUrutan.forEach(baris => {
 
-  const suffix = hour >= 12 ? "PM" : "AM";
+    const kelompokTerakhir =
+      daftarKelompok[daftarKelompok.length - 1];
 
-  hour = hour % 12;
+    const melanjutkanKelompok =
+      kelompokTerakhir &&
+      kelompokTerakhir.buka === baris.jam_buka &&
+      kelompokTerakhir.tutup === baris.jam_tutup &&
+      baris.urutanHari === kelompokTerakhir.urutanAkhir + 1;
 
-  if (hour === 0) {
-    hour = 12;
-  }
+    if (melanjutkanKelompok) {
+      kelompokTerakhir.urutanAkhir = baris.urutanHari;
+    } else {
+      daftarKelompok.push({
+        urutanAwal: baris.urutanHari,
+        urutanAkhir: baris.urutanHari,
+        buka: baris.jam_buka,
+        tutup: baris.jam_tutup
+      });
+    }
+  });
 
-  return `${hour}:${minute} ${suffix}`;
+  return daftarKelompok.map(kelompok => {
+
+    const hariAwal = NAMA_HARI[kelompok.urutanAwal][0];
+    const hariAkhir = NAMA_HARI[kelompok.urutanAkhir][0];
+
+    return {
+      label:
+        kelompok.urutanAwal === kelompok.urutanAkhir
+          ? hariAwal
+          : hariAwal + " - " + hariAkhir,
+      buka: kelompok.buka,
+      tutup: kelompok.tutup
+    };
+  });
 }
 
 
@@ -379,33 +464,17 @@ async function tampilkanBeranda() {
     );
 
 
-  if (cafeHours.length === 0) {
+      openHours.innerHTML = kelompokJam(cafeHours).map(kelompok => `
+    <div>
+      <h3>${esc(kelompok.label)}</h3>
+      <p>${formatJam(kelompok.buka)} - ${formatJam(kelompok.tutup)}</p>
+    </div>
+  `).join("");
 
-    openHours.innerHTML = `
-      <p>Jam operasional belum tersedia.</p>
-    `;
-
-    return;
-  }
+}   // penutup tampilkanBeranda
 
 
-  /* =====================================================
-     TAMPILKAN JAM
-  ===================================================== */
-
-  openHours.innerHTML = `
-  <div>
-    <h3>Monday - Thursday</h3>
-    <p>11 AM - 11 PM</p>
-  </div>
-
-  <div>
-    <h3>Friday - Sunday</h3>
-    <p>09 AM - 10 PM</p>
-  </div>
-`;
-
-}   // ← INI PENUTUP function tampilkanBeranda()
+ 
 
 
 
@@ -598,68 +667,168 @@ async function tampilkanHero() {
   }
 
 
+
   /* =====================================================
-     AUTOPLAY
+     KONTROL CAROUSEL (autoplay, klik, geser, keyboard)
   ===================================================== */
 
-  function mulai() {
+  const DURASI = 2000; // ms antar slide
 
-    if (
-      n < 2 ||
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches
-    ) {
+  const kurangiGerak =
+    window.matchMedia &&
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-      return;
-    }
+  function pindah(ke) {
 
+    i = (ke + n) % n;
+
+    render();
+  }
+
+  function berhenti() {
 
     clearInterval(timer);
 
-
-    timer =
-      setInterval(() => {
-
-        i =
-          (i + 1) % n;
-
-        render();
-
-      }, 5000);
+    timer = null;
   }
 
+  function mulai() {
 
-  /* =====================================================
-     KLIK SLIDE
-  ===================================================== */
+    berhenti();
 
-  slider.addEventListener(
-    "click",
-    e => {
+    if (n > 1 && !kurangiGerak) {
 
-      const s =
-        e.target.closest(
-          ".slide"
-        );
-
-
-      if (!s) {
-        return;
-      }
-
-
-      i =
-        Number(
-          s.dataset.idx
-        );
-
-
-      render();
-
-      mulai();
+      timer = setInterval(
+        () => pindah(i + 1),
+        DURASI
+      );
     }
-  );
+  }
+
+  if (n > 1) {
+
+    /* Klik slide kiri / kanan -> pindah ke slide itu */
+    slider.addEventListener(
+      "click",
+      (e) => {
+
+        const tombol =
+          e.target.closest(".slide");
+
+        if (
+          !tombol ||
+          !slider.contains(tombol) ||
+          tombol.classList.contains(
+            "tengah"
+          )
+        ) {
+          return;
+        }
+
+        pindah(
+          Number(tombol.dataset.idx)
+        );
+
+        mulai();
+      }
+    );
+
+    /* Panah kiri / kanan di keyboard saat fokus di carousel */
+    slider.addEventListener(
+      "keydown",
+      (e) => {
+
+        if (e.key === "ArrowLeft") {
+
+          pindah(i - 1);
+
+          mulai();
+
+        } else if (
+          e.key === "ArrowRight"
+        ) {
+
+          pindah(i + 1);
+
+          mulai();
+        }
+      }
+    );
+
+    /* Geser (swipe) di layar sentuh */
+    let awalX = null;
+
+    slider.addEventListener(
+      "touchstart",
+      (e) => {
+
+        awalX =
+          e.touches[0].clientX;
+
+        berhenti();
+      },
+      { passive: true }
+    );
+
+    slider.addEventListener(
+      "touchend",
+      (e) => {
+
+        if (awalX !== null) {
+
+          const selisih =
+            e.changedTouches[0]
+              .clientX - awalX;
+
+          if (Math.abs(selisih) > 40) {
+
+            pindah(
+              selisih < 0
+                ? i + 1
+                : i - 1
+            );
+          }
+        }
+
+        awalX = null;
+
+        mulai();
+      }
+    );
+
+    /* Jeda saat kursor di atas carousel, lanjut saat keluar */
+    const hero =
+      slider.closest(".hero") ||
+      slider;
+
+    hero.addEventListener(
+      "mouseenter",
+      berhenti
+    );
+
+    hero.addEventListener(
+      "mouseleave",
+      mulai
+    );
+
+    /* Jeda saat tab tidak aktif */
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+
+        if (document.hidden) {
+
+          berhenti();
+
+        } else {
+
+          mulai();
+        }
+      }
+    );
+  }
 
 
   /* =====================================================

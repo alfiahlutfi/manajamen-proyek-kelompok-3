@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 08, 2026 at 02:02 AM
+-- Generation Time: Oct 13, 2026 at 08:13 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -101,7 +101,7 @@ CREATE TABLE `cafe` (
 --
 
 INSERT INTO `cafe` (`id`, `nama`, `logo`, `deskripsi`, `gambar_about`, `judul_about`, `judul_reservasi`, `deskripsi_reservasi`, `gambar_reservasi`, `alamat`, `link_maps`, `maps_embed_url`, `whatsapp`, `email`, `instagram`, `tiktok`, `updated_at`) VALUES
-(1, 'assets/logo_acala_-_Salin-removebg-preview.png', 'assets/logo_acala-removebg-preview.png', 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'assets/acala.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'assets/duduk.jpg', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 857 9727 5590', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-10-07 08:52:03');
+(1, 'uploads/cafe/nama-cafe.png', 'uploads/cafe/logo-cafe.png', 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.jpg', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 857 9727 5590', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-10-13 08:06:32');
 
 -- --------------------------------------------------------
 
@@ -152,9 +152,9 @@ CREATE TABLE `event` (
 --
 
 INSERT INTO `event` (`id`, `nama`, `slug`, `deskripsi`, `gambar`, `tanggal`, `waktu`, `lokasi`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Coffee Workshop', 'coffee-workshop', 'Pelajari teknik meracik dan menyeduh kopi dalam pengalaman workshop yang seru dan interaktif.', 'assets/seduh.JPG', '2026-10-11', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:48:25', '2026-10-07 04:48:25'),
-(2, 'Open Mic', 'open-mic', 'Nikmati malam penuh musik dan kreativitas, saat para talenta berbagi suara, cerita, dan penampilan terbaik mereka di panggung Cafe Acala.', 'assets/meeting.png', '2026-10-18', '09:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:50:16', '2026-10-07 04:50:16'),
-(3, 'Live Music', 'live-music', 'Nikmati suasana hangat bersama alunan musik secara langsung, ditemani kopi dan hidangan favorit di Cafe Acala.', 'assets/live music.png', '2026-10-31', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-10-07 04:52:32');
+(1, 'Coffee Workshop', 'coffee-workshop', 'Pelajari teknik meracik dan menyeduh kopi dalam pengalaman workshop yang seru dan interaktif.', 'uploads/event/coffe-workshop.jpg', '2026-10-11', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:48:25', '2026-10-13 08:09:26'),
+(2, 'Open Mic', 'open-mic', 'Nikmati malam penuh musik dan kreativitas, saat para talenta berbagi suara, cerita, dan penampilan terbaik mereka di panggung Cafe Acala.', 'uploads/event/open-mic.png', '2026-10-18', '09:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:50:16', '2026-10-13 08:10:09'),
+(3, 'Live Music', 'live-music', 'Nikmati suasana hangat bersama alunan musik secara langsung, ditemani kopi dan hidangan favorit di Cafe Acala.', 'uploads/event/live-music.png', '2026-10-31', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-10-13 08:10:46');
 
 -- --------------------------------------------------------
 
@@ -224,10 +224,81 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `gambar`, `label`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 5, 'Matcha Latte', 'matcha-latte', 'Minuman matcha dengan perpaduan susu yang lembut dan creamy.', 25000, 'assets/Refreshing_iced_matcha_latte___free_image_by_-removebg-preview.png', 'best_seller', 1, 'aktif', '2026-10-07 05:32:46', '2026-10-07 07:19:28'),
-(2, 5, 'Dubai Choco', 'dubai-choco', 'Minuman cokelat dengan rasa manis dan creamy yang cocok dinikmati kapan saja.', 30000, 'assets/Dubai_Chocolate_Strawberry_Cup-removebg-preview.png', 'best_seller', 2, 'aktif', '2026-10-07 05:32:46', '2026-10-07 07:19:48'),
-(3, 5, 'Goguma Smoothies', 'goguma-smoothies', 'Smoothies dengan cita rasa ubi manis yang lembut dan creamy.', 35000, 'assets/blueberry smoothies.png', 'best_seller', 3, 'aktif', '2026-10-07 05:32:46', '2026-10-07 07:19:58'),
-(4, 1, 'Cafe Latte', 'cafe-latte', 'Perpaduan espresso dan susu steamed dengan rasa yang lembut dan creamy.', 21000, 'assets/iced coffe delight.png', 'best_seller', 4, 'aktif', '2026-10-07 05:32:46', '2026-10-07 07:20:08');
+(5, 1, 'Cafe Latte', 'cafe-latte', NULL, 14000, 'uploads/menu/default-menu.png', NULL, 1, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(6, 1, 'Cappuccino', 'cappuccino', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 2, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(7, 1, 'Mochoccino', 'mochoccino', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 3, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(8, 1, 'Cafe Latte Vanilla', 'cafe-latte-vanilla', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 4, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(9, 1, 'Cafe Latte Caramel', 'cafe-latte-caramel', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 5, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(10, 1, 'Cafe Latte Hazelnut', 'cafe-latte-hazelnut', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 6, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(11, 1, 'Cafe Latte Tiramisu', 'cafe-latte-tiramisu', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 7, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(12, 1, 'Cafe Latte Salted Caramel', 'cafe-latte-salted-caramel', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 8, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(13, 1, 'Comel', 'comel', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 9, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(14, 1, 'Acala Basic', 'acala-basic', 'Hanya tersedia dingin (ice only).', 18000, 'uploads/menu/default-menu.png', NULL, 10, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(15, 1, 'Hammock', 'hammock', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 11, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(16, 1, 'Bootcamp', 'bootcamp', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 12, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(17, 1, 'Salted Caramel Mocca', 'salted-caramel-mocca', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 13, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(18, 1, 'Matchaccino', 'matchaccino', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 14, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(19, 1, 'Red Fusion', 'red-fusion', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 15, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(20, 1, 'Butterscotch Sea Salt', 'butterscotch-sea-salt', 'Hanya tersedia dingin (ice only).', 22000, 'uploads/menu/default-menu.png', NULL, 16, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(21, 2, 'Americano', 'americano', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 17, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(22, 2, 'Long Black', 'long-black', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 18, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(23, 2, 'Romano', 'romano', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 19, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(24, 2, 'Acala Basic 1.000 ml', 'acala-basic-1000ml', 'Tambahan shot: double shot +Rp4.000, triple shot +Rp6.000.', 80000, 'uploads/menu/default-menu.png', NULL, 20, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(25, 3, 'French Press', 'french-press', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 21, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(26, 3, 'V60 Japanese', 'v60-japanese', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 22, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(27, 3, 'Aeropress', 'aeropress', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 23, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(28, 3, 'Vietnam Drip', 'vietnam-drip', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 24, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(29, 3, 'Tubruk', 'tubruk', NULL, 10000, 'uploads/menu/default-menu.png', NULL, 25, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(30, 4, 'Mango Butterfly', 'mango-butterfly', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 26, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(31, 4, 'Green Lady', 'green-lady', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 27, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(32, 4, 'Lemon Citrus', 'lemon-citrus', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 28, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(33, 4, 'Sunrise', 'sunrise', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 29, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(34, 4, 'Cira Aquamarine', 'cira-aquamarine', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 30, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(35, 5, 'Chocolate', 'chocolate', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 31, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(36, 5, 'Matcha', 'matcha', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 32, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(37, 5, 'Bubblegum', 'bubblegum', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 33, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(38, 5, 'Taro', 'taro', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 34, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(39, 5, 'Red Velvet', 'red-velvet', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 35, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(40, 5, 'Cookies n Cream', 'cookies-n-cream', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 36, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(41, 5, 'Matcha Orange', 'matcha-orange', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 37, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(42, 5, 'Lotus Matcha Coco', 'lotus-matcha-coco', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 38, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(43, 5, 'Matcha Mango', 'matcha-mango', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 39, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(44, 6, 'Orange Mojito', 'orange-mojito', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 40, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(45, 6, 'Strawberry Mojito', 'strawberry-mojito', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 41, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(46, 6, 'Mango Mojito', 'mango-mojito', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 42, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(47, 7, 'Lemon Tea', 'lemon-tea', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 43, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(48, 7, 'Lychee Tea', 'lychee-tea', NULL, 14000, 'uploads/menu/default-menu.png', NULL, 44, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(49, 7, 'Tea', 'tea', NULL, 10000, 'uploads/menu/default-menu.png', NULL, 45, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(50, 7, 'Mineral Water', 'mineral-water', NULL, 6000, 'uploads/menu/default-menu.png', NULL, 46, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(51, 8, 'Elmacho', 'elmacho', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 47, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(52, 8, 'Affogato', 'affogato', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 48, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(53, 9, 'Croissant Butter', 'croissant-butter', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 49, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(54, 9, 'Croissant Dark Chocolate', 'croissant-dark-chocolate', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 50, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(55, 9, 'Croissant Matcha Biscoff', 'croissant-matcha-biscoff', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 51, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(56, 9, 'Croissant White Chocolate', 'croissant-white-chocolate', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 52, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(57, 9, 'Crombolloni Dark Chocolate', 'crombolloni-dark-chocolate', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 53, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(58, 9, 'Crombolloni White Chocolate', 'crombolloni-white-chocolate', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 54, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(59, 9, 'Crombolloni Matcha Biscoff', 'crombolloni-matcha-biscoff', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 55, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(60, 10, 'Snack Acala', 'snack-acala', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 56, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(61, 10, 'Cireng Ayam Suwir', 'cireng-ayam-suwir', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 57, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(62, 10, 'Pisang Krispi', 'pisang-krispi', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 58, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(63, 10, 'Nugget Isi 5', 'nugget-isi-5', NULL, 14000, 'uploads/menu/default-menu.png', NULL, 59, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(64, 10, 'Nugget Isi 10', 'nugget-isi-10', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 60, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(65, 10, 'Co Cheese', 'co-cheese', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 61, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(66, 10, 'Costick', 'costick', NULL, 14000, 'uploads/menu/default-menu.png', NULL, 62, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(67, 11, 'Ricebowl Chicken Blackpepper', 'ricebowl-chicken-blackpepper', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 63, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(68, 11, 'Ricebowl Ayam Sambal Matah', 'ricebowl-ayam-sambal-matah', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 64, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(69, 11, 'Ricebowl Chicken Katsu', 'ricebowl-chicken-katsu', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 65, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(70, 11, 'Nasi Goreng', 'nasi-goreng', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 66, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(71, 11, 'Ayam Geprek', 'ayam-geprek', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 67, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(72, 11, 'Ayam Saus Mentega', 'ayam-saus-mentega', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 68, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(73, 11, 'Sate Taichan', 'sate-taichan', 'Tambahan: nasi atau lontong.', 20000, 'uploads/menu/default-menu.png', NULL, 69, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(74, 11, 'Spicy Wings', 'spicy-wings', 'Tambahan: nasi atau french fries.', 20000, 'uploads/menu/default-menu.png', NULL, 70, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(75, 11, 'Acala Noodle Soup', 'acala-noodle-soup', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 71, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(76, 11, 'Mie Acala', 'mie-acala', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 72, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(77, 12, 'Cheese Beef Burger', 'cheese-beef-burger', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 73, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(78, 12, 'Cheese Chicken Burger', 'cheese-chicken-burger', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 74, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(79, 12, 'Cheese Egg Burger', 'cheese-egg-burger', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 75, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12');
 
 -- --------------------------------------------------------
 
@@ -415,7 +486,7 @@ ALTER TABLE `gallery`
 -- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `menu_category`
