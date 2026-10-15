@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu | Café Ácala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main class="menu-page">
+    <div class="menu-layout">
+
+      <!-- Kategori -->
+      <aside>
+        <ul class="kategori-list" id="kategori-list"></ul>
+      </aside>
+
+      <!-- Produk -->
+      <section>
+        <div class="menu-grid" id="menu-grid"></div>
+        <div class="menu-pager" id="menu-pager" aria-label="Halaman menu"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer-section">
+
+    <div class="footer-container">
+
+      <!-- Kolom 1: Logo -->
+      <div class="footer-col footer-brand">
+        <img src="assets/logo_acala.png" alt="Logo Acala" class="footer-logo">
+      </div>
+
+      <!-- Kolom 2: Get to Know Us -->
+      <div class="footer-col">
+        <h3>GET TO KNOW US</h3>
+        <ul class="footer-links">
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="index.html#event">Event</a></li>
+          <li><a href="galeri.html">Galeri</a></li>
+          <li><a href="reservasi.html">Reservasi</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Kolom 3: Connect With Us -->
+      <div class="footer-col">
+        <h3>CONNECT WITH US</h3>
+
+        <a id="footer-whatsapp" class="footer-contact" href="#"
+           target="_blank" rel="noopener noreferrer"></a>
+
+        <a id="footer-email" class="footer-contact" href="#"></a>
+
+        <div class="footer-socials">
+          <a id="footer-instagram" href="#" target="_blank"
+             rel="noopener noreferrer" aria-label="Instagram">
+            <img src="assets/Instagram_logo_2022.svg.webp" alt="Instagram">
+          </a>
+          <a id="footer-tiktok" href="#" target="_blank"
+             rel="noopener noreferrer" aria-label="TikTok">
+            <img src="assets/tiktok-icon2.png" alt="TikTok">
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2021-2026 Cafe Acala &amp; Eatery</p>
+    </div>
+
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>
