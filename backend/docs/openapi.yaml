@@ -13,6 +13,8 @@ tags:
     description: Profil cafe (card 1.1)
   - name: Jam Operasional
     description: Jam buka cafe per hari (card 2.1)
+  - name: Lokasi
+    description: Alamat, tautan Google Maps, dan URL embed peta cafe (card 3.1)
 
 paths:
   /api/cafe.php:
@@ -97,6 +99,46 @@ paths:
                 message: Jam operasional gagal dimuat
                 data: null
 
+  /api/location.php:
+    get:
+      tags: [Lokasi]
+      summary: Ambil lokasi cafe (alamat, tautan Google Maps, URL embed peta)
+      description: >
+        Mengembalikan alamat, tautan Google Maps, dan URL embed peta
+        untuk bagian "Lokasi" di halaman beranda. Tanpa login.
+        Untuk simulasi error (SQA/FE) tambahkan `?simulate_error=1`.
+        Setelah gagal, memanggil ulang tanpa parameter tersebut akan berhasil (200).
+      parameters:
+        - $ref: '#/components/parameters/SimulateError'
+      responses:
+        '200':
+          description: Lokasi cafe berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationResponse'
+              example:
+                success: true
+                message: Lokasi cafe berhasil diambil
+                data:
+                  alamat: Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559
+                  link_maps: https://maps.app.goo.gl/YJC855MqBPNThfi36
+                  maps_embed_url: https://www.google.com/maps/embed?pb=...
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          description: Lokasi cafe gagal dimuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Lokasi cafe gagal dimuat
+                data: null
+
 components:
   parameters:
     SimulateError:
@@ -159,6 +201,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OperatingHour'
+    Location:
+      type: object
+      properties:
+        alamat:
+          type: string
+          example: Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559
+        link_maps:
+          type: string
+          description: Tautan Google Maps untuk tombol "Maps"
+          example: https://maps.app.goo.gl/YJC855MqBPNThfi36
+        maps_embed_url:
+          type: string
+          description: URL embed Google Maps (untuk iframe)
+    LocationResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        message: { type: string, example: Lokasi cafe berhasil diambil }
+        data:
+          $ref: '#/components/schemas/Location'
     ErrorResponse:
       type: object
       properties:
