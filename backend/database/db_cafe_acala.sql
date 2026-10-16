@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
-<<<<<<< HEAD:database/db_cafe_acala.sql
--- Generation Time: Oct 13, 2026 at 08:13 AM
-=======
--- Generation Time: Oct 13, 2026 at 08:23 AM
->>>>>>> e9a7b8b383ddd335df6e73264da9c80c22ea6061:backend/database/db_cafe_acala.sql
+-- Generation Time: Oct 16, 2026 at 06:53 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -85,8 +81,8 @@ CREATE TABLE `cafe` (
   `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `gambar_about` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `judul_about` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `judul_deskripsi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `judul_reservasi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deskripsi_reservasi` text COLLATE utf8mb4_unicode_ci,
   `gambar_reservasi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -104,8 +100,8 @@ CREATE TABLE `cafe` (
 -- Dumping data for table `cafe`
 --
 
-INSERT INTO `cafe` (`id`, `nama`, `logo`, `deskripsi`, `gambar_about`, `judul_about`, `judul_reservasi`, `deskripsi_reservasi`, `gambar_reservasi`, `alamat`, `link_maps`, `maps_embed_url`, `whatsapp`, `email`, `instagram`, `tiktok`, `updated_at`) VALUES
-(1, 'uploads/cafe/nama-cafe.png', 'uploads/cafe/logo-cafe.png', 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.jpg', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 857 9727 5590', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-10-13 08:06:32');
+INSERT INTO `cafe` (`id`, `nama`, `logo`, `deskripsi`, `foto`, `judul_deskripsi`, `judul_reservasi`, `deskripsi_reservasi`, `gambar_reservasi`, `alamat`, `link_maps`, `maps_embed_url`, `whatsapp`, `email`, `instagram`, `tiktok`, `updated_at`) VALUES
+(1, 'uploads/cafe/nama-cafe.png', 'uploads/cafe/logo-cafe.png', 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.jpg', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 878 787 578 08', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-10-13 08:57:58');
 
 -- --------------------------------------------------------
 
@@ -228,7 +224,7 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `gambar`, `label`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(5, 1, 'Cafe Latte', 'cafe-latte', NULL, 14000, 'uploads/menu/default-menu.png', NULL, 1, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(5, 1, 'Cafe Latte', 'cafe-latte', NULL, 14000, 'uploads/menu/default-menu.png', 'best_seller', 1, 'aktif', '2026-10-13 07:56:12', '2026-10-13 08:58:38'),
 (6, 1, 'Cappuccino', 'cappuccino', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 2, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (7, 1, 'Mochoccino', 'mochoccino', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 3, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (8, 1, 'Cafe Latte Vanilla', 'cafe-latte-vanilla', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 4, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
@@ -243,7 +239,7 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (17, 1, 'Salted Caramel Mocca', 'salted-caramel-mocca', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 13, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (18, 1, 'Matchaccino', 'matchaccino', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 14, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (19, 1, 'Red Fusion', 'red-fusion', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 15, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
-(20, 1, 'Butterscotch Sea Salt', 'butterscotch-sea-salt', 'Hanya tersedia dingin (ice only).', 22000, 'uploads/menu/default-menu.png', NULL, 16, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(20, 1, 'Butterscotch Sea Salt', 'butterscotch-sea-salt', 'Hanya tersedia dingin (ice only).', 22000, 'uploads/menu/default-menu.png', 'best_seller', 16, 'aktif', '2026-10-13 07:56:12', '2026-10-13 08:58:58'),
 (21, 2, 'Americano', 'americano', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 17, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (22, 2, 'Long Black', 'long-black', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 18, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (23, 2, 'Romano', 'romano', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 19, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
@@ -298,7 +294,7 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (72, 11, 'Ayam Saus Mentega', 'ayam-saus-mentega', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 68, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (73, 11, 'Sate Taichan', 'sate-taichan', 'Tambahan: nasi atau lontong.', 20000, 'uploads/menu/default-menu.png', NULL, 69, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (74, 11, 'Spicy Wings', 'spicy-wings', 'Tambahan: nasi atau french fries.', 20000, 'uploads/menu/default-menu.png', NULL, 70, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
-(75, 11, 'Acala Noodle Soup', 'acala-noodle-soup', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 71, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(75, 11, 'Acala Noodle Soup', 'acala-noodle-soup', NULL, 20000, 'uploads/menu/default-menu.png', 'best_seller', 71, 'aktif', '2026-10-13 07:56:12', '2026-10-13 08:59:31'),
 (76, 11, 'Mie Acala', 'mie-acala', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 72, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (77, 12, 'Cheese Beef Burger', 'cheese-beef-burger', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 73, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (78, 12, 'Cheese Chicken Burger', 'cheese-chicken-burger', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 74, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),

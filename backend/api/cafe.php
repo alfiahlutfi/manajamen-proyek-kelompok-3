@@ -1,33 +1,32 @@
 <?php
+// GET /api/cafe.php
+// Card 1.1 - API profil cafe (foto, judul deskripsi, deskripsi). Publik, tanpa login.
 
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../config/response.php';
+require_once __DIR__ . '/../config/database.php';
 
-require_once '../config/database.php';
+only_get();
+simulate_error('Profil cafe gagal dimuat');
 
-$sql = "SELECT * FROM cafe ORDER BY id ASC";
-$result = $conn->query($sql);
+try {
+    $stmt = db()->query(
+        'SELECT id, foto, judul_deskripsi, deskripsi
+           FROM cafe
+          ORDER BY id
+          LIMIT 1'
+    );
+    $row = $stmt->fetch();
 
-if (!$result) {
-    http_response_code(500);
+    if (!$row) {
+        respond(404, false, 'Data profil cafe belum tersedia');
+    }
 
-    echo json_encode([
-        'success' => false,
-        'message' => 'Gagal mengambil data cafe'
-    ]);
+    // foto sengaja dikirim sebagai path relatif (contoh: uploads/cafe/gambar-about.png),
+    // sama persis dengan isi database. FE yang menambahkan alamat backend di depannya.
 
-    $conn->close();
-    exit;
+    respond(200, true, 'Profil cafe berhasil diambil', $row);
+
+} catch (PDOException $e) {
+    error_log('[cafe.php] ' . $e->getMessage());
+    respond(500, false, 'Profil cafe gagal dimuat');
 }
-
-$data = [];
-
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
-}
-
-echo json_encode([
-    'success' => true,
-    'data' => $data
-]);
-
-$conn->close();

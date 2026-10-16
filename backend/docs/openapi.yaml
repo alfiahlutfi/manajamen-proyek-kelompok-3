@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: API Cafe Acala
+  description: >
+    Dokumentasi API publik Cafe Acala (Kelompok 3).
+    Semua endpoint di bawah ini dapat dipanggil tanpa login.
+  version: 1.0.0
+servers:
+  - url: http://localhost/manajemenProyek/manajamen-proyek-kelompok-3/backend
+    description: Server lokal (Laragon)
+tags:
+  - name: Cafe
+    description: Profil cafe (card 1.1)
+  - name: Jam Operasional
+    description: Jam buka cafe per hari (card 2.1)
+
+paths:
+  /api/cafe.php:
+    get:
+      tags: [Cafe]
+      summary: Ambil profil cafe (foto, judul deskripsi, deskripsi)
+      description: >
+        Mengembalikan profil cafe untuk bagian "Cafe Acala" di halaman beranda.
+        Tanpa login. Untuk simulasi error (SQA) tambahkan `?simulate_error=1`.
+      parameters:
+        - $ref: '#/components/parameters/SimulateError'
+      responses:
+        '200':
+          description: Profil cafe berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CafeResponse'
+              example:
+                success: true
+                message: Profil cafe berhasil diambil
+                data:
+                  id: 1
+                  foto: uploads/cafe/gambar-about.png
+                  judul_deskripsi: Unfinished Escape
+                  deskripsi: Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai ...
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          description: Profil cafe gagal dimuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Profil cafe gagal dimuat
+                data: null
+
+  /api/operating_hours.php:
+    get:
+      tags: [Jam Operasional]
+      summary: Ambil jam operasional cafe untuk 7 hari
+      description: >
+        Mengembalikan daftar hari beserta jam buka dan tutup, berurutan Monday sampai Sunday.
+        Tanpa login. Untuk simulasi error (SQA) tambahkan `?simulate_error=1`.
+        Setelah gagal, memanggil ulang tanpa parameter tersebut akan berhasil (200).
+      parameters:
+        - $ref: '#/components/parameters/SimulateError'
+      responses:
+        '200':
+          description: Jam operasional berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatingHoursResponse'
+              example:
+                success: true
+                message: Jam operasional berhasil diambil
+                data:
+                  - { hari: Monday,    is_closed: false, jam_buka: '11:00', jam_tutup: '23:00' }
+                  - { hari: Tuesday,   is_closed: false, jam_buka: '11:00', jam_tutup: '23:00' }
+                  - { hari: Wednesday, is_closed: false, jam_buka: '11:00', jam_tutup: '23:00' }
+                  - { hari: Thursday,  is_closed: false, jam_buka: '11:00', jam_tutup: '23:00' }
+                  - { hari: Friday,    is_closed: false, jam_buka: '09:00', jam_tutup: '22:00' }
+                  - { hari: Saturday,  is_closed: false, jam_buka: '09:00', jam_tutup: '22:00' }
+                  - { hari: Sunday,    is_closed: false, jam_buka: '09:00', jam_tutup: '22:00' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          description: Jam operasional gagal dimuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Jam operasional gagal dimuat
+                data: null
+
+components:
+  parameters:
+    SimulateError:
+      in: query
+      name: simulate_error
+      required: false
+      description: Isi `1` untuk mensimulasikan error 500 (khusus SQA, aktif jika APP_DEBUG = true).
+      schema:
+        type: integer
+        enum: [1]
+
+  schemas:
+    Cafe:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        foto:
+          type: string
+          description: Path relatif foto cafe terhadap folder backend/ (sama dengan isi database). FE mengakses foto lewat {alamat backend}/{foto}.
+          example: uploads/cafe/gambar-about.png
+        judul_deskripsi:
+          type: string
+          example: Unfinished Escape
+        deskripsi:
+          type: string
+    CafeResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        message: { type: string, example: Profil cafe berhasil diambil }
+        data:
+          $ref: '#/components/schemas/Cafe'
+    OperatingHour:
+      type: object
+      properties:
+        hari:
+          type: string
+          example: Monday
+        is_closed:
+          type: boolean
+          example: false
+        jam_buka:
+          type: string
+          nullable: true
+          description: Format HH:MM, null jika tutup
+          example: '11:00'
+        jam_tutup:
+          type: string
+          nullable: true
+          description: Format HH:MM, null jika tutup
+          example: '23:00'
+    OperatingHoursResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        message: { type: string, example: Jam operasional berhasil diambil }
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperatingHour'
+    ErrorResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        message: { type: string }
+        data:
+          nullable: true
+          example: null
+
+  responses:
+    NotFound:
+      description: Data belum tersedia di database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            message: Data belum tersedia
+            data: null
+    MethodNotAllowed:
+      description: Method tidak diizinkan (hanya GET)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            message: Method tidak diizinkan
+            data: null

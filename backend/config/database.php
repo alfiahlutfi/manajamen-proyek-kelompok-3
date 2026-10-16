@@ -1,15 +1,22 @@
 <?php
 
-$host = "localhost";
-$username = "root";
-$password = "";
-$database = "db_cafe_acala";
+const DB_HOST = 'localhost';
+const DB_NAME = 'db_cafe_acala_test';
+const DB_USER = 'root';
+const DB_PASS = '';
 
-$conn = new mysqli($host, $username, $password, $database);
+function db(): PDO
+{
+    static $pdo = null;
 
-if ($conn->connect_error) {
-    http_response_code(500);
-    die("Koneksi database gagal");
+    if ($pdo === null) {
+        $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ]);
+    }
+
+    return $pdo;
 }
-
-$conn->set_charset("utf8mb4");
