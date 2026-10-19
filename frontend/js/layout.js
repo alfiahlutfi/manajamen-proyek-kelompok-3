@@ -111,4 +111,4 @@ async function renderLayout() {
   }
 }
 
-renderLayout();
+window.layoutSiap = renderLayout();

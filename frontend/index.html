@@ -3,14 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Café Ácala & Eatery: menu, event, reservasi, dan lokasi.">
   <title>Café Ácala</title>
+
+  <link rel="icon" href="assets/logo_acala.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap dulu, lalu CSS milik sendiri agar bisa menimpa Bootstrap -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- states.js dimuat di head dengan defer: tetap berjalan berurutan setelah DOM siap -->
+   <!-- Harus di head TANPA defer: beranda.js memakai fungsi/variabel dari dua file ini -->
+    <script src="js/states.js"></script>
+    <script src="js/loading.js"></script>
+
 </head>
-<body>
-  <header id="navbar" class="navbar"></header>
+<body class="loading">
+
+  <div id="skeleton" role="status" aria-live="polite">
+    <img src="assets/home.svg" alt="Memuat...">
+  </div>
+
+  <header id="navbar" class="nav-acala"></header>
 
   <main>
 
@@ -28,32 +46,41 @@
     <section class="tembok">
       <h2 class="judul-kecil" id="nama">Cafe Acala</h2>
 
-      <!-- ABOUT -->
-      <div class="blok">
-        <figure class="foto-wrap kiri">
-          <img id="gambar-about" src="" alt="Tampak depan Café Ácala">
-          <span class="lubang" aria-hidden="true"></span>
-        </figure>
+      <!-- BUNGKUS SEMUA KONTEN ABOUT & RESERVASI -->
+      <div id="konten-profil-cafe">
 
-        <div class="blok-teks">
-          <h3 id="judul-about">Unfinished Escape</h3>
-          <p id="deskripsi"></p>
-          <a class="btn-garis" href="menu.html">Menu</a>
-        </div>
-      </div>
+        <!-- ABOUT -->
+        <div class="blok">
+          <figure class="foto-wrap kiri">
+            <img id="gambar-about"
+                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                 alt="Tampak depan Café Ácala">
+            <span class="lubang" aria-hidden="true"></span>
+          </figure>
 
-      <!-- RESERVASI -->
-      <div class="blok balik">
-        <div class="blok-teks">
-          <h3 id="judul-reservasi">Acala Reservation</h3>
-          <p id="deskripsi-reservasi"></p>
-          <a class="btn-garis" href="reservasi.html">Reservasi</a>
+          <div class="blok-teks">
+            <h3 id="judul-about">Unfinished Escape</h3>
+            <p id="deskripsi"></p>
+            <a class="btn-garis" href="menu.html">Menu</a>
+          </div>
         </div>
 
-        <figure class="foto-wrap kanan">
-          <img id="gambar-reservasi" src="" alt="Area indoor Café Ácala">
-          <span class="lubang" aria-hidden="true"></span>
-        </figure>
+        <!-- RESERVASI -->
+        <div class="blok balik">
+          <div class="blok-teks">
+            <h3 id="judul-reservasi">Acala Reservation</h3>
+            <p id="deskripsi-reservasi"></p>
+            <a class="btn-garis" href="reservasi.html">Reservasi</a>
+          </div>
+
+          <figure class="foto-wrap kanan">
+            <img id="gambar-reservasi"
+                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                 alt="Area indoor Café Ácala">
+            <span class="lubang" aria-hidden="true"></span>
+          </figure>
+        </div>
+
       </div>
     </section>
 
@@ -67,12 +94,12 @@
       </div>
     </section>
 
-    <!-- BEST SELLERS -->
+    <!-- Signature Series -->
     <div class="best-header-wrapper">
-      <h2>Our Best Sellers</h2>
+      <h2 id="best-judul">Signature Series</h2>
     </div>
 
-    <section class="best">
+    <section class="best" aria-labelledby="best-judul">
       <p>Nikmati vibe santai dengan menu andalan Acala</p>
       <div class="best-list" id="best-list"></div>
     </section>
@@ -91,6 +118,7 @@
           <iframe
             id="peta"
             title="Lokasi Cafe Acala"
+            src="about:blank"
             loading="lazy"
             allowfullscreen
             referrerpolicy="no-referrer-when-downgrade">
@@ -109,7 +137,7 @@
 
       <!-- Kolom 1: Logo -->
       <div class="footer-col footer-brand">
-        <img src="assets/logo_acala.png" alt="Logo Acala" class="footer-logo">
+        <img src="assets/logo_acala.png" alt="Logo Acala" class="footer-logo" loading="lazy">
       </div>
 
       <!-- Kolom 2: Get to Know Us -->
@@ -136,11 +164,11 @@
         <div class="footer-socials">
           <a id="footer-instagram" href="#" target="_blank"
              rel="noopener noreferrer" aria-label="Instagram">
-            <img src="assets/Instagram_logo_2022.svg.webp" alt="Instagram">
+            <img src="assets/Instagram_logo_2022.svg.webp" alt="" loading="lazy">
           </a>
           <a id="footer-tiktok" href="#" target="_blank"
              rel="noopener noreferrer" aria-label="TikTok">
-            <img src="assets/tiktok-icon2.png" alt="TikTok">
+            <img src="assets/tiktok-icon2.png" alt="" loading="lazy">
           </a>
         </div>
       </div>
@@ -154,8 +182,10 @@
 
   </footer>
 
-  <script src="js/api.js"></script>
-  <script src="js/layout.js"></script>
-  <script src="js/beranda.js"></script>
+<!-- Urutan penting: api -> layout (navbar) -> beranda (isi halaman) -->
+<script src="js/api.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/beranda.js"></script>
+
 </body>
 </html>
