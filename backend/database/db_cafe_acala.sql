@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 16, 2026 at 06:53 AM
+-- Generation Time: Oct 19, 2026 at 08:11 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -54,7 +54,7 @@ CREATE TABLE `area` (
   `lantai` int DEFAULT NULL,
   `jenis` enum('indoor','outdoor') COLLATE utf8mb4_unicode_ci NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `gambar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `urutan` int NOT NULL DEFAULT '0',
   `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -65,7 +65,7 @@ CREATE TABLE `area` (
 -- Dumping data for table `area`
 --
 
-INSERT INTO `area` (`id`, `nama_area`, `lantai`, `jenis`, `deskripsi`, `gambar`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `area` (`id`, `nama_area`, `lantai`, `jenis`, `deskripsi`, `foto`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Indoor Area', 1, 'indoor', 'Area indoor yang nyaman untuk menikmati kopi, makanan, maupun berkumpul bersama teman dan keluarga.', NULL, 1, 'aktif', '2026-10-07 05:38:42', '2026-10-07 05:38:42'),
 (2, 'Outdoor Area - Lantai 1', 1, 'outdoor', 'Area outdoor di lantai 1 dengan suasana terbuka dan santai, cocok untuk menikmati kopi dan makanan bersama teman maupun keluarga.', NULL, 2, 'aktif', '2026-10-07 05:38:42', '2026-10-07 05:38:42'),
 (3, 'Outdoor Area - Lantai 2', 2, 'outdoor', 'Area outdoor di lantai 2 yang menawarkan suasana terbuka dan nyaman untuk bersantai.', NULL, 3, 'aktif', '2026-10-07 05:38:42', '2026-10-07 05:38:42');
@@ -78,14 +78,12 @@ INSERT INTO `area` (`id`, `nama_area`, `lantai`, `jenis`, `deskripsi`, `gambar`,
 
 CREATE TABLE `cafe` (
   `id` int NOT NULL,
-  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
   `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `judul_deskripsi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `judul_reservasi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deskripsi_reservasi` text COLLATE utf8mb4_unicode_ci,
-  `gambar_reservasi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_reservasi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `alamat` text COLLATE utf8mb4_unicode_ci,
   `link_maps` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `maps_embed_url` text COLLATE utf8mb4_unicode_ci,
@@ -100,8 +98,8 @@ CREATE TABLE `cafe` (
 -- Dumping data for table `cafe`
 --
 
-INSERT INTO `cafe` (`id`, `nama`, `logo`, `deskripsi`, `foto`, `judul_deskripsi`, `judul_reservasi`, `deskripsi_reservasi`, `gambar_reservasi`, `alamat`, `link_maps`, `maps_embed_url`, `whatsapp`, `email`, `instagram`, `tiktok`, `updated_at`) VALUES
-(1, 'uploads/cafe/nama-cafe.png', 'uploads/cafe/logo-cafe.png', 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.jpg', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 878 787 578 08', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-10-13 08:57:58');
+INSERT INTO `cafe` (`id`, `deskripsi`, `foto`, `judul_deskripsi`, `judul_reservasi`, `deskripsi_reservasi`, `foto_reservasi`, `alamat`, `link_maps`, `maps_embed_url`, `whatsapp`, `email`, `instagram`, `tiktok`, `updated_at`) VALUES
+(1, 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.jpg', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 878 787 578 08', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-10-13 08:57:58');
 
 -- --------------------------------------------------------
 
@@ -138,7 +136,7 @@ CREATE TABLE `event` (
   `nama` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(170) COLLATE utf8mb4_unicode_ci NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `gambar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal` date DEFAULT NULL,
   `waktu` time DEFAULT NULL,
   `lokasi` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -151,7 +149,7 @@ CREATE TABLE `event` (
 -- Dumping data for table `event`
 --
 
-INSERT INTO `event` (`id`, `nama`, `slug`, `deskripsi`, `gambar`, `tanggal`, `waktu`, `lokasi`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `event` (`id`, `nama`, `slug`, `deskripsi`, `foto`, `tanggal`, `waktu`, `lokasi`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Coffee Workshop', 'coffee-workshop', 'Pelajari teknik meracik dan menyeduh kopi dalam pengalaman workshop yang seru dan interaktif.', 'uploads/event/coffe-workshop.jpg', '2026-10-11', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:48:25', '2026-10-13 08:09:26'),
 (2, 'Open Mic', 'open-mic', 'Nikmati malam penuh musik dan kreativitas, saat para talenta berbagi suara, cerita, dan penampilan terbaik mereka di panggung Cafe Acala.', 'uploads/event/open-mic.png', '2026-10-18', '09:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:50:16', '2026-10-13 08:10:09'),
 (3, 'Live Music', 'live-music', 'Nikmati suasana hangat bersama alunan musik secara langsung, ditemani kopi dan hidangan favorit di Cafe Acala.', 'uploads/event/live-music.png', '2026-10-31', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-10-13 08:10:46');
@@ -190,7 +188,7 @@ INSERT INTO `faq` (`id`, `pertanyaan`, `jawaban`, `urutan`, `status`, `created_a
 CREATE TABLE `gallery` (
   `id` int NOT NULL,
   `judul` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `gambar` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
   `urutan` int NOT NULL DEFAULT '0',
   `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
@@ -211,8 +209,8 @@ CREATE TABLE `menu` (
   `slug` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
   `harga` int NOT NULL,
-  `gambar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `label` enum('best_seller','new') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `label` enum('best_seller','new','signature') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `urutan` int NOT NULL DEFAULT '0',
   `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -223,8 +221,8 @@ CREATE TABLE `menu` (
 -- Dumping data for table `menu`
 --
 
-INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `gambar`, `label`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(5, 1, 'Cafe Latte', 'cafe-latte', NULL, 14000, 'uploads/menu/default-menu.png', 'best_seller', 1, 'aktif', '2026-10-13 07:56:12', '2026-10-13 08:58:38'),
+INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `foto`, `label`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
+(5, 1, 'Cafe Latte', 'cafe-latte', NULL, 14000, 'uploads/menu/default-menu.png', NULL, 1, 'aktif', '2026-10-13 07:56:12', '2026-10-19 02:44:36'),
 (6, 1, 'Cappuccino', 'cappuccino', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 2, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (7, 1, 'Mochoccino', 'mochoccino', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 3, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (8, 1, 'Cafe Latte Vanilla', 'cafe-latte-vanilla', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 4, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
@@ -233,13 +231,13 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (11, 1, 'Cafe Latte Tiramisu', 'cafe-latte-tiramisu', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 7, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (12, 1, 'Cafe Latte Salted Caramel', 'cafe-latte-salted-caramel', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 8, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (13, 1, 'Comel', 'comel', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 9, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
-(14, 1, 'Acala Basic', 'acala-basic', 'Hanya tersedia dingin (ice only).', 18000, 'uploads/menu/default-menu.png', NULL, 10, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(14, 1, 'Acala Basic', 'acala-basic', 'Hanya tersedia dingin (ice only).', 18000, 'uploads/menu/acala-basic.png', 'signature', 10, 'aktif', '2026-10-13 07:56:12', '2026-10-19 02:12:19'),
 (15, 1, 'Hammock', 'hammock', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 11, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (16, 1, 'Bootcamp', 'bootcamp', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 12, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (17, 1, 'Salted Caramel Mocca', 'salted-caramel-mocca', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 13, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (18, 1, 'Matchaccino', 'matchaccino', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 14, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (19, 1, 'Red Fusion', 'red-fusion', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/default-menu.png', NULL, 15, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
-(20, 1, 'Butterscotch Sea Salt', 'butterscotch-sea-salt', 'Hanya tersedia dingin (ice only).', 22000, 'uploads/menu/default-menu.png', 'best_seller', 16, 'aktif', '2026-10-13 07:56:12', '2026-10-13 08:58:58'),
+(20, 1, 'Butterscotch Sea Salt', 'butterscotch-sea-salt', 'Hanya tersedia dingin (ice only).', 22000, 'uploads/menu/butterscotch-sea-salt.png', 'signature', 16, 'aktif', '2026-10-13 07:56:12', '2026-10-19 07:57:27'),
 (21, 2, 'Americano', 'americano', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 17, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (22, 2, 'Long Black', 'long-black', NULL, 13000, 'uploads/menu/default-menu.png', NULL, 18, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (23, 2, 'Romano', 'romano', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 19, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
@@ -261,7 +259,7 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (39, 5, 'Red Velvet', 'red-velvet', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 35, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (40, 5, 'Cookies n Cream', 'cookies-n-cream', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 36, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (41, 5, 'Matcha Orange', 'matcha-orange', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 37, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
-(42, 5, 'Lotus Matcha Coco', 'lotus-matcha-coco', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 38, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(42, 5, 'Lotus Matcha Coco', 'lotus-matcha-coco', 'Matcha yang smooth, creamy dan penuh karakter.', 20000, 'uploads/menu/lotus-matcha-coco.png', 'signature', 38, 'aktif', '2026-10-13 07:56:12', '2026-10-19 02:09:23'),
 (43, 5, 'Matcha Mango', 'matcha-mango', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 39, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (44, 6, 'Orange Mojito', 'orange-mojito', NULL, 16000, 'uploads/menu/default-menu.png', NULL, 40, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (45, 6, 'Strawberry Mojito', 'strawberry-mojito', NULL, 15000, 'uploads/menu/default-menu.png', NULL, 41, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
@@ -298,7 +296,8 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (76, 11, 'Mie Acala', 'mie-acala', NULL, 18000, 'uploads/menu/default-menu.png', NULL, 72, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (77, 12, 'Cheese Beef Burger', 'cheese-beef-burger', NULL, 22000, 'uploads/menu/default-menu.png', NULL, 73, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
 (78, 12, 'Cheese Chicken Burger', 'cheese-chicken-burger', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 74, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
-(79, 12, 'Cheese Egg Burger', 'cheese-egg-burger', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 75, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12');
+(79, 12, 'Cheese Egg Burger', 'cheese-egg-burger', NULL, 20000, 'uploads/menu/default-menu.png', NULL, 75, 'aktif', '2026-10-13 07:56:12', '2026-10-13 07:56:12'),
+(80, 13, 'Lotus Nut Cloudshake', 'lotus-nut-cloudshake', 'Milkshake creamy dengan rasa Biscoff yang rich dan bikin nagih.', 20000, 'uploads/menu/lotus-nut-cloudshake.png', 'signature', 1, 'aktif', '2026-10-19 02:54:01', '2026-10-19 02:55:14');
 
 -- --------------------------------------------------------
 
@@ -332,7 +331,8 @@ INSERT INTO `menu_category` (`id`, `nama`, `slug`, `urutan`, `status`, `created_
 (9, 'Pastry', 'pastry', 9, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
 (10, 'Snack', 'snack', 10, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
 (11, 'Main Course', 'main-course', 11, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
-(12, 'Light Meal', 'light-meal', 12, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56');
+(12, 'Light Meal', 'light-meal', 12, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
+(13, 'Milkshake', 'milkshake', 13, 'aktif', '2026-10-19 02:51:54', '2026-10-19 02:51:54');
 
 -- --------------------------------------------------------
 
@@ -486,13 +486,13 @@ ALTER TABLE `gallery`
 -- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `menu_category`
 --
 ALTER TABLE `menu_category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `operating_hours`
