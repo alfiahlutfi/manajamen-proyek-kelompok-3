@@ -10,7 +10,8 @@ simulate_error('Profil cafe gagal dimuat');
 
 try {
     $stmt = db()->query(
-        'SELECT id, foto, judul_deskripsi, deskripsi
+        'SELECT id, foto, judul_deskripsi, deskripsi,
+                whatsapp, email, instagram, tiktok
            FROM cafe
           ORDER BY id
           LIMIT 1'

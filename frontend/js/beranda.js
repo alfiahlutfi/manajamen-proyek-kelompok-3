@@ -1,4 +1,3 @@
-
 // ===== KODE UJI: hapus setelah selesai =====
 //const UJI_GAGAL = ["/cafe"];
 //const _fetchAsli = fetchData;
@@ -86,10 +85,9 @@ function skeletonJam(wadah) {
 }
 
 function skeletonBest(wadah, jumlah = 4) {
-  wadah.innerHTML = Array.from({ length: jumlah }, (_, k) => {
-    const sorot = jumlah >= 3 && k === 2;
-    return `<div class="skel" style="flex:${sorot ? 1.6 : 1} 1 0;max-width:${sorot ? 290 : 190}px;height:${sorot ? 340 : 240}px"></div>`;
-  }).join("");
+  wadah.innerHTML = Array.from({ length: jumlah }, () =>
+    `<div class="skel" style="flex:1 1 0;height:240px"></div>`
+  ).join("");
 }
 
 const ID_TEKS_CAFE = ["judul-about", "deskripsi", "judul-reservasi", "deskripsi-reservasi"];
@@ -414,6 +412,51 @@ async function tampilkanBeranda() {
 /* =======================================================
    JAM OPERASIONAL
 ======================================================= */
+
+function tampilkanErrorJam(wadah) {
+  wadah.innerHTML = `
+    <div class="hours-error">
+      <svg
+        class="hours-error-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="56"
+        height="56"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M5 9a13 13 0 0 1 14 0"/>
+        <path d="M8.5 12.5a7 7 0 0 1 7 0"/>
+        <path d="M12 16h.01"/>
+        <path d="M2 2l20 20"/>
+      </svg>
+
+      <h3>Tidak Ada Koneksi</h3>
+
+      <p>
+        Harap Periksa Koneksimu, Lalu Muat Ulang
+        Informasi Jam Operasional
+      </p>
+
+      <button
+        type="button"
+        class="hours-reload-btn"
+        id="reload-hours"
+      >
+        Muat Ulang
+      </button>
+    </div>
+  `;
+
+  wadah.querySelector("#reload-hours").addEventListener("click", async () => {
+    await tampilkanJam(cafeTerakhir);
+  });
+}
+
 async function tampilkanJam(cafe) {
   const openHours = document.getElementById("open-hours");
   if (!openHours) return;
@@ -421,29 +464,35 @@ async function tampilkanJam(cafe) {
   cafe = cafe || cafeTerakhir;
 
   skeletonJam(openHours);
-  const hours = await ambil("/operating-hours");
+  
+let hours;
 
-  if (!hours) {
-    openHours.innerHTML = `<p>Jam operasional belum tersedia.</p>`;
-    return;
-  }
+try {
+  hours = await ambil("/operating-hours");
+} catch (error) {
+  console.error("Gagal memuat jam operasional:", error);
+  tampilkanErrorJam(openHours);
+  return;
+}
 
-  const idCafe = cafe ? cafe.id : (hours[0] && hours[0].cafe_id);
-  const cafeHours = idCafe == null
-    ? hours
-    : hours.filter(item => String(item.cafe_id) === String(idCafe));
+if (!Array.isArray(hours)) {
+  tampilkanErrorJam(openHours);
+  return;
+}
+
+  const cafeHours = hours;
 
   if (cafeHours.length === 0) {
-    openHours.innerHTML = `<p>Jam operasional belum tersedia.</p>`;
-    return;
-  }
+  openHours.innerHTML = `<p>Jam operasional belum tersedia.</p>`;
+  return;
+}
 
-  openHours.innerHTML = kelompokJam(cafeHours).map(kelompok => `
-    <div>
-      <h3>${esc(kelompok.label)}</h3>
-      <p>${esc(formatJam(kelompok.buka))} - ${esc(formatJam(kelompok.tutup))}</p>
-    </div>
-  `).join("");
+openHours.innerHTML = kelompokJam(cafeHours).map(kelompok => `
+  <div>
+    <h3>${esc(kelompok.label)}</h3>
+    <p>${esc(formatJam(kelompok.buka))} - ${esc(formatJam(kelompok.tutup))}</p>
+  </div>
+`).join("");
 }
 
 /* =======================================================
@@ -640,18 +689,63 @@ async function tampilkanBest() {
     return;
   }
 
-  const sorot = best.length >= 3 ? 2 : 0;
-
-  wadah.innerHTML = best.map((m, k) => `
+  wadah.innerHTML = best.map(m => {
+    const teks = teksBadge(m);
+    return `
     <a
-      class="best-card${k === sorot ? " sorot" : ""}"
+      class="best-card"
       href="menu-detail.html?id=${encodeURIComponent(m.id)}"
     >
+      ${teks ? `<span class="best-badge" aria-hidden="true"><span>${esc(teks)}</span></span>` : ""}
       <img src="${esc(m.foto || "")}" alt="${esc(m.nama || "Menu")}" loading="lazy">
       <h3>${esc(m.nama || "")}</h3>
       <small>${esc(rupiahSingkat(m.harga))}</small>
     </a>
-  `).join("");
+  `;
+  }).join("");
+
+  pasangHoverBest(wadah);
+}
+
+/* Teks bintang: ambil dari kolom `label_teks` (diatur di database).
+   Kalau kosong, pakai teks bawaan sesuai kolom `label`. */
+const TEKS_BADGE_DEFAULT = {
+  best_seller: "Best Seller",
+  signature: "Signature",
+  new: "New"
+};
+
+function teksBadge(m) {
+  const kustom = String(m.label_teks || "").trim();
+  if (kustom) return kustom;
+  return TEKS_BADGE_DEFAULT[m.label] || "";
+}
+
+/* Awalnya semua card abu-abu. Card yang di-hover menjadi kuning & besar;
+   saat kursor keluar dari area list, semua kembali abu-abu. */
+function pasangHoverBest(wadah) {
+  const kartu = Array.from(wadah.querySelectorAll(".best-card"));
+  if (kartu.length === 0) return;
+
+  const aktifkan = (target) => {
+    kartu.forEach(k => k.classList.toggle("sorot", k === target));
+  };
+
+  kartu.forEach(k => {
+    // hanya mouse; di layar sentuh tap langsung membuka halaman menu
+    k.addEventListener("pointerenter", (e) => {
+      if (e.pointerType === "mouse") aktifkan(k);
+    });
+    // dukungan keyboard (Tab)
+    k.addEventListener("focus", () => aktifkan(k));
+  });
+
+  wadah.addEventListener("pointerleave", (e) => {
+    if (e.pointerType === "mouse") aktifkan(null);
+  });
+  wadah.addEventListener("focusout", (e) => {
+    if (!wadah.contains(e.relatedTarget)) aktifkan(null);
+  });
 }
 
 /* =======================================================

@@ -72,10 +72,7 @@ async function renderLayout() {
     `;
   }
 
-  if (!cafe) {
-    console.error("Data café tidak ditemukan; navbar memakai logo cadangan.");
-    return;
-  }
+    if (!cafe) return;
 
   const footerWhatsapp = document.getElementById("footer-whatsapp");
   if (footerWhatsapp) {
@@ -94,15 +91,11 @@ async function renderLayout() {
   const footerInstagram = document.getElementById("footer-instagram");
   if (footerInstagram) {
     footerInstagram.href = cafe.instagram || "#";
-    footerInstagram.target = "_blank";
-    footerInstagram.rel = "noopener noreferrer";
   }
 
   const footerTiktok = document.getElementById("footer-tiktok");
   if (footerTiktok) {
     footerTiktok.href = cafe.tiktok || "#";
-    footerTiktok.target = "_blank";
-    footerTiktok.rel = "noopener noreferrer";
   }
 
   const copyright = document.querySelector(".footer-bottom p");
