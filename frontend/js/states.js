@@ -130,7 +130,7 @@
     block.innerHTML = `
       <div class="failed-illustration-wrap">
         <img 
-          src="assets/muat.svg" 
+          src="assets/placeholder.png" 
           alt="Gagal Memuat Data" 
           class="failed-illustration-img"
         >

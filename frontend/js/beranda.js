@@ -11,6 +11,7 @@
   //return _fetchAsli(url);
 //};
 
+
 /* =======================================================
    ESCAPE HTML (Mencegah XSS)
 ======================================================= */
@@ -490,12 +491,12 @@ function heroRender() {
 
   judul.textContent = item.nama || "Café Ácala";
   btn.hidden = false;
-  btn.href = item.id_event
-    ? "event.html?id=" + encodeURIComponent(item.id_event)
+  btn.href = item.id
+    ? "event.html?id=" + encodeURIComponent(item.id)
     : "#";
 
-  bg.style.backgroundImage = item.gambar
-    ? `url("${String(item.gambar).replace(/"/g, "%22")}")`
+  bg.style.backgroundImage = item.foto
+    ? `url("${String(item.foto).replace(/"/g, "%22")}")`
     : "";
 
   const posisi = n === 1
@@ -510,7 +511,7 @@ function heroRender() {
         data-idx="${idx}"
         aria-label="${esc(d.nama || "Event")}"
       >
-        <img src="${esc(d.gambar || "")}" alt="${esc(d.nama || "Event")}">
+        <img src="${esc(d.foto || "")}" alt="${esc(d.nama || "Event")}">
       </button>
     `;
   }).join("");

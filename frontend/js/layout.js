@@ -7,8 +7,8 @@
 const MENU_NAV = [
   { label: "Beranda", href: "index.html" },
   { label: "Menu", href: "menu.html" },
-  { label: "Event", href: "index.html#event" },
-  { label: "Galeri", href: "galeri.html" },
+  { label: "Event", href: "event.html" },
+  { label: "Galeri", href: "gallery.html" },
   { label: "Reservasi", href: "reservasi.html" },
   { label: "FAQ", href: "faq.html" }
 ];
