@@ -1,5 +1,17 @@
+
 # Object file
 *.o
 
 # Ada Library Information
 *.ali
+
+# Database testing lokal
+/backend/database/db_cafe_acala_test.sql
+
+# Environment dan data sensitif
+.env
+.env.*
+!.env.example
+
+# Log
+*.log
