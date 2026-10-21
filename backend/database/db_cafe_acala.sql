@@ -211,6 +211,7 @@ CREATE TABLE `menu` (
   `harga` int NOT NULL,
   `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `label` enum('best_seller','new','signature') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `label_teks` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Teks pada badge bintang; NULL = pakai teks bawaan dari label',
   `urutan` int NOT NULL DEFAULT '0',
   `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,

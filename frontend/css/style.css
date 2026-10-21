@@ -216,11 +216,41 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
 }
 
 .retak-svg, .lampu { display: none; }
-.retak h2 { font-family: "Montserrat", sans-serif; font-size: clamp(36px, 5vw, 50px); color: #F5D76E; font-weight: 700; margin-bottom: 55px; letter-spacing: 5px; }
 
-.jam-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px 80px; text-align: center; }
-.jam-grid h3 { font-family: "Montserrat", sans-serif; color: #F5D76E; font-size: 25px; font-weight: 500; letter-spacing: 3px; }
-.jam-grid p { font-family: "Montserrat", sans-serif; color: #F5D76E; margin: 8px 0 0; font-size: 18px; letter-spacing: 3px; }
+.retak h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(36px, 5vw, 50px);
+  color: #F5D76E;
+  font-weight: 700;
+  margin-bottom: 55px;
+  border-bottom: none;
+  letter-spacing: 5px;
+}
+
+.jam-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px 80px;
+  text-align: center;
+}
+
+.jam-grid h3 {
+  font-family: "Montserrat", sans-serif;
+  color: #F5D76E;
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: 3px;
+}
+
+.jam-grid p {
+  font-family: "Montserrat", sans-serif;
+  color: #F5D76E;
+  margin: 8px 0 0;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 3px;
+}
 
 /* ========== BEST SELLERS ========== */
 .best-header-wrapper {
@@ -235,31 +265,88 @@ h1, h2, h3, h4 { font-weight: 400; margin: 0; }
 .best-header-wrapper h2 { font-family: "Montserrat", sans-serif; font-size: clamp(32px, 5vw, 48px); color: var(--hijau2); font-weight: 700; letter-spacing: 10px; margin: 0; }
 .best { background: var(--hijau-tua); color: #fff; text-align: center; padding: 14px 5vw 56px; }
 .best > p { margin-top: 0; margin-bottom: 30px; font-size: 18px; color: #fff; letter-spacing: 8px; }
-.best-list { display: flex; align-items: flex-end; justify-content: center; gap: 8px; max-width: 1100px; margin: 0 auto; padding-top: 18px; }
-.best-card { position: relative; flex: 1 1 0; max-width: 190px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; padding: 0 10px 20px; color: #111; text-decoration: none; }
-.best-card > * { position: relative; }
-.best-card img { height: 190px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 10px; }
-.best-card h3 { font-size: 17px; }
-.best-card small { font-size: 15px; }
-
-.best-card:nth-child(1)::before,
-.best-card:nth-child(2)::before,
-.best-card:nth-child(4)::before {
-  content: "";
-  position: absolute; left: 0; right: 0; bottom: -6px; top: 35%; background: #C4C4C4;
+.best-list {
+  display: flex; align-items: flex-end; justify-content: center; gap: 8px;
+  width: min(884px, 100%); min-height: 410px; margin: 0 auto; padding-top: 18px;
 }
-.best-card:nth-child(1)::before { clip-path: polygon(round 16px, 22% 0%, 78% 0%, 100% 100%, 0% 100%); }
-.best-card:nth-child(2)::before,
-.best-card:nth-child(4)::before { clip-path: polygon(round 16px, 0% 0%, 100% 0%, 78% 100%, 22% 100%); }
 
-.best-card.sorot { flex: 1.6 1 0; max-width: 290px; padding-bottom: 28px; }
+/* Kondisi awal: semua card abu-abu & berukuran sama. Lebar list dikunci agar posisi tidak bergeser saat hover. */
+.best-card {
+  position: relative; flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  text-align: center; padding: 0 10px 20px; color: #111; text-decoration: none;
+  transition: flex-grow .5s cubic-bezier(.34,1.3,.64,1), padding-bottom .5s cubic-bezier(.34,1.3,.64,1);
+}
+.best-card > * { position: relative; }
+.best-card img {
+  height: 190px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 10px;
+  transition: height .5s cubic-bezier(.34,1.3,.64,1);
+}
+.best-card h3 { font-size: 17px; transition: font-size .4s ease; }
+.best-card small { font-size: 15px; transition: font-size .4s ease; }
+
+/* Panel latar card */
+.best-card::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; top: 35%;
+  background: #C4C4C4;
+  clip-path: polygon(0% 0%, 100% 0%, 78% 100%, 22% 100%);
+  transition: top .5s cubic-bezier(.34,1.3,.64,1), bottom .5s cubic-bezier(.34,1.3,.64,1),
+              background-color .35s ease, clip-path .5s cubic-bezier(.34,1.3,.64,1);
+}
+.best-card:nth-child(1)::before { clip-path: polygon(22% 0%, 78% 0%, 100% 100%, 0% 100%); }
+
+/* Card aktif (di-hover): kuning, lebih besar, "pop up" */
+.best-card.sorot { flex-grow: 1.6; padding-bottom: 28px; z-index: 2; }
 .best-card.sorot::before {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -14px; top: 32%; background: var(--kuning);
-  clip-path: polygon(round 22px, 20% 0%, 80% 0%, 100% 100%, 0% 100%);
+  bottom: -14px; top: 32%; background: var(--kuning);
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
 }
 .best-card.sorot img { height: 290px; }
 .best-card.sorot h3 { font-size: 23px; }
 .best-card.sorot small { font-size: 17px; }
+
+/* Sudut membulat hanya di browser yang mendukung polygon(round ...) */
+@supports (clip-path: polygon(round 1px, 0 0, 1px 0, 1px 1px)) {
+  .best-card::before { clip-path: polygon(round 16px, 0% 0%, 100% 0%, 78% 100%, 22% 100%); }
+  .best-card:nth-child(1)::before { clip-path: polygon(round 16px, 22% 0%, 78% 0%, 100% 100%, 0% 100%); }
+  .best-card.sorot::before { clip-path: polygon(round 22px, 20% 0%, 80% 0%, 100% 100%, 0% 100%); }
+}
+
+/* Badge bintang (teks dari kolom menu.label_teks) */
+.best-badge {
+  position: absolute !important; top: 6px; left: -6px; z-index: 4;
+  width: 78px; height: 78px; pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.3));
+  transform: rotate(-14deg) scale(1);
+  transform-origin: center;
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+}
+.best-badge > span {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%; padding: 12px 7px;
+  background: var(--kuning); color: var(--hijau2);
+  clip-path: polygon(50.0% 0.0%, 59.1% 10.0%, 71.7% 5.0%, 75.6% 17.9%, 89.1% 18.8%, 86.9% 32.2%, 98.7% 38.9%, 91.0% 50.0%, 98.7% 61.1%, 86.9% 67.8%, 89.1% 81.2%, 75.6% 82.1%, 71.7% 95.0%, 59.1% 90.0%, 50.0% 100.0%, 40.9% 90.0%, 28.3% 95.0%, 24.4% 82.1%, 10.9% 81.2%, 13.1% 67.8%, 1.3% 61.1%, 9.0% 50.0%, 1.3% 38.9%, 13.1% 32.2%, 10.9% 18.8%, 24.4% 17.9%, 28.3% 5.0%, 40.9% 10.0%);
+  font-size: 8.5px; font-weight: 800; line-height: 1.1; letter-spacing: 0;
+  text-transform: uppercase; text-align: center; overflow-wrap: break-word; word-break: normal;
+}
+.best-card.sorot .best-badge { transform: rotate(-8deg) scale(1.3); }
+
+@media (max-width: 700px) {
+  .best > p { letter-spacing: 3px; font-size: 14px; }
+  .best-list { min-height: 300px; gap: 4px; }
+  .best-card { padding: 0 4px 14px; }
+  .best-card img, .best-card.sorot img { height: 110px; }
+  .best-card.sorot img { height: 150px; }
+  .best-card h3 { font-size: 12px; }
+  .best-card.sorot h3 { font-size: 15px; }
+  .best-card small, .best-card.sorot small { font-size: 11px; }
+  .best-badge { width: 54px; height: 54px; }
+  .best-badge > span { font-size: 6.5px; padding: 9px 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .best-card, .best-card::before, .best-card img, .best-card h3, .best-card small, .best-badge { transition: none; }
+}
 
 /* ========== LOKASI ========== */
 .lokasi-section {
@@ -984,4 +1071,80 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
 
 @media (max-width: 576px) {
   .menu-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ERROR STATE - OPERATING HOURS */
+.hours-error {
+  width: 100%;
+  min-height: 270px;
+  box-sizing: border-box;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #e8e8e8;
+  color: #2d5f2e;
+}
+
+.hours-error-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 20px;
+  color: #2d5f2e;
+}
+
+.hours-error h3 {
+  margin: 0 0 4px;
+  color: #2d5f2e;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.hours-error p {
+  max-width: 320px;
+  margin: 0 0 22px;
+  color: #2d5f2e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  line-height: 1.7;
+}
+
+.hours-reload-btn {
+  padding: 7px 16px;
+  border: 0;
+  border-radius: 0;
+  background: #2d5f2e;
+  color: #fff;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  cursor: pointer;
+}
+
+.hours-reload-btn:hover {
+  background: #1f4722;
+}
+
+@media (max-width: 480px) {
+  .hours-error {
+    min-height: 240px;
+    padding: 28px 16px;
+  }
+
+  .hours-error h3 {
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+
+  .hours-error p {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
 }

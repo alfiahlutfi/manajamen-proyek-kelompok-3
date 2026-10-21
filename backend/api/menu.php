@@ -24,7 +24,7 @@ function kirim_menu_pilihan(): void
         respond(400, false, 'Label tidak valid. Gunakan best_seller, signature, atau new');
     }
 
-    $sql = 'SELECT id, label, foto, nama, harga
+    $sql = 'SELECT id, label, label_teks, foto, nama, harga
               FROM menu
              WHERE status = \'aktif\'
                AND label IS NOT NULL';
@@ -46,6 +46,7 @@ function kirim_menu_pilihan(): void
             return [
                 'id'    => (int) $r['id'],
                 'label' => $r['label'],   // best_seller | signature | new
+                'label_teks' => $r['label_teks'], // teks pada bintang (boleh NULL -> FE pakai teks bawaan)
                 'foto'  => $r['foto'],    // path relatif (kolom gambar), contoh: uploads/menu/nama-file.png
                 'nama'  => $r['nama'],
                 'harga' => (int) $r['harga'],
