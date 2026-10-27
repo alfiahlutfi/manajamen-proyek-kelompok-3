@@ -8,15 +8,15 @@ require_once __DIR__ . '/../config/response.php';
 require_once __DIR__ . '/../config/database.php';
 
 only_get();
-simulate_error('Detail event gagal dimuat');
+simulate_error('Detail event gagal dimuat', 'EVE-5001');
 
 $id = $_GET['id'] ?? '';
 
 if ($id === '') {
-    respond(400, false, 'Parameter id wajib diisi');
+    respond(400, false, 'Parameter id wajib diisi', null, 'EVE-4001');
 }
 if (!ctype_digit((string) $id) || (int) $id < 1) {
-    respond(400, false, 'Parameter id tidak valid');
+    respond(400, false, 'Parameter id tidak valid', null, 'EVE-4002');
 }
 
 try {
@@ -30,7 +30,7 @@ try {
     $r = $stmt->fetch();
 
     if (!$r) {
-        respond(404, false, 'Event tidak ditemukan');
+        respond(404, false, 'Event tidak ditemukan', null, 'EVE-4041');
     }
 
     respond(200, true, 'Detail event berhasil diambil', [
@@ -45,5 +45,5 @@ try {
 
 } catch (PDOException $e) {
     error_log('[event.php] ' . $e->getMessage());
-    respond(500, false, 'Detail event gagal dimuat');
+    respond(500, false, 'Detail event gagal dimuat', null, 'EVE-5002');
 }

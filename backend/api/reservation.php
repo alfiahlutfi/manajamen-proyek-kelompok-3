@@ -8,7 +8,7 @@ require_once __DIR__ . '/../config/response.php';
 require_once __DIR__ . '/../config/database.php';
 
 only_get();
-simulate_error('Deskripsi reservasi gagal dimuat');
+simulate_error('Deskripsi reservasi gagal dimuat', 'RES-5001');
 
 try {
     $stmt = db()->query(
@@ -22,7 +22,7 @@ try {
     $row = $stmt->fetch();
 
     if (!$row) {
-        respond(404, false, 'Data deskripsi reservasi belum tersedia');
+        respond(404, false, 'Data deskripsi reservasi belum tersedia', null, 'RES-4041');
     }
 
     // foto dikirim sebagai path relatif (contoh: uploads/cafe/gambar-reservasi.jpg),
@@ -32,5 +32,5 @@ try {
 
 } catch (PDOException $e) {
     error_log('[reservation.php] ' . $e->getMessage());
-    respond(500, false, 'Deskripsi reservasi gagal dimuat');
+    respond(500, false, 'Deskripsi reservasi gagal dimuat', null, 'RES-5002');
 }

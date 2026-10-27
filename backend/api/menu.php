@@ -17,14 +17,14 @@ const LABEL_MENU       = ['best_seller', 'signature', 'new'];
  */
 function kirim_menu_pilihan(): void
 {
-    simulate_error('Menu pilihan gagal dimuat');
+    simulate_error('Menu pilihan gagal dimuat', 'MNU-5001');
 
     $label = $_GET['label'] ?? '';
     if ($label !== '' && !in_array($label, LABEL_MENU, true)) {
-        respond(400, false, 'Label tidak valid. Gunakan best_seller, signature, atau new');
+        respond(400, false, 'Label tidak valid. Gunakan best_seller, signature, atau new', null, 'MNU-4001');
     }
 
-    $sql = 'SELECT id, label, label_teks, foto, nama, harga
+    $sql = 'SELECT id, label, foto, nama, harga
               FROM menu
              WHERE status = \'aktif\'
                AND label IS NOT NULL';
@@ -46,7 +46,6 @@ function kirim_menu_pilihan(): void
             return [
                 'id'    => (int) $r['id'],
                 'label' => $r['label'],   // best_seller | signature | new
-                'label_teks' => $r['label_teks'], // teks pada bintang (boleh NULL -> FE pakai teks bawaan)
                 'foto'  => $r['foto'],    // path relatif (kolom gambar), contoh: uploads/menu/nama-file.png
                 'nama'  => $r['nama'],
                 'harga' => (int) $r['harga'],
@@ -62,7 +61,7 @@ function kirim_menu_pilihan(): void
 
     } catch (PDOException $e) {
         error_log('[menu.php] ' . $e->getMessage());
-        respond(500, false, 'Menu pilihan gagal dimuat');
+        respond(500, false, 'Menu pilihan gagal dimuat', null, 'MNU-5002');
     }
 }
 
@@ -73,4 +72,4 @@ if (($_GET['featured'] ?? '') === '1') {
 }
 
 // Mode lain belum tersedia
-respond(400, false, 'Parameter tidak dikenali. Gunakan ?featured=1');
+respond(400, false, 'Parameter tidak dikenali. Gunakan ?featured=1', null, 'MNU-4002');

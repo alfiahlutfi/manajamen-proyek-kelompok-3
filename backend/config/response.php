@@ -13,13 +13,28 @@ const APP_DEBUG = true;
 
 /**
  * Kirim response JSON lalu hentikan script.
- * Format selalu: { success, message, data }
+ * Format sekarang mendukung error_code untuk keperluan SQA/Testing.
  */
-function respond(int $status, bool $success, string $message, $data = null): void
+function respond(int $status, bool $success, string $message, $data = null, ?string $error_code = null): void
 {
     http_response_code($status);
+    
+    // Menyusun response dasar
+    $payload = [
+        'success' => $success,
+        'message' => $message
+    ];
+
+    // PERBAIKAN QA: Jika gagal dan ada error_code, sisipkan ke dalam JSON
+    if (!$success && $error_code !== null) {
+        $payload['error_code'] = $error_code;
+    }
+
+    // Properti data tetap disertakan sesuai struktur awal Anda
+    $payload['data'] = $data;
+
     echo json_encode(
-        ['success' => $success, 'message' => $message, 'data' => $data],
+        $payload,
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
     );
     exit;
@@ -40,7 +55,8 @@ function only_get(): void
 
     if ($method !== 'GET') {
         header('Allow: GET');
-        respond(405, false, 'Method tidak diizinkan');
+        // PERBAIKAN QA: Menambahkan error code global untuk method yang salah
+        respond(405, false, 'Method tidak diizinkan', null, 'SYS-4050');
     }
 }
 
@@ -48,10 +64,11 @@ function only_get(): void
  * Cara SQA mensimulasikan error: tambahkan ?simulate_error=1 pada URL.
  * Hanya aktif jika APP_DEBUG = true.
  */
-function simulate_error(string $message): void
+// PERBAIKAN QA: Menambahkan parameter $error_code agar simulasi error memiliki kode unik
+function simulate_error(string $message, string $error_code): void
 {
     if (APP_DEBUG && ($_GET['simulate_error'] ?? '') === '1') {
-        respond(500, false, $message);
+        respond(500, false, $message, null, $error_code);
     }
 }
 

@@ -12,7 +12,9 @@ require_once __DIR__ . '/../config/database.php';
 const MAX_EVENT_PILIHAN = 3;
 
 only_get();
-simulate_error('Event pilihan gagal dimuat');
+
+// Menambahkan error code 'CAR-5001' untuk simulasi error
+simulate_error('Event pilihan gagal dimuat', 'CAR-5001');
 
 try {
     $stmt = db()->query(
@@ -44,5 +46,6 @@ try {
 
 } catch (PDOException $e) {
     error_log('[carousel.php] ' . $e->getMessage());
-    respond(500, false, 'Event pilihan gagal dimuat');
+    // Menambahkan null untuk parameter data dan error code 'CAR-5002' untuk database error
+    respond(500, false, 'Event pilihan gagal dimuat', null, 'CAR-5002');
 }
