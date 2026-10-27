@@ -1,12 +1,11 @@
 
-
 /* =======================================================
    PENGATURAN
 ======================================================= */
 const PLACEHOLDER_FOTO = "assets/placeholder.png"; // Placeholder gambar
 const SKELETON_GAMBAR  = "assets/Skeleton.svg";        // Gambar skeleton halaman penuh
 const MIN_SKELETON     = 1500;  // Skeleton minimal tampil (ms)
-const BATAS_WAKTU      = 8000;  // Batas tunggu per data / foto / peta (ms)
+const BATAS_WAKTU      = 5000;  // Batas tunggu per data / foto / peta (ms)
 
 /* =======================================================
    ESCAPE HTML (Mencegah XSS)
@@ -219,6 +218,7 @@ function pasangPeta(wadah, iframe, url) {
       resolve(false);
       return;
     }
+
     wadah.classList.remove("gagal-foto");
     wadah.querySelectorAll(".peta-placeholder").forEach(el => el.remove());
 
@@ -234,6 +234,7 @@ function pasangPeta(wadah, iframe, url) {
       if (!berhasil) {
         wadah.classList.add("gagal-foto");
         iframe.removeAttribute("src");
+
         const img = new Image();
         img.className = "peta-placeholder";
         img.src = PLACEHOLDER_FOTO;
@@ -293,77 +294,35 @@ async function isiBeranda() {
   const c = cafe || {};
   const nama = c.nama || "Café Ácala";
 
-  // ----- ABOUT (PROFIL CAFE) -----
+    // ----- ABOUT (PROFIL CAFE) -----
   const judulAbout = document.getElementById("judul-about");
   const deskripsi  = document.getElementById("deskripsi");
 
-await pasangFoto(
-    document.querySelector(".foto-wrap.kiri"),
-    c.gambar_about || c.foto || "",
-    "Tampak depan " + nama
-  );
+  // Judul: pakai database kalau ada, kalau tidak pertahankan teks statis HTML
+  const judulDb = c.judul_about || c.judul;
+  if (judulAbout && judulDb) judulAbout.textContent = judulDb;
 
-  // Ubah baris ini menjadi false supaya kodenya menganggap teks gagal/kosong
-  const teksAboutOk = false; 
-
-  // Pesan khusus jika data kafe gagal/kosong
-  tampilPesan(
-    deskripsi,
-    "profil",
-    "Gagal mengambil data cafe" // <--- Paksa teks pesannya tampil di sini
-  );
+  const deskripsiOk = isiTeks(deskripsi, c.deskripsi_about || c.deskripsi);
+  tampilPesan(deskripsi, "profil", !cafe || !deskripsiOk ? "Gagal memuat profil cafe" : "");
 
   // ----- RESERVASI -----
   const judulReservasi     = document.getElementById("judul-reservasi");
   const deskripsiReservasi = document.getElementById("deskripsi-reservasi");
 
-  await pasangFoto(
-    document.querySelector(".foto-wrap.kanan"),
-    reservasi.foto || c.gambar_reservasi || "",
-    "Area indoor " + nama
-  );
+  const judulResDb = reservasi.judul || c.judul_reservasi;
+  if (judulReservasi && judulResDb) judulReservasi.textContent = judulResDb;
 
-  const teksReservasiOk = [
-    isiTeks(judulReservasi, reservasi.judul || c.judul_reservasi),
-    isiTeks(deskripsiReservasi, reservasi.deskripsi || c.deskripsi_reservasi)
-  ].every(Boolean);
+  const deskripsiResOk = isiTeks(deskripsiReservasi, reservasi.deskripsi || c.deskripsi_reservasi);
+  tampilPesan(deskripsiReservasi, "reservasi", !reservasiData || !deskripsiResOk ? "Gagal memuat data reservasi" : "");
 
-  // Pesan khusus jika data reservasi gagal/kosong
-  tampilPesan(
-    deskripsiReservasi,
-    "reservasi",
-    !reservasiData || !teksReservasiOk ? "Gagal memuat data reservasi" : ""
-  );
-
-  // ----- FOOTER -----
-  if (cafe) {
-    const footerWhatsapp = document.getElementById("footer-whatsapp");
-    if (footerWhatsapp && cafe.whatsapp) {
-      footerWhatsapp.textContent = cafe.whatsapp;
-      footerWhatsapp.href = "https://wa.me/" + cafe.whatsapp.replace(/\D/g, "");
-      footerWhatsapp.target = "_blank";
-      footerWhatsapp.rel = "noopener noreferrer";
-    }
-    const footerEmail = document.getElementById("footer-email");
-    if (footerEmail && cafe.email) {
-      footerEmail.textContent = cafe.email;
-      footerEmail.href = "mailto:" + cafe.email;
-    }
-    const footerInstagram = document.getElementById("footer-instagram");
-    if (footerInstagram && cafe.instagram) {
-      footerInstagram.href = cafe.instagram;
-      footerInstagram.target = "_blank";
-      footerInstagram.rel = "noopener noreferrer";
-    }
-    const footerTiktok = document.getElementById("footer-tiktok");
-    if (footerTiktok && cafe.tiktok) {
-      footerTiktok.href = cafe.tiktok;
-      footerTiktok.target = "_blank";
-      footerTiktok.rel = "noopener noreferrer";
-    }
-  }
-
-  // ----- JAM OPERASIONAL -----
+  // Foto dipasang bersamaan, tidak menahan teks
+  await Promise.all([
+    pasangFoto(document.querySelector(".foto-wrap.kiri"),
+      c.gambar_about || c.foto || "", "Tampak depan " + nama),
+    pasangFoto(document.querySelector(".foto-wrap.kanan"),
+      reservasi.foto || c.gambar_reservasi || "", "Area indoor " + nama)
+  ]);
+  
  // ----- JAM OPERASIONAL -----
   const openHours = document.getElementById("open-hours");
   if (!openHours) return;
@@ -408,15 +367,17 @@ async function isiLokasi() {
   const btnMaps = document.getElementById("btn-maps");
   const peta    = document.getElementById("peta");
 
-  // Alamat & pesan "Gagal memuat lokasi cafe"
+  // Alamat
   const alamatOk = isiTeks(alamat, l.alamat);
+
+  // Pesan gagal hanya jika data lokasi gagal diambil / alamat kosong
   tampilPesan(
     alamat,
     "lokasi",
     !lokasi || !alamatOk ? "Gagal memuat lokasi cafe" : ""
   );
 
-  // Tombol Google Maps
+  // Tombol Maps
   const linkMaps = String(l.link_maps || "").trim();
   const linkOk = urlGoogleMaps(linkMaps);
 
@@ -425,25 +386,22 @@ async function isiLokasi() {
       btnMaps.href = linkMaps;
       btnMaps.target = "_blank";
       btnMaps.rel = "noopener noreferrer";
+      btnMaps.style.pointerEvents = "auto";
+      btnMaps.style.opacity = "1";
     } else {
-      btnMaps.href = "#";
+      btnMaps.removeAttribute("href");
       btnMaps.removeAttribute("target");
+      btnMaps.style.pointerEvents = "none";
+      btnMaps.style.opacity = "0.6";
     }
-
-    btnMaps.onclick = (e) => {
-      if (!linkOk) {
-        e.preventDefault();
-        tampilPesan(btnMaps, "maps", "Gagal membuka Google Maps");
-      }
-    };
   }
 
-  // Peta embed & pesan "Gagal membuka Google Maps"
+  // Peta embed
   const mapUrl = ambilUrlEmbed(l.link_maps_embed || l.maps_embed_url || l.peta_embed || "");
-  const petaOk = await pasangPeta(peta && peta.parentElement, peta, mapUrl);
+  const wadahPeta = peta ? peta.parentElement : null;
 
-  if (lokasi && !petaOk) {
-    tampilPesan(btnMaps || alamat, "maps", "Gagal membuka Google Maps");
+  if (wadahPeta) {
+    await pasangPeta(wadahPeta, peta, mapUrl);
   }
 }
 
