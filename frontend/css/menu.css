@@ -1,0 +1,271 @@
+/* ======================================================
+   VARIABLE WARNA & TEMA CAFE ACALA
+   ====================================================== */
+:root {
+  --acala-hijau-tua: #2D5F2E;
+  --acala-hijau-sidebar: #9EAF94;
+  --acala-kuning: #E8CA65;
+  --acala-bg-lembut: #E5EADF;
+  --acala-teks-dark: #2B3A2C;
+}
+
+/* Base Page Setup */
+.menu-page {
+  font-family: "Montserrat", sans-serif;
+  background-color: #DDE4D7;
+  min-height: 100vh;
+  padding: 40px 0 60px;
+}
+
+/* Header Title (Jika Digunakan) */
+.menu-header-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.menu-header-title h1 {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--acala-hijau-tua);
+  letter-spacing: 8px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.menu-header-title p {
+  font-size: 14px;
+  color: #555;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.menu-header-title .garis-kuning {
+  width: 50px;
+  height: 4px;
+  background-color: var(--acala-kuning);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* Grid Layout 2 Kolom (Sidebar + Content) */
+.menu-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 35px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 30px;
+  align-items: start;
+}
+
+/* ======================================================
+   SIDEBAR KATEGORI (Tepi & Warna Rapi)
+   ====================================================== */
+aside {
+  background-color: var(--acala-hijau-sidebar);
+  padding: 24px 18px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.kategori-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kategori-list li {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--acala-teks-dark);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  white-space: nowrap;
+}
+
+.kategori-list li:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: var(--acala-hijau-tua);
+}
+
+.kategori-list li.aktif {
+  background-color: #FFFFFF;
+  color: var(--acala-hijau-tua);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding-left: 24px;
+}
+
+/* ======================================================
+   GRID KARTU MENU
+   ====================================================== */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  align-items: center;
+  min-height: 520px;
+}
+
+.menu-grid.swap {
+  animation: fadeIn 0.35s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.3; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Kartu Menu (Bentuk Sudut Melengkung Khas Acala) */
+.menu-card {
+  position: relative;
+  background-color: var(--acala-hijau-tua, #2D5F2E);
+  height: 280px; /* Ditinggikan sedikit agar ruang foto leluasa */
+  border-radius: 0 45px 0 45px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  overflow: visible; /* Pastikan gambar tidak terpotong */
+}
+
+/* Posisi Foto Gelas/Cangkir Menu */
+.menu-card .cup {
+  position: absolute;
+  top: -35px; /* Membuat gambar sedikit keluar ke atas kartu seperti di desain */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 190px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+  z-index: 2;
+}
+
+.menu-card .meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  z-index: 3;
+}
+
+.menu-card .nama {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--acala-kuning, #E8CA65);
+  letter-spacing: 0.3px;
+}
+
+.menu-card .harga {
+  background-color: var(--acala-kuning, #E8CA65);
+  color: var(--acala-hijau-tua, #2D5F2E);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+
+/* ======================================================
+   PAGER / PAGINATION MENU (Dengan Tombol < dan >)
+   ====================================================== */
+.menu-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 35px;
+}
+
+/* Tombol Dot */
+.menu-pager button.dot {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: #A5B89B;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.menu-pager button.dot.aktif,
+.menu-pager button.dot:hover {
+  background-color: var(--acala-hijau-tua);
+  transform: scale(1.25);
+}
+
+/* Tombol Panah Prev (<) & Next (>) */
+.menu-pager .nav-arrow {
+  background: transparent;
+  border: none;
+  color: var(--acala-hijau-tua);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.menu-pager .nav-arrow:hover:not([disabled]) {
+  transform: scale(1.3);
+}
+
+.menu-pager .nav-arrow[disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.badge-burst {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 55px;
+  height: 55px;
+  background-image: url('../assets/bestseller.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: #1b4332; /* Warna teks hijau gelap khas Ácala */
+  text-align: center;
+  line-height: 1.1;
+  z-index: 2;
+}
+
+/* Jika badge berlabel NEW */
+.badge-burst.new {
+  background-image: url('../assets/new.svg');
+}
+
+/* ======================================================
+   RESPONSIF (MOBILE & TABLET)
+   ====================================================== */
+@media (max-width: 992px) {
+  .menu-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
