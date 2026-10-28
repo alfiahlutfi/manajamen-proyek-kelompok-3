@@ -4,7 +4,9 @@
 //   ?featured=1         -> menu pilihan untuk beranda (card 4.1).
 //     Opsional: &label=best_seller | signature | new   (menyaring menu pilihan berdasarkan label)
 //   ?category_id={id}   -> daftar menu berdasarkan kategori untuk halaman Menu (card 9.1.1).
+//   ?id={id}            -> detail satu menu untuk pop-up detail menu (card 9.2.1).
 // Jika featured=1 dan category_id dikirim bersamaan, mode featured yang dipakai.
+// Urutan prioritas mode: featured, category_id, id.
 // Mode lain (mis. daftar semua menu tanpa kategori) dikerjakan di card terpisah:
 // tambahkan di bawah blok yang sudah ada, jangan mengubah blok card sebelumnya.
 
@@ -128,6 +130,53 @@ function kirim_menu_per_kategori(): void
     }
 }
 
+/**
+ * Card 9.2.1 - Detail menu berdasarkan ID menu (pop-up detail menu).
+ * GET /api/menu.php?id={id}
+ * Hanya menu berstatus aktif pada kategori aktif (sama dengan syarat daftar menu di card 9.1.1),
+ * sehingga menu yang tidak tampil di daftar juga tidak bisa dibuka detailnya.
+ * Kolom deskripsi dan foto boleh kosong (null), FE yang memutuskan tampilannya.
+ */
+function kirim_detail_menu(): void
+{
+    simulate_error('Detail menu gagal dimuat', 'MNU-5005');
+
+    $id = $_GET['id'];
+    if (!is_string($id) || !ctype_digit($id) || (int) $id < 1) {
+        respond(400, false, 'Parameter id tidak valid', null, 'MNU-4004');
+    }
+
+    try {
+        $stmt = db()->prepare(
+            'SELECT m.id, m.label, m.foto, m.nama, m.harga, m.deskripsi
+               FROM menu m
+               JOIN menu_category c ON c.id = m.category_id AND c.status = \'aktif\'
+              WHERE m.id = :id
+                AND m.status = \'aktif\'
+              LIMIT 1'
+        );
+        $stmt->execute([':id' => (int) $id]);
+        $r = $stmt->fetch();
+
+        if (!$r) {
+            respond(404, false, 'Menu tidak ditemukan', null, 'MNU-4042');
+        }
+
+        respond(200, true, 'Detail menu berhasil diambil', [
+            'id'        => (int) $r['id'],
+            'label'     => $r['label'],      // best_seller | signature | new | null
+            'foto'      => $r['foto'],       // path relatif, contoh: uploads/menu/nama-file.png (boleh null)
+            'nama'      => $r['nama'],
+            'harga'     => (int) $r['harga'],
+            'deskripsi' => $r['deskripsi'],  // teks deskripsi menu (boleh null)
+        ]);
+
+    } catch (PDOException $e) {
+        error_log('[menu.php] ' . $e->getMessage());
+        respond(500, false, 'Detail menu gagal dimuat', null, 'MNU-5006');
+    }
+}
+
 only_get();
 
 if (($_GET['featured'] ?? '') === '1') {
@@ -138,5 +187,9 @@ if (isset($_GET['category_id'])) {
     kirim_menu_per_kategori();
 }
 
+if (isset($_GET['id'])) {
+    kirim_detail_menu();
+}
+
 // Mode lain belum tersedia
-respond(400, false, 'Parameter tidak dikenali. Gunakan ?featured=1 atau ?category_id={id}', null, 'MNU-4002');
+respond(400, false, 'Parameter tidak dikenali. Gunakan ?featured=1, ?category_id={id}, atau ?id={id}', null, 'MNU-4002');
