@@ -12,7 +12,9 @@ const API_MAP = {
     "/menu-category": "menu_category.php",
     "/operating-hours": "operating_hours.php",
     "/lokasi": "location.php",
-    "/reservasi": "reservation.php"
+    "/reservasi": "reservation.php",
+    "/contact": "contact.php"
+
 };
 
 
@@ -32,14 +34,14 @@ function perbaikiPathGambar(data) {
 
 
 async function fetchData(endpoint) {
-    const cleanEndpoint = endpoint.startsWith("/")
-        ? endpoint
-        : "/" + endpoint;
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : "/" + endpoint;
 
-    // Mendukung endpoint detail, misalnya /events/2
-    const detailMatch = cleanEndpoint.match(/^(.+)\/(\d+)$/);
+    // Pisahkan query string dari path
+    const [pathSaja, queryString] = cleanEndpoint.split("?");
 
-    let apiEndpoint = cleanEndpoint;
+    const detailMatch = pathSaja.match(/^(.+)\/(\d+)$/);
+
+    let apiEndpoint = pathSaja;
     let detailId = null;
 
     if (detailMatch) {
@@ -53,49 +55,48 @@ async function fetchData(endpoint) {
         throw new Error("Endpoint tidak terdaftar: " + endpoint);
     }
 
-    const res = await fetch(BASE_URL + fileName);
-
-    if (!res.ok) {
-        throw new Error("HTTP " + res.status);
+    // --- BAGIAN INI YANG DIPERBAIKI ---
+    // Jika memanggil parameter spesifik seperti category_id, abaikan default ?featured=1
+    let baseFile = fileName;
+    if (queryString && queryString.includes("category_id") && baseFile.includes("?featured=1")) {
+        baseFile = baseFile.split("?")[0];
     }
 
-    const json = await res.json();
-
-    if (!json.success) {
-        throw new Error(json.message || "Gagal mengambil data");
+    // Gabungkan query dari API_MAP dan dari pemanggil
+    let url = BASE_URL + baseFile;
+    if (queryString) {
+        url += (url.includes("?") ? "&" : "?") + queryString;
     }
 
-    const data = perbaikiPathGambar(json.data);
+    try {
+        const res = await fetch(url);
 
-    if (detailId !== null) {
-        if (!Array.isArray(data)) {
-            throw new Error("Format data detail tidak valid");
+        if (!res.ok) {
+            console.warn(`API ${fileName} merespon status HTTP ${res.status}`);
+            return null;
         }
 
-        const item = data.find(item => Number(item.id) === detailId);
+        const json = await res.json();
 
-        if (!item) {
-            throw new Error("Data detail tidak ditemukan");
+        if (!json.success) {
+            console.warn(`API ${fileName} mengembalikan pesan gagal:`, json.message);
+            return null;
         }
 
-        return item;
-    }
+        const data = perbaikiPathGambar(json.data);
 
-    if (apiEndpoint === "/cafe" && Array.isArray(data)) {
-        if (!data.length) {
-            throw new Error("Data cafe kosong");
+        if (detailId !== null) {
+            if (!Array.isArray(data)) return null;
+            return data.find(item => Number(item.id) === detailId) || null;
         }
 
-        return data[0];
-    }
+        if (apiEndpoint === "/cafe" && Array.isArray(data)) {
+            return data.length ? data[0] : null;
+        }
 
-    return data;
+        return data;
+    } catch (err) {
+        console.error(`Gagal koneksi ke endpoint ${endpoint}:`, err);
+        return null;
+    }
 }
-
-
-function esc(text) {
-    const d = document.createElement("div");
-    d.textContent = text ?? "";
-    return d.innerHTML;
-}
-

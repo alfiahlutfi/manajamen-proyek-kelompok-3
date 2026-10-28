@@ -243,6 +243,10 @@ elGrid.addEventListener("touchend", e => {
 // PENGAMBILAN DATA (API)
 // ======================================================
 
+// ======================================================
+// PENGAMBILAN DATA (API) KATEGORI & MENU
+// ======================================================
+
 function ambilDaftar(respon) {
   if (Array.isArray(respon)) return respon;
   if (respon && Array.isArray(respon.data)) return respon.data;
@@ -253,44 +257,58 @@ function ambilDaftar(respon) {
 async function muatMenu() {
   elGrid.innerHTML = '<p class="menu-status">Memuat menu...</p>';
 
-  let menu = null;
-
   try {
-    const rawRespon = await fetchData(ENDPOINT_MENU);
-    menu = ambilDaftar(rawRespon);
-  } catch (err) {
-    console.error("Gagal memuat menu:", err);
-  }
+    // 1. Ambil daftar kategori terlebih dahulu dari endpoint menu-category
+    const rawKategori = await fetchData("/menu-category");
+    const listKategori = ambilDaftar(rawKategori);
 
-  if (!menu) {
+    if (!listKategori || !listKategori.length) {
+      elGrid.innerHTML = '<p class="menu-status">Kategori menu belum tersedia.</p>';
+      return;
+    }
+
+    // Ambil nama-nama kategori untuk tombol filter di UI
+    daftarKat = listKategori.map(kat => kat.nama);
+
+    // 2. Ambil menu untuk setiap kategori secara paralel menggunakan category_id
+    let semuaMenuGabungan = [];
+
+    await Promise.all(
+      listKategori.map(async (kat) => {
+        // Memanggil endpoint backend: menu.php?category_id={id}
+        const rawMenuPerKat = await fetchData(`/menu?category_id=${kat.id}`);
+        const menuPerKat = ambilDaftar(rawMenuPerKat);
+
+        if (Array.isArray(menuPerKat) && menuPerKat.length > 0) {
+          const normalized = menuPerKat.map(m => {
+            const itemNorm = normalisasi(m);
+            itemNorm.kategori = kat.nama; // Paksa masuk ke nama kategori yang sesuai
+            return itemNorm;
+          });
+          semuaMenuGabungan = semuaMenuGabungan.concat(normalized);
+        }
+      })
+    );
+
+    semuaMenu = semuaMenuGabungan;
+
+    if (!daftarKat.length) {
+      elGrid.innerHTML = '<p class="menu-status">Menu belum tersedia.</p>';
+      return;
+    }
+
+    kategoriAktif = daftarKat[0] || "";
+    halamanAktif  = 0;
+    tampilkan(false);
+
+  } catch (err) {
+    console.error("Gagal memuat data menu dan kategori:", err);
     elGrid.innerHTML = `
       <div class="menu-placeholder-gagal">
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
         <p class="menu-status">Halaman Menu gagal dimuat</p>
       </div>
     `;
-
-    if (typeof tampilkanToast === "function") {
-      tampilkanToast("Gagal mengambil data menu");
-    }
-    return;
   }
-
-  if (!menu.length) {
-    elGrid.innerHTML = '<p class="menu-status">Menu belum tersedia.</p>';
-    return;
-  }
-
-  semuaMenu = menu.map(normalisasi);
-  daftarKat = [...new Set(semuaMenu.map(m => m.kategori))];
-
-  kategoriAktif = daftarKat[0] || "";
-  halamanAktif  = 0;
-  tampilkan(false);
 }
 
 muatMenu();

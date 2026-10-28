@@ -1,6 +1,5 @@
 /* =========================================================
-   LAYOUT GLOBAL: NAVBAR + FOOTER
-   Menggunakan struktur index.html yang sudah ada.
+   LAYOUT GLOBAL: NAVBAR + FOOTER (ANTIGAGAL & STABIL)
    ========================================================= */
 "use strict";
 
@@ -23,7 +22,6 @@ function formatTelp(wa) {
   if (!digits.startsWith("62")) return value;
 
   const national = digits.slice(2);
-  // Format nomor Indonesia secara fleksibel tanpa memotong digit.
   if (national.length >= 10) {
     return "+62 " + national.slice(0, 3) + " " +
       national.slice(3, 7) + " " + national.slice(7);
@@ -45,63 +43,80 @@ function isHalamanAktif(href, halaman) {
 }
 
 async function renderLayout() {
-  const cafeResponse = await fetchData("/cafe");
-  const cafe = Array.isArray(cafeResponse) ? cafeResponse[0] : cafeResponse;
   const halaman = location.pathname.split("/").pop() || "index.html";
   const navbar = document.getElementById("navbar");
 
+  // 1. RENDER NAVBAR DIJAMIN TAMPIL DULUAN
   if (navbar) {
     const links = MENU_NAV.map(item => {
       const aktif = isHalamanAktif(item.href, halaman) ? ' class="aktif" aria-current="page"' : "";
       return `<a href="${item.href}"${aktif}>${item.label}</a>`;
     }).join("");
 
-    const logoCafe = cafe && cafe.logo
-      ? cafe.logo
-      : "assets/logo_acala-removebg-preview.png";
-    const namaCafe = cafe && cafe.nama
-      ? cafe.nama
-      : "assets/logo_acala_-_Salin-removebg-preview.png";
-
     navbar.innerHTML = `
       <a href="index.html" class="brand" aria-label="Café Ácala - Beranda">
-        <img src="${esc(logoCafe)}" class="logo-icon" alt="Logo Acala">
-        <img src="${esc(namaCafe)}" class="logo-text" alt="Acala">
+        <img src="assets/logo_acala-removebg-preview.png" class="logo-icon" alt="Logo Acala Icon">
+        <img src="assets/logo_acala_-_Salin-removebg-preview.png" class="logo-text" alt="Acala Text">
       </a>
       <nav aria-label="Navigasi utama">${links}</nav>
     `;
   }
 
-    if (!cafe) return;
-
-  const footerWhatsapp = document.getElementById("footer-whatsapp");
-  if (footerWhatsapp) {
-    footerWhatsapp.href = formatWaLink(cafe.whatsapp);
-    footerWhatsapp.target = "_blank";
-    footerWhatsapp.rel = "noopener noreferrer";
-    footerWhatsapp.textContent = formatTelp(cafe.whatsapp);
+  // 2. AMBIL DATA KAFE & KONTAK UNTUK FOOTER DARI DATABASE
+// 2. AMBIL DATA KONTAK & KAFE MURNI DARI DATABASE
+  let contact = null;
+  let cafe = null;
+  try {
+    if (typeof fetchData === "function") {
+      const [contactResponse, cafeResponse] = await Promise.all([
+        fetchData("/contact").catch(() => null),
+        fetchData("/cafe").catch(() => null)
+      ]);
+      contact = Array.isArray(contactResponse) ? contactResponse[0] : contactResponse;
+      cafe = Array.isArray(cafeResponse) ? cafeResponse[0] : cafeResponse;
+    }
+  } catch (err) {
+    console.warn("Gagal mengambil data dari database:", err);
   }
 
-  const footerEmail = document.getElementById("footer-email");
-  if (footerEmail) {
-    footerEmail.href = cafe.email ? "mailto:" + cafe.email : "#";
-    footerEmail.textContent = cafe.email || "";
+  // Field dari contact.php: nomor_telepon, email, url_whatsapp, url_gmail, url_instagram, url_tiktok
+  // (fallback ke tabel cafe bila contact.php gagal)
+  const c = contact || {};
+  const k = cafe || {};
+
+  const waNumber = c.nomor_telepon || k.whatsapp || "";
+  const waUrl    = c.url_whatsapp || (waNumber ? formatWaLink(waNumber) : "");
+  const emailVal = c.email || k.email || "";
+  const emailUrl = c.url_gmail || (emailVal ? "mailto:" + emailVal : "");
+  const igVal    = c.url_instagram || k.instagram || "";
+  const ttVal    = c.url_tiktok || k.tiktok || "";
+
+  function setLink(id, href, teks, display) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (href) {
+      el.href = href;
+      if (teks !== null) el.textContent = teks;
+      el.style.display = display;
+    } else {
+      el.style.display = "none";
+    }
   }
 
-  const footerInstagram = document.getElementById("footer-instagram");
-  if (footerInstagram) {
-    footerInstagram.href = cafe.instagram || "#";
-  }
-
-  const footerTiktok = document.getElementById("footer-tiktok");
-  if (footerTiktok) {
-    footerTiktok.href = cafe.tiktok || "#";
-  }
+  setLink("footer-whatsapp", waUrl, formatTelp(waNumber), "block");
+  setLink("footer-email", emailUrl, emailVal, "block");
+  setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-block");
+  setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-block");
 
   const copyright = document.querySelector(".footer-bottom p");
   if (copyright) {
-    copyright.innerHTML = `&copy; 2021-${new Date().getFullYear()} Cafe Acala &amp; Eatery`;
+    copyright.innerHTML = `© 2021-${new Date().getFullYear()} Cafe Acala & Eatery`;
   }
 }
 
-window.layoutSiap = renderLayout();
+// Jalankan otomatis saat halaman siap
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderLayout);
+} else {
+  renderLayout();
+}
