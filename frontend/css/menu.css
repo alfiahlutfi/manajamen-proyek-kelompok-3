@@ -1,271 +1,437 @@
 /* ======================================================
-   VARIABLE WARNA & TEMA CAFE ACALA
+   VARIABLE WARNA & TEMA KHUSUS MENU ÁCALA
    ====================================================== */
 :root {
-  --acala-hijau-tua: #2D5F2E;
-  --acala-hijau-sidebar: #9EAF94;
-  --acala-kuning: #E8CA65;
-  --acala-bg-lembut: #E5EADF;
-  --acala-teks-dark: #2B3A2C;
-}
-
-/* Base Page Setup */
-.menu-page {
-  font-family: "Montserrat", sans-serif;
-  background-color: #DDE4D7;
-  min-height: 100vh;
-  padding: 40px 0 60px;
-}
-
-/* Header Title (Jika Digunakan) */
-.menu-header-title {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.menu-header-title h1 {
-  font-size: 38px;
-  font-weight: 700;
-  color: var(--acala-hijau-tua);
-  letter-spacing: 8px;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.menu-header-title p {
-  font-size: 14px;
-  color: #555;
-  letter-spacing: 1.5px;
-  margin-bottom: 12px;
-}
-
-.menu-header-title .garis-kuning {
-  width: 50px;
-  height: 4px;
-  background-color: var(--acala-kuning);
-  margin: 0 auto;
-  border-radius: 2px;
-}
-
-/* Grid Layout 2 Kolom (Sidebar + Content) */
-.menu-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 35px;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 30px;
-  align-items: start;
+  --acala-hijau-tua: #2d5f2e;
+  --acala-hijau-sidebar: #C2D0BC;
+  --acala-kuning: #FFE77B;
+  --acala-bg-lembut: #D9D9D9;
+  --acala-teks-dark: #2d5f2e;
 }
 
 /* ======================================================
-   SIDEBAR KATEGORI (Tepi & Warna Rapi)
+   LAYOUT MENU: MENEMPEL UTUH DARI NAVBAR HINGGA FOOTER
    ====================================================== */
-aside {
-  background-color: var(--acala-hijau-sidebar);
-  padding: 24px 18px;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+/* 1. Hapus padding atas dan bawah pada halaman menu agar menempel mulus */
+.menu-page {
+  font-family: "Montserrat", sans-serif;
+  background: var(--latar-tembok, url("../assets/gray.png")) center/cover no-repeat, #D9D9D9;
+  min-height: 100vh;
+  padding: 0 !important; /* Hilangkan semua padding halaman */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
+/* 2. Grid Layout merentang penuh */
+.menu-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 40px;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0 35px 0 0;
+  flex: 1; /* Membuat area konten memenuhi ruang kosong hingga footer */
+  align-items: stretch; /* Memaksa tinggi kolom kiri dan kanan sama persis */
+}
+
+/* 3. Sidebar Menempel Sempurna dari Garis Navbar sampai ke Footer */
+aside {
+  background-color: var(--acala-hijau-sidebar, #C2D0BC) !important;
+  padding: 35px 20px !important;
+  
+  /* Sisi kiri lurus menempel rata di tepi layar, sisi kanan melengkung manis */
+  border-top-right-radius: 28px;
+  border-bottom-right-radius: 28px;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  
+  margin: 0 !important;
+  box-shadow: 6px 0 20px rgba(0, 45, 20, 0.05);
+  border-right: 2px solid rgba(255, 255, 255, 0.4);
+  
+  /* Menempel langsung dari atas (di bawah navbar) hingga batas bawah kontainer (footer) */
+  align-self: stretch; /* Memastikan elemen aside memanjang penuh mengikuti tinggi grid */
+  position: sticky;
+  top: 0;
+  height: 100%; /* Mengisi penuh tinggi kontainer grid */
+  box-sizing: border-box;
+}
+
+/* 4. Daftar Kategori di dalam Sidebar */
 .kategori-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .kategori-list li {
-  padding: 12px 20px;
+  padding: 13px 22px;
+  font-family: "Montserrat", sans-serif;
   font-size: 15px;
-  font-weight: 600;
-  color: var(--acala-teks-dark);
-  border-radius: 25px;
+  font-weight: 500;
+  color: #2D4229;
+  background-color: transparent !important;
+  border-radius: 18px;
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
 }
 
 .kategori-list li:hover {
-  background-color: rgba(255, 255, 255, 0.4);
-  color: var(--acala-hijau-tua);
+  color: var(--acala-hijau-tua, #2d5f2e);
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  transform: translateX(4px);
 }
 
 .kategori-list li.aktif {
-  background-color: #FFFFFF;
-  color: var(--acala-hijau-tua);
+  background-color: #E2EADF !important;
+  color: var(--acala-hijau-tua, #2d5f2e) !important;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding-left: 24px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  padding-left: 26px;
+  border-left: 4px solid var(--acala-hijau-tua, #2d5f2e);
 }
 
 /* ======================================================
-   GRID KARTU MENU
+   GRID KARTU MENU & EFEK DUA LAPIS (Card Abu + Card Hijau)
    ====================================================== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  gap: 45px 35px;
   align-items: center;
   min-height: 520px;
+  padding-top: 25px;
 }
 
 .menu-grid.swap {
-  animation: fadeIn 0.35s ease-in-out;
+  animation: masuk 0.35s ease-in-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0.3; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* ======================================================
+   TAMPILAN CARD MENU ÁCALA (DISESUAIKAN)
+   ====================================================== */
 
-/* Kartu Menu (Bentuk Sudut Melengkung Khas Acala) */
-.menu-card {
+/* --- CARD ABU-ABU (Latar Belakang: 336px x 417px) --- */
+.menu-item {
   position: relative;
-  background-color: var(--acala-hijau-tua, #2D5F2E);
-  height: 280px; /* Ditinggikan sedikit agar ruang foto leluasa */
-  border-radius: 0 45px 0 45px;
-  padding: 20px;
+  width: 336px;
+  height: 417px;
+  background-color: #C8C8C8;
+  border-radius: 30px;
+  display: flex;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: visible;
+}
+
+/* --- CARD HIJAU UTAMA (293.12px x 375.79px, top: 21px, left: 21px) --- */
+.menu-card {
+  position: absolute;
+  top: 21px;
+  left: 21px;
+  width: 293.12px;
+  height: 375.79px;
+  background-color: var(--hijau-tua, #2d5f2e);
+  border-top-right-radius: 70px;
+  border-bottom-left-radius: 70px;
+  border-top-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 24px 22px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  overflow: visible; /* Pastikan gambar tidak terpotong */
+  overflow: visible;
+  text-decoration: none;
 }
 
-/* Posisi Foto Gelas/Cangkir Menu */
+/* --- FOTO PRODUK GELAS (width: 134.53px, height: 231.94px, top: 52.93px, left: 100.38px) --- */
 .menu-card .cup {
   position: absolute;
-  top: -35px; /* Membuat gambar sedikit keluar ke atas kartu seperti di desain */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140px;
-  height: 190px;
+  top: 52.93px;
+  left: 100.38px;
+  width: 134.53px;
+  height: 231.94px;
   object-fit: contain;
   pointer-events: none;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.28));
   z-index: 2;
 }
 
+/* ======================================================
+   PENYESUAIAN FINAL: NAMA & KOTAK HARGA MENU ÁCALA
+   ====================================================== */
+
+/* --- CONTAINER META (NAMA & HARGA) --- */
 .menu-card .meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   margin-top: auto;
+  margin-bottom: 12px;
+  padding: 0 12px; /* Memberikan ruang agar nama produk pas di tengah */
   z-index: 3;
 }
 
+/* --- NAMA PRODUK (Ukuran diperbesar sedikit & posisinya tepat di tengah) --- */
 .menu-card .nama {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--acala-kuning, #E8CA65);
-  letter-spacing: 0.3px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 18px; /* Diperbesar sedikit dari sebelumnya */
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  color: var(--kuning, #FFE77B);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  flex: 1; /* Mengisi ruang agar posisi teks benar-benar berada di tengah */
 }
 
+/* --- KOTAK HARGA PRODUK (Ukuran font & kotak diperbesar, sedikit keluar card, sudut lancip) --- */
 .menu-card .harga {
-  background-color: var(--acala-kuning, #E8CA65);
-  color: var(--acala-hijau-tua, #2D5F2E);
-  font-size: 14px;
+  width: 66px;
+  height: 40px;
+  background-color: var(--kuning, #FFE77B);
+  color: var(--hijau-tua, #2d5f2e);
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 6px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px; /* Sudut lancip */
+  flex-shrink: 0;
+  margin-right: -42px; /* Ditambahkan agar posisi kotak harga sedikit lebih keluar ke kanan */
+  margin-bottom: -6px;
+  padding: 0;
+  box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 4; /* Memastikan kotak harga berada di lapisan teratas card */
 }
 
 /* ======================================================
-   PAGER / PAGINATION MENU (Dengan Tombol < dan >)
+   LABEL PITA RIBBON (NEW & BEST SELLER)
+   ====================================================== */
+.label-ribbon {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.label-ribbon.new {
+  width: 172px;
+  height: 172px;
+  top: 12px;
+  left: -14px;
+  background-image: url('../assets/label new.svg');
+}
+
+.label-ribbon.best {
+  width: 429px;
+  height: 429px;
+  top: -132px;
+  left: 45px;
+  background-image: url('../assets/label best.svg');
+}
+
+/* ======================================================
+   PAGINATION / PAGER MENU
+   ====================================================== */
+/* ======================================================
+   PAGER & TOMBOL PANAH (LINGKARAN ABU LEBIH TEGAS & KONTRAS)
    ====================================================== */
 .menu-pager {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 35px;
+  gap: 18px;
+  margin-top: 50px;
+  margin-bottom: 60px; /* Jarak aman dari footer */
+  grid-column: 1 / -1;
 }
 
-/* Tombol Dot */
+/* Tombol Panah Lingkaran (Ukuran 39x36, Latar Abu Lebih Tua/Tegas) */
+.menu-pager .nav-arrow {
+  width: 39px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #B8B8B8 !important; /* Warna abu-abu lebih tua agar kontras dari latar tekstur */
+  border: 1px solid rgba(0, 0, 0, 0.08); /* Border tipis untuk mempertegas batas lingkaran */
+  color: #111111 !important; /* Warna garis panah hitam tegas */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Bayangan sedikit lebih tajam agar timbul */
+  padding: 0;
+  opacity: 1 !important;
+}
+
+/* Memastikan tombol disabled tetap menggunakan warna abu-abu tua kontras yang sama */
+.menu-pager .nav-arrow:disabled,
+.menu-pager .nav-arrow[disabled] {
+  background-color: #B8B8B8 !important;
+  opacity: 1 !important;
+  color: #111111 !important;
+  cursor: not-allowed;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Efek Hover saat tombol bisa diklik */
+.menu-pager .nav-arrow:hover:not(:disabled) {
+  background-color: var(--acala-hijau-tua, #2d5f2e) !important;
+  color: #FFE77B !important;
+  border-color: transparent;
+  transform: scale(1.08);
+}
+
+/* Bulatan Indikator (Dots) */
 .menu-pager button.dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   padding: 0;
   border: none;
   border-radius: 50%;
-  background-color: #A5B89B;
+  background-color: #A8A8A8 !important; /* Dot abu-abu tidak aktif juga disesuaikan agar pas */
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
-.menu-pager button.dot.aktif,
-.menu-pager button.dot:hover {
-  background-color: var(--acala-hijau-tua);
+.menu-pager button.dot.aktif {
+  background-color: var(--acala-hijau-tua, #2d5f2e) !important;
   transform: scale(1.25);
 }
 
-/* Tombol Panah Prev (<) & Next (>) */
-.menu-pager .nav-arrow {
-  background: transparent;
-  border: none;
-  color: var(--acala-hijau-tua);
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0 8px;
-  line-height: 1;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+.menu-pager button.dot:hover {
+  background-color: var(--acala-hijau-tua, #2d5f2e) !important;
 }
 
-.menu-pager .nav-arrow:hover:not([disabled]) {
-  transform: scale(1.3);
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
 }
 
-.menu-pager .nav-arrow[disabled] {
-  opacity: 0.3;
-  cursor: not-allowed;
+/* --- AREA BUNGKUS FOTO PRODUK (Posisi Flex Terpusat) --- */
+.menu-card .foto-menu,
+.menu-card .menu-img-wrapper {
+  width: 100% !important;
+  height: 220px !important;
+  display: flex !important;
+  align-items: flex-start !important;   /* Mengatur posisi dari atas */
+  justify-content: flex-start !important; /* Mengatur posisi dari kiri */
+  position: relative !important;
+  overflow: visible !important;
 }
 
-.badge-burst {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 55px;
-  height: 55px;
-  background-image: url('../assets/bestseller.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.55rem;
-  font-weight: 800;
-  color: #1b4332; /* Warna teks hijau gelap khas Ácala */
-  text-align: center;
-  line-height: 1.1;
+/* --- GAMBAR PRODUK / GELAS (Pengaturan Manual Persis) --- */
+.menu-card img,
+.menu-card .cup {
+  width: auto !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: 210px !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
   z-index: 2;
-}
-
-/* Jika badge berlabel NEW */
-.badge-burst.new {
-  background-image: url('../assets/new.svg');
+  
+  /* PENGATURAN POSISI MANUAL:
+     - position: absolute memastikan kita bisa menempatkan gambar tepat di titik pixel yang kita mau.
+     - left: atur jarak dari kiri (kecilkan jadi 35px atau 40px supaya geser ke kiri).
+     - top: atur jarak dari atas (atur ke angka negatif kecil supaya naik ke atas). */
+  position: absolute !important;
+  left: 69px !important;  
+  top: 20px !important;   
+  transform: none !important;
 }
 
 /* ======================================================
-   RESPONSIF (MOBILE & TABLET)
+   PERBAIKAN FINAL POSISI FOTO PRODUK (CENTER & TINGGI)
    ====================================================== */
-@media (max-width: 992px) {
-  .menu-layout {
-    grid-template-columns: 1fr;
-  }
-  
+
+/* 1. Batasi area kartu hijau agar elemen tidak meluber keluar */
+.menu-card {
+  overflow: hidden !important;
+}
+
+/* 2. Wadah pembungkus foto menggunakan Flexbox center sempurna */
+.menu-card .foto-menu,
+.menu-card .menu-img-wrapper {
+  width: 100% !important;
+  height: 220px !important;
+  display: flex !important;
+  align-items: center !important;       /* Posisi vertikal pas di tengah */
+  justify-content: center !important;   /* Posisi horizontal pas di tengah */
+  position: relative !important;
+  margin-top: -12px !important;         /* Mengangkat keseluruhan area foto sedikit ke atas */
+  overflow: visible !important;
+  z-index: 2;
+}
+
+/* 3. Gambar Produk / Gelas (Proporsional & Simetris) */
+.menu-card img,
+.menu-card .cup {
+  position: relative !important;        /* Kembali ke relative agar aman mengikuti flexbox */
+  top: auto !important;
+  left: auto !important;
+  width: auto !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 215px !important;         /* Tinggi maksimal gelas agar tidak kepanjangan */
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
+  z-index: 2;
+  transform: none !important;
+  margin-left: 0 !important;
+}
+
+/* 4. Sesuaikan ukuran pita ribbon agar tidak menimpa elemen lain */
+.label-ribbon.new {
+  width: 140px;
+  height: 140px;
+  top: -10px;
+  left: -10px;
+}
+
+.label-ribbon.best {
+  width: 170px;
+  height: 170px;
+  top: -15px;
+  left: -15px;
+}
+
+/* ======================================================
+   RESPONSIF
+   ====================================================== */
+@media (max-width: 1200px) {
   .menu-grid {
     grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
+  .menu-layout {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    position: static;
+  }
   .menu-grid {
     grid-template-columns: 1fr;
+    justify-items: center;
   }
 }
