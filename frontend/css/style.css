@@ -49,64 +49,87 @@ main { animation: masuk .35s ease both; }
 /* Menyembunyikan bagian saat data gagal dimuat */
 [hidden] { display: none !important; }
 
-/* ========== NAVBAR STYLES ========== */
+/* ========== NAVBAR STYLES (Sticky & Sliding Indicator) ========== */
 .nav-acala {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #A9BA9D; /* Warna latar belakang hijau sage */
-  padding: 14px 20px;       /* Padding kiri-kanan */
+  background-color: #A9BA9D;
+  padding: 14px 24px;
   width: 100%;
   box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Container Logo & Teks Brand */
+/* Container Logo & Teks Brand (Sejajar presisi & digeser ke kiri) */
 .nav-acala .brand {
   display: flex;
   align-items: center;
-  gap: 18px;                /* Jarak antara icon logo dan tulisan "Acala" */
+  gap: 12px;
   text-decoration: none;
-  margin-left: 0;
+  margin-left: -6px;
 }
 
-/* Ukuran Icon Logo */
 .nav-acala .logo-icon {
-  height: 44px;
+  height: 40px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 
-/* Ukuran & Kerapihan Teks Acala */
 .nav-acala .logo-text {
-  height: 22px;
+  height: 20px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 
+/* Navigasi Utama */
 /* Navigasi Utama */
 .nav-acala nav {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 8px;
+  position: relative;
 }
 
-/* Link Menu Navigasi */
+/* Kotak Indikator Hijau yang Meluncur Mengikuti Kursor */
+.nav-acala nav .nav-indicator {
+  position: absolute;
+  background-color: #275932;
+  border-radius: 24px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+/* Link Menu Navigasi - Pastikan padding seimbang */
 .nav-acala nav a {
+  position: relative;
+  z-index: 2;
   text-decoration: none;
   color: #1e4d2b;
   font-weight: 500;
   font-size: 0.95rem;
   letter-spacing: 0.5px;
-  padding: 8px 22px;
+  padding: 8px 18px; /* Padding kiri-kanan disesuaikan agar proporsional */
   border-radius: 24px;
-  transition: all 0.2s ease-in-out;
+  background: transparent !important;
+  transition: color 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Menu Aktif */
+/* Teks berubah kuning saat tersorot indikator atau saat halaman sedang aktif */
+.nav-acala nav a.highlighted,
 .nav-acala nav a.aktif {
-  background-color: #275932;
-  color: #fce881;
-  font-weight: 600;
+  color: #fce881 !important;
+  font-weight: 600 !important;
 }
 
 .nav-acala nav a:hover:not(.aktif) {

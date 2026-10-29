@@ -42,6 +42,75 @@ function isHalamanAktif(href, halaman) {
   return href === halaman || (href === "index.html" && halaman === "");
 }
 
+// ======================================================
+// LOGIKA HOVER INDIKATOR NAVBAR NGIKUTIN KURSOR
+// ======================================================
+function inisialisasiNavIndicator() {
+  const nav = document.querySelector(".nav-acala nav");
+  if (!nav) return;
+
+  // Buat elemen indikator hijau meluncur jika belum ada
+  let indicator = nav.querySelector(".nav-indicator");
+  if (!indicator) {
+    indicator = document.createElement("div");
+    indicator.className = "nav-indicator";
+    nav.appendChild(indicator);
+  }
+
+  const links = nav.querySelectorAll("a");
+  const activeLink = nav.querySelector("a.aktif");
+
+  function pindahIndikator(el) {
+    if (!el) {
+      indicator.style.opacity = "0";
+      return;
+    }
+    const navRect = nav.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+
+    // Menggunakan offset relatif terhadap parent nav dengan posisi presisi
+    const leftPos = elRect.left - navRect.left;
+    
+    indicator.style.left = `${leftPos}px`;
+    indicator.style.width = `${elRect.width}px`;
+    indicator.style.top = `${(navRect.height - elRect.height) / 2}px`;
+    indicator.style.height = `${elRect.height}px`;
+    indicator.style.opacity = "1";
+
+    links.forEach(link => {
+      if (link === el) {
+        link.classList.add("highlighted");
+      } else {
+        link.classList.remove("highlighted");
+      }
+    });
+  }
+
+  // Posisikan awal pada menu halaman yang sedang aktif
+  if (activeLink) {
+    pindahIndikator(activeLink);
+  }
+
+  // Saat kursor menyentuh menu lain
+  links.forEach(link => {
+    link.addEventListener("mouseenter", () => pindahIndikator(link));
+  });
+
+  // Saat kursor meninggalkan area nav, kembalikan ke menu aktif
+  nav.addEventListener("mouseleave", () => {
+    if (activeLink) {
+      pindahIndikator(activeLink);
+    } else {
+      pindahIndikator(null);
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    const currentHighlighted = nav.querySelector("a.highlighted") || activeLink;
+    if (currentHighlighted) pindahIndikator(currentHighlighted);
+  });
+}
+
 async function renderLayout() {
   const halaman = location.pathname.split("/").pop() || "index.html";
   const navbar = document.getElementById("navbar");
@@ -60,10 +129,12 @@ async function renderLayout() {
       </a>
       <nav aria-label="Navigasi utama">${links}</nav>
     `;
+
+    // Inisialisasi efek indikator kursor navbar setelah dirender
+    setTimeout(inisialisasiNavIndicator, 50);
   }
 
-  // 2. AMBIL DATA KAFE & KONTAK UNTUK FOOTER DARI DATABASE
-// 2. AMBIL DATA KONTAK & KAFE MURNI DARI DATABASE
+  // 2. AMBIL DATA KONTAK & KAFE MURNI DARI DATABASE
   let contact = null;
   let cafe = null;
   try {
@@ -79,8 +150,6 @@ async function renderLayout() {
     console.warn("Gagal mengambil data dari database:", err);
   }
 
-  // Field dari contact.php: nomor_telepon, email, url_whatsapp, url_gmail, url_instagram, url_tiktok
-  // (fallback ke tabel cafe bila contact.php gagal)
   const c = contact || {};
   const k = cafe || {};
 
@@ -118,5 +187,5 @@ async function renderLayout() {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", renderLayout);
 } else {
-  renderLayout();
+    renderLayout();
 }
