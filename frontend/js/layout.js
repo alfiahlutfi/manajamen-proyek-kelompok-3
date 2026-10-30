@@ -45,69 +45,68 @@ function isHalamanAktif(href, halaman) {
 // ======================================================
 // LOGIKA HOVER INDIKATOR NAVBAR NGIKUTIN KURSOR
 // ======================================================
+// ======================================================
+// LOGIKA HOVER & AKTIF INDIKATOR NAVBAR (DUAL INDIKATOR)
+// ======================================================
 function inisialisasiNavIndicator() {
   const nav = document.querySelector(".nav-acala nav");
   if (!nav) return;
 
-  // Buat elemen indikator hijau meluncur jika belum ada
-  let indicator = nav.querySelector(".nav-indicator");
-  if (!indicator) {
-    indicator = document.createElement("div");
-    indicator.className = "nav-indicator";
-    nav.appendChild(indicator);
+  // 1. Indikator untuk Hover (Ikut Kursor)
+  let hoverIndicator = nav.querySelector(".nav-indicator-hover");
+  if (!hoverIndicator) {
+    hoverIndicator = document.createElement("div");
+    hoverIndicator.className = "nav-indicator-hover";
+    nav.appendChild(hoverIndicator);
+  }
+
+  // 2. Indikator Tetap (Permanen di Halaman yang Sedang Dikunjungi)
+  let activeIndicator = nav.querySelector(".nav-indicator-active");
+  if (!activeIndicator) {
+    activeIndicator = document.createElement("div");
+    activeIndicator.className = "nav-indicator-active";
+    nav.appendChild(activeIndicator);
   }
 
   const links = nav.querySelectorAll("a");
   const activeLink = nav.querySelector("a.aktif");
 
-  function pindahIndikator(el) {
-    if (!el) {
-      indicator.style.opacity = "0";
-      return;
-    }
+  function posisikanIndikator(indicatorEl, el) {
+    if (!el || !indicatorEl) return;
     const navRect = nav.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
 
-    // Menggunakan offset relatif terhadap parent nav dengan posisi presisi
     const leftPos = elRect.left - navRect.left;
     
-    indicator.style.left = `${leftPos}px`;
-    indicator.style.width = `${elRect.width}px`;
-    indicator.style.top = `${(navRect.height - elRect.height) / 2}px`;
-    indicator.style.height = `${elRect.height}px`;
-    indicator.style.opacity = "1";
-
-    links.forEach(link => {
-      if (link === el) {
-        link.classList.add("highlighted");
-      } else {
-        link.classList.remove("highlighted");
-      }
-    });
+    indicatorEl.style.left = `${leftPos}px`;
+    indicatorEl.style.width = `${elRect.width}px`;
+    indicatorEl.style.top = `${(navRect.height - elRect.height) / 2}px`;
+    indicatorEl.style.height = `${elRect.height}px`;
+    indicatorEl.style.opacity = "1";
   }
 
-  // Posisikan awal pada menu halaman yang sedang aktif
+  // Set posisi awal indikator aktif permanen pada halaman yang dikunjungi
   if (activeLink) {
-    pindahIndikator(activeLink);
+    posisikanIndikator(activeIndicator, activeLink);
   }
 
-  // Saat kursor menyentuh menu lain
+  // Sembunyikan hover indicator di awal
+  hoverIndicator.style.opacity = "0";
+
+  // Saat kursor mendekati menu lain (hover)
   links.forEach(link => {
-    link.addEventListener("mouseenter", () => pindahIndikator(link));
+    link.addEventListener("mouseenter", () => {
+      posisikanIndikator(hoverIndicator, link);
+    });
   });
 
-  // Saat kursor meninggalkan area nav, kembalikan ke menu aktif
+  // Saat kursor keluar dari navbar, sembunyikan hover indicator (indikator aktif tetap stay di tempatnya!)
   nav.addEventListener("mouseleave", () => {
-    if (activeLink) {
-      pindahIndikator(activeLink);
-    } else {
-      pindahIndikator(null);
-    }
+    hoverIndicator.style.opacity = "0";
   });
 
   window.addEventListener("resize", () => {
-    const currentHighlighted = nav.querySelector("a.highlighted") || activeLink;
-    if (currentHighlighted) pindahIndikator(currentHighlighted);
+    if (activeLink) posisikanIndikator(activeIndicator, activeLink);
   });
 }
 

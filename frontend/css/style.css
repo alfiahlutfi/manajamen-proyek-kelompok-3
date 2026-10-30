@@ -96,10 +96,21 @@ main { animation: masuk .35s ease both; }
   position: relative;
 }
 
-/* Kotak Indikator Hijau yang Meluncur Mengikuti Kursor */
-.nav-acala nav .nav-indicator {
+/* Kotak Indikator Tetap untuk Halaman yang Sedang Dikunjungi */
+.nav-acala nav .nav-indicator-active {
   position: absolute;
-  background-color: #275932;
+  background-color: #275932; /* Warna hijau tetap */
+  border-radius: 24px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 1;
+  transition: all 0.25s ease;
+}
+
+/* Kotak Indikator yang Bergerak Mengikuti Kursor */
+.nav-acala nav .nav-indicator-hover {
+  position: absolute;
+  background-color: rgba(39, 89, 50, 0.45); /* Warna hijau transparan saat di-hover */
   border-radius: 24px;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;

@@ -13,18 +13,16 @@
    LAYOUT MENU: MENEMPEL UTUH DARI NAVBAR HINGGA FOOTER
    ====================================================== */
 
-/* 1. Hapus padding atas dan bawah pada halaman menu agar menempel mulus */
 .menu-page {
   font-family: "Montserrat", sans-serif;
   background: var(--latar-tembok, url("../assets/gray.png")) center/cover no-repeat, #D9D9D9;
   min-height: 100vh;
-  padding: 0 !important; /* Hilangkan semua padding halaman */
+  padding: 0 !important;
   margin: 0;
   display: flex;
   flex-direction: column;
 }
 
-/* 2. Grid Layout merentang penuh */
 .menu-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -33,34 +31,27 @@
   width: 100%;
   margin: 0;
   padding: 0 35px 0 0;
-  flex: 1; /* Membuat area konten memenuhi ruang kosong hingga footer */
-  align-items: stretch; /* Memaksa tinggi kolom kiri dan kanan sama persis */
+  flex: 1;
+  align-items: stretch;
 }
 
-/* 3. Sidebar Menempel Sempurna dari Garis Navbar sampai ke Footer */
 aside {
   background-color: var(--acala-hijau-sidebar, #C2D0BC) !important;
   padding: 35px 20px !important;
-  
-  /* Sisi kiri lurus menempel rata di tepi layar, sisi kanan melengkung manis */
   border-top-right-radius: 28px;
   border-bottom-right-radius: 28px;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
-  
   margin: 0 !important;
   box-shadow: 6px 0 20px rgba(0, 45, 20, 0.05);
   border-right: 2px solid rgba(255, 255, 255, 0.4);
-  
-  /* Menempel langsung dari atas (di bawah navbar) hingga batas bawah kontainer (footer) */
-  align-self: stretch; /* Memastikan elemen aside memanjang penuh mengikuti tinggi grid */
+  align-self: stretch;
   position: sticky;
   top: 0;
-  height: 100%; /* Mengisi penuh tinggi kontainer grid */
+  height: 100%;
   box-sizing: border-box;
 }
 
-/* 4. Daftar Kategori di dalam Sidebar */
 .kategori-list {
   list-style: none;
   padding: 0;
@@ -99,7 +90,7 @@ aside {
 }
 
 /* ======================================================
-   GRID KARTU MENU & EFEK DUA LAPIS (Card Abu + Card Hijau)
+   GRID KARTU MENU & KARTU UTAMA ÁCALA
    ====================================================== */
 .menu-grid {
   display: grid;
@@ -114,11 +105,6 @@ aside {
   animation: masuk 0.35s ease-in-out;
 }
 
-/* ======================================================
-   TAMPILAN CARD MENU ÁCALA (DISESUAIKAN)
-   ====================================================== */
-
-/* --- CARD ABU-ABU (Latar Belakang: 336px x 417px) --- */
 .menu-item {
   position: relative;
   width: 336px;
@@ -130,7 +116,7 @@ aside {
   overflow: visible;
 }
 
-/* --- CARD HIJAU UTAMA (293.12px x 375.79px, top: 21px, left: 21px) --- */
+/* KARTU HIJAU UTAMA (Menggunakan overflow: hidden agar pita & gambar rapi di dalam) */
 .menu-card {
   position: absolute;
   top: 21px;
@@ -147,28 +133,82 @@ aside {
   flex-direction: column;
   justify-content: flex-end;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  overflow: visible;
+  overflow: visible !important; /* <--- PASTIKAN MENJADI VISIBLE AGAR TIDAK TERPOTONG */
   text-decoration: none;
 }
 
-/* --- FOTO PRODUK GELAS (width: 134.53px, height: 231.94px, top: 52.93px, left: 100.38px) --- */
-.menu-card .cup {
+/* ======================================================
+   LABEL PITA RIBBON MENGGUNAKAN ASET SVG BARU
+   ====================================================== */
+/* ======================================================
+   LABEL PITA RIBBON (POSISI BENAR-BENAR MELINTANG DI ATAS)
+   ====================================================== */
+.label-ribbon {
   position: absolute;
-  top: 52.93px;
-  left: 100.38px;
-  width: 134.53px;
-  height: 231.94px;
-  object-fit: contain;
   pointer-events: none;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.28));
-  z-index: 2;
+  z-index: 25; /* Lapisan paling atas */
+  background-repeat: no-repeat;
+  background-size: 100% 100%; /* Memaksa SVG mengisi penuh area kotak dengan pas */
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Label NEW (Di pojok kiri atas) */
+.label-ribbon.new {
+  width: 140px;
+  height: 50px;
+  top: -12px;
+  left: -10px;
+  background-image: url('../assets/label-new.svg');
+}
+
+/* Label BEST SELLER (Melintang lebar menembus sisi kiri dan kanan kartu) */
+.label-ribbon.best {
+  width: 360px !important;       /* Lebar dibuat lebih lebar dari kartu (293px) */
+  height: 230px !important;        /* Tinggi proporsional untuk pita horizontal */
+  top: -42px !important;         /* Posisi menggantung di atas garis kartu */
+  left: 8px !important;        /* Ditarik sedikit ke kiri agar ekor kirinya pas */
+  right: auto !important;
+  background-image: url('../assets/label-bestseller.svg');
 }
 
 /* ======================================================
-   PENYESUAIAN FINAL: NAMA & KOTAK HARGA MENU ÁCALA
+   POSISI FOTO PRODUK (UTUH & CENTER SEMPURNA)
    ====================================================== */
+.menu-card .foto-menu,
+.menu-card .menu-img-wrapper {
+  width: 100% !important;
+  height: 220px !important;
+  display: flex !important;
+  align-items: center !important;       /* Posisi vertikal di tengah */
+  justify-content: center !important;   /* Posisi horizontal di tengah */
+  position: relative !important;
+  margin-top: 25px !important;         /* Mengangkat area foto sedikit ke atas */
+  overflow: visible !important;
+  z-index: 2;
+}
 
-/* --- CONTAINER META (NAMA & HARGA) --- */
+.menu-card img,
+.menu-card .cup {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  width: auto !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 210px !important;         /* Tinggi maksimal gelas proporsional */
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
+  z-index: 2;
+  transform: none !important;
+  margin-left: 0 !important;
+}
+
+/* ======================================================
+   NAMA & KOTAK HARGA
+   ====================================================== */
 .menu-card .meta {
   display: flex;
   align-items: center;
@@ -176,15 +216,14 @@ aside {
   width: 100%;
   margin-top: auto;
   margin-bottom: 12px;
-  padding: 0 12px; /* Memberikan ruang agar nama produk pas di tengah */
+  padding: 0 12px;
   z-index: 3;
 }
 
-/* --- NAMA PRODUK (Ukuran diperbesar sedikit & posisinya tepat di tengah) --- */
 .menu-card .nama {
   font-family: "Montserrat", sans-serif;
   font-weight: 600;
-  font-size: 18px; /* Diperbesar sedikit dari sebelumnya */
+  font-size: 18px;
   line-height: 1.2;
   letter-spacing: 0.05em;
   color: var(--kuning, #FFE77B);
@@ -192,10 +231,9 @@ aside {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  flex: 1; /* Mengisi ruang agar posisi teks benar-benar berada di tengah */
+  flex: 1;
 }
 
-/* --- KOTAK HARGA PRODUK (Ukuran font & kotak diperbesar, sedikit keluar card, sudut lancip) --- */
 .menu-card .harga {
   width: 66px;
   height: 40px;
@@ -207,48 +245,18 @@ aside {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0px; /* Sudut lancip */
+  border-radius: 0px;
   flex-shrink: 0;
-  margin-right: -42px; /* Ditambahkan agar posisi kotak harga sedikit lebih keluar ke kanan */
+  margin-right: -42px;
   margin-bottom: -6px;
   padding: 0;
   box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
   position: relative;
-  z-index: 4; /* Memastikan kotak harga berada di lapisan teratas card */
+  z-index: 4;
 }
 
 /* ======================================================
-   LABEL PITA RIBBON (NEW & BEST SELLER)
-   ====================================================== */
-.label-ribbon {
-  position: absolute;
-  pointer-events: none;
-  z-index: 5;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.label-ribbon.new {
-  width: 172px;
-  height: 172px;
-  top: 12px;
-  left: -14px;
-  background-image: url('../assets/label new.svg');
-}
-
-.label-ribbon.best {
-  width: 429px;
-  height: 429px;
-  top: -132px;
-  left: 45px;
-  background-image: url('../assets/label best.svg');
-}
-
-/* ======================================================
-   PAGINATION / PAGER MENU
-   ====================================================== */
-/* ======================================================
-   PAGER & TOMBOL PANAH (LINGKARAN ABU LEBIH TEGAS & KONTRAS)
+   PAGER & TOMBOL NAVIGASI
    ====================================================== */
 .menu-pager {
   display: flex;
@@ -256,39 +264,35 @@ aside {
   justify-content: center;
   gap: 18px;
   margin-top: 50px;
-  margin-bottom: 60px; /* Jarak aman dari footer */
+  margin-bottom: 60px;
   grid-column: 1 / -1;
 }
 
-/* Tombol Panah Lingkaran (Ukuran 39x36, Latar Abu Lebih Tua/Tegas) */
 .menu-pager .nav-arrow {
   width: 39px;
   height: 36px;
   border-radius: 50%;
-  background-color: #B8B8B8 !important; /* Warna abu-abu lebih tua agar kontras dari latar tekstur */
-  border: 1px solid rgba(0, 0, 0, 0.08); /* Border tipis untuk mempertegas batas lingkaran */
-  color: #111111 !important; /* Warna garis panah hitam tegas */
+  background-color: #B8B8B8 !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #111111 !important;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Bayangan sedikit lebih tajam agar timbul */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   padding: 0;
   opacity: 1 !important;
 }
 
-/* Memastikan tombol disabled tetap menggunakan warna abu-abu tua kontras yang sama */
 .menu-pager .nav-arrow:disabled,
 .menu-pager .nav-arrow[disabled] {
   background-color: #B8B8B8 !important;
   opacity: 1 !important;
   color: #111111 !important;
   cursor: not-allowed;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Efek Hover saat tombol bisa diklik */
 .menu-pager .nav-arrow:hover:not(:disabled) {
   background-color: var(--acala-hijau-tua, #2d5f2e) !important;
   color: #FFE77B !important;
@@ -296,14 +300,13 @@ aside {
   transform: scale(1.08);
 }
 
-/* Bulatan Indikator (Dots) */
 .menu-pager button.dot {
   width: 14px;
   height: 14px;
   padding: 0;
   border: none;
   border-radius: 50%;
-  background-color: #A8A8A8 !important; /* Dot abu-abu tidak aktif juga disesuaikan agar pas */
+  background-color: #A8A8A8 !important;
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -313,104 +316,9 @@ aside {
   transform: scale(1.25);
 }
 
-.menu-pager button.dot:hover {
-  background-color: var(--acala-hijau-tua, #2d5f2e) !important;
-}
-
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.55; }
-}
-
-/* --- AREA BUNGKUS FOTO PRODUK (Posisi Flex Terpusat) --- */
-.menu-card .foto-menu,
-.menu-card .menu-img-wrapper {
-  width: 100% !important;
-  height: 220px !important;
-  display: flex !important;
-  align-items: flex-start !important;   /* Mengatur posisi dari atas */
-  justify-content: flex-start !important; /* Mengatur posisi dari kiri */
-  position: relative !important;
-  overflow: visible !important;
-}
-
-/* --- GAMBAR PRODUK / GELAS (Pengaturan Manual Persis) --- */
-.menu-card img,
-.menu-card .cup {
-  width: auto !important;
-  height: 100% !important;
-  max-width: none !important;
-  max-height: 210px !important;
-  object-fit: contain !important;
-  display: block !important;
-  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
-  z-index: 2;
-  
-  /* PENGATURAN POSISI MANUAL:
-     - position: absolute memastikan kita bisa menempatkan gambar tepat di titik pixel yang kita mau.
-     - left: atur jarak dari kiri (kecilkan jadi 35px atau 40px supaya geser ke kiri).
-     - top: atur jarak dari atas (atur ke angka negatif kecil supaya naik ke atas). */
-  position: absolute !important;
-  left: 69px !important;  
-  top: 20px !important;   
-  transform: none !important;
-}
-
-/* ======================================================
-   PERBAIKAN FINAL POSISI FOTO PRODUK (CENTER & TINGGI)
-   ====================================================== */
-
-/* 1. Batasi area kartu hijau agar elemen tidak meluber keluar */
-.menu-card {
-  overflow: hidden !important;
-}
-
-/* 2. Wadah pembungkus foto menggunakan Flexbox center sempurna */
-.menu-card .foto-menu,
-.menu-card .menu-img-wrapper {
-  width: 100% !important;
-  height: 220px !important;
-  display: flex !important;
-  align-items: center !important;       /* Posisi vertikal pas di tengah */
-  justify-content: center !important;   /* Posisi horizontal pas di tengah */
-  position: relative !important;
-  margin-top: -12px !important;         /* Mengangkat keseluruhan area foto sedikit ke atas */
-  overflow: visible !important;
-  z-index: 2;
-}
-
-/* 3. Gambar Produk / Gelas (Proporsional & Simetris) */
-.menu-card img,
-.menu-card .cup {
-  position: relative !important;        /* Kembali ke relative agar aman mengikuti flexbox */
-  top: auto !important;
-  left: auto !important;
-  width: auto !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 215px !important;         /* Tinggi maksimal gelas agar tidak kepanjangan */
-  object-fit: contain !important;
-  object-position: center center !important;
-  display: block !important;
-  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
-  z-index: 2;
-  transform: none !important;
-  margin-left: 0 !important;
-}
-
-/* 4. Sesuaikan ukuran pita ribbon agar tidak menimpa elemen lain */
-.label-ribbon.new {
-  width: 140px;
-  height: 140px;
-  top: -10px;
-  left: -10px;
-}
-
-.label-ribbon.best {
-  width: 170px;
-  height: 170px;
-  top: -15px;
-  left: -15px;
 }
 
 /* ======================================================
