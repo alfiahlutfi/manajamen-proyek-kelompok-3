@@ -328,12 +328,16 @@ async function muatMenu() {
 
     semuaMenu = semuaMenuGabungan;
 
-    if (!daftarKat.length) {
+if (!daftarKat.length) {
       elGrid.innerHTML = '<p class="menu-status" style="grid-column:1/-1; text-align:center; padding:40px;">Menu belum tersedia.</p>';
       return;
     }
 
-    kategoriAktif = daftarKat[0] || "";
+    // [DIUBAH] Pengaman: Jika kategori aktif kosong atau tidak terdaftar di daftar kategori, fallback ke kategori default pertama
+    if (!kategoriAktif || !daftarKat.includes(kategoriAktif)) {
+      kategoriAktif = daftarKat[0] || "";
+    }
+    
     halamanAktif  = 0;
     tampilkan(false);
 
