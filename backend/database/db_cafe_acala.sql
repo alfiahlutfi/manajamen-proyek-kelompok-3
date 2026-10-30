@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 28, 2026 at 06:13 AM
+-- Generation Time: Oct 30, 2026 at 06:14 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -201,7 +201,11 @@ CREATE TABLE `gallery` (
 --
 
 INSERT INTO `gallery` (`id`, `judul`, `foto`, `deskripsi`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Suasana Nyaman Café Ácala', 'uploads/gallery/suasana1.jpeg', 'Nikmati suasana Café Ácala yang nyaman untuk berkumpul, bersantai, dan menghabiskan waktu bersama teman maupun keluarga.', 1, 'aktif', '2026-10-20 06:56:49', '2026-10-20 07:00:18');
+(1, 'Lorem ipsum', 'uploads/gallery/gallery-cafe1.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 1, 'aktif', '2026-10-20 06:56:49', '2026-10-30 06:11:54'),
+(2, 'Lorem ipsum', 'uploads/gallery/gallery-cafe2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 2, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
+(3, 'Lorem ipsum', 'uploads/gallery/gallery-cafe3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 3, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
+(4, 'Lorem ipsum', 'uploads/gallery/gallery-cafe4.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 4, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
+(5, 'Lorem ipsum', 'uploads/gallery/gallery-cafe5.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 5, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24');
 
 -- --------------------------------------------------------
 
@@ -487,7 +491,7 @@ ALTER TABLE `faq`
 -- AUTO_INCREMENT for table `gallery`
 --
 ALTER TABLE `gallery`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `menu`
