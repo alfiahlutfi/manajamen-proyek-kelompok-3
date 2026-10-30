@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Jika request bukan file atau folder yang benar-benar ada
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Teruskan request ke file .php di dalam folder api
+    RewriteRule ^(.*)$ $1.php [L]
+</IfModule>
