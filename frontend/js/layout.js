@@ -1,6 +1,6 @@
-/* =========================================================
-   LAYOUT GLOBAL: NAVBAR + FOOTER (ANTIGAGAL & STABIL)
-   ========================================================= */
+// =========================================================
+// LAYOUT GLOBAL: NAVBAR + FOOTER (ANTIGAGAL & STABIL)
+// =========================================================
 "use strict";
 
 const MENU_NAV = [
@@ -43,70 +43,66 @@ function isHalamanAktif(href, halaman) {
 }
 
 // ======================================================
-// LOGIKA HOVER INDIKATOR NAVBAR NGIKUTIN KURSOR
-// ======================================================
-// ======================================================
-// LOGIKA HOVER & AKTIF INDIKATOR NAVBAR (DUAL INDIKATOR)
+// LOGIKA HOVER & AKTIF INDIKATOR NAVBAR (PRESISI & STABIL)
 // ======================================================
 function inisialisasiNavIndicator() {
   const nav = document.querySelector(".nav-acala nav");
   if (!nav) return;
 
-  // 1. Indikator untuk Hover (Ikut Kursor)
-  let hoverIndicator = nav.querySelector(".nav-indicator-hover");
-  if (!hoverIndicator) {
-    hoverIndicator = document.createElement("div");
-    hoverIndicator.className = "nav-indicator-hover";
-    nav.appendChild(hoverIndicator);
-  }
-
-  // 2. Indikator Tetap (Permanen di Halaman yang Sedang Dikunjungi)
-  let activeIndicator = nav.querySelector(".nav-indicator-active");
-  if (!activeIndicator) {
-    activeIndicator = document.createElement("div");
-    activeIndicator.className = "nav-indicator-active";
-    nav.appendChild(activeIndicator);
-  }
-
+  const hoverIndicator = nav.querySelector(".nav-indicator-hover");
+  const activeIndicator = nav.querySelector(".nav-indicator-active");
   const links = nav.querySelectorAll("a");
-  const activeLink = nav.querySelector("a.aktif");
 
   function posisikanIndikator(indicatorEl, el) {
     if (!el || !indicatorEl) return;
-    const navRect = nav.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-
-    const leftPos = elRect.left - navRect.left;
     
+    const leftPos = el.offsetLeft;
+    const topPos = (nav.clientHeight - el.offsetHeight) / 2;
+
     indicatorEl.style.left = `${leftPos}px`;
-    indicatorEl.style.width = `${elRect.width}px`;
-    indicatorEl.style.top = `${(navRect.height - elRect.height) / 2}px`;
-    indicatorEl.style.height = `${elRect.height}px`;
+    indicatorEl.style.top = `${topPos}px`;
+    indicatorEl.style.width = `${el.offsetWidth}px`;
+    indicatorEl.style.height = `${el.offsetHeight}px`;
     indicatorEl.style.opacity = "1";
   }
 
-  // Set posisi awal indikator aktif permanen pada halaman yang dikunjungi
-  if (activeLink) {
+  // Tentukan link yang aktif (Beranda/index.html secara default jika di root)
+  let activeLink = nav.querySelector("a.aktif");
+  if (!activeLink) {
+    const halamanSkarang = location.pathname.split("/").pop() || "index.html";
+    activeLink = nav.querySelector(`a[href="${halamanSkarang}"]`) || nav.querySelector('a[href="index.html"]');
+    if (activeLink) {
+      activeLink.classList.add("aktif");
+    }
+  }
+
+  // Posisikan indikator aktif permanen secara instan
+  if (activeLink && activeIndicator) {
     posisikanIndikator(activeIndicator, activeLink);
   }
 
-  // Sembunyikan hover indicator di awal
-  hoverIndicator.style.opacity = "0";
+  if (hoverIndicator) {
+    hoverIndicator.style.opacity = "0";
+  }
 
   // Saat kursor mendekati menu lain (hover)
   links.forEach(link => {
     link.addEventListener("mouseenter", () => {
-      posisikanIndikator(hoverIndicator, link);
+      if (hoverIndicator) posisikanIndikator(hoverIndicator, link);
     });
   });
 
-  // Saat kursor keluar dari navbar, sembunyikan hover indicator (indikator aktif tetap stay di tempatnya!)
+  // Saat kursor keluar dari navbar, kembalikan ke indikator aktif
   nav.addEventListener("mouseleave", () => {
-    hoverIndicator.style.opacity = "0";
+    if (hoverIndicator) hoverIndicator.style.opacity = "0";
+    if (activeLink && activeIndicator) {
+      posisikanIndikator(activeIndicator, activeLink);
+    }
   });
 
   window.addEventListener("resize", () => {
-    if (activeLink) posisikanIndikator(activeIndicator, activeLink);
+    const currentActive = nav.querySelector("a.aktif");
+    if (currentActive && activeIndicator) posisikanIndikator(activeIndicator, currentActive);
   });
 }
 
@@ -114,10 +110,11 @@ async function renderLayout() {
   const halaman = location.pathname.split("/").pop() || "index.html";
   const navbar = document.getElementById("navbar");
 
-  // 1. RENDER NAVBAR DIJAMIN TAMPIL DULUAN
+  // 1. RENDER NAVBAR DISERTAI KOTAK INDIKATOR LANGSUNG DI DALAM HTML
   if (navbar) {
     const links = MENU_NAV.map(item => {
-      const aktif = isHalamanAktif(item.href, halaman) ? ' class="aktif" aria-current="page"' : "";
+      const isAktif = isHalamanAktif(item.href, halaman) || ((halaman === "" || halaman === "/") && item.href === "index.html");
+      const aktif = isAktif ? ' class="aktif" aria-current="page"' : "";
       return `<a href="${item.href}"${aktif}>${item.label}</a>`;
     }).join("");
 
@@ -126,14 +123,18 @@ async function renderLayout() {
         <img src="assets/logo_acala-removebg-preview.png" class="logo-icon" alt="Logo Acala Icon">
         <img src="assets/logo_acala_-_Salin-removebg-preview.png" class="logo-text" alt="Acala Text">
       </a>
-      <nav aria-label="Navigasi utama">${links}</nav>
+      <nav aria-label="Navigasi utama">
+        <div class="nav-indicator-active"></div>
+        <div class="nav-indicator-hover"></div>
+        ${links}
+      </nav>
     `;
 
-    // Inisialisasi efek indikator kursor navbar setelah dirender
-    setTimeout(inisialisasiNavIndicator, 50);
+    // Jalankan kalkulasi posisi agar langsung klop di awal
+    inisialisasiNavIndicator();
   }
 
-  // 2. AMBIL DATA KONTAK & KAFE MURNI DARI DATABASE
+  // 2. AMBIL DATA KONTAK & KAFE DARI DATABASE
   let contact = null;
   let cafe = null;
   try {
@@ -186,5 +187,5 @@ async function renderLayout() {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", renderLayout);
 } else {
-    renderLayout();
+  renderLayout();
 }
