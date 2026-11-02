@@ -19,6 +19,7 @@ const LABEL_MENU       = ['best_seller', 'signature', 'new'];
 /**
  * Menu pilihan = menu berstatus aktif yang kolom label-nya terisi (diatur admin),
  * diurutkan sesuai kolom urutan, maksimal MAX_MENU_PILIHAN.
+ * Card 4.4: respons memuat id menu dan id kategori (category_id); field lain tidak berubah.
  */
 function kirim_menu_pilihan(): void
 {
@@ -29,7 +30,7 @@ function kirim_menu_pilihan(): void
         respond(400, false, 'Label tidak valid. Gunakan best_seller, signature, atau new', null, 'MNU-4001');
     }
 
-    $sql = 'SELECT id, label, foto, nama, harga
+    $sql = 'SELECT id, category_id, label, foto, nama, harga
               FROM menu
              WHERE status = \'aktif\'
                AND label IS NOT NULL';
@@ -49,11 +50,12 @@ function kirim_menu_pilihan(): void
 
         $data = array_map(static function (array $r): array {
             return [
-                'id'    => (int) $r['id'],
-                'label' => $r['label'],   // best_seller | signature | new
-                'foto'  => $r['foto'],    // path relatif (kolom gambar), contoh: uploads/menu/nama-file.png
-                'nama'  => $r['nama'],
-                'harga' => (int) $r['harga'],
+                'id'          => (int) $r['id'],
+                'category_id' => (int) $r['category_id'],   // card 4.4: id kategori menu
+                'label'       => $r['label'],               // best_seller | signature | new
+                'foto'        => $r['foto'],                // path relatif (kolom gambar), contoh: uploads/menu/nama-file.png
+                'nama'        => $r['nama'],
+                'harga'       => (int) $r['harga'],
             ];
         }, $rows);
 
