@@ -33,6 +33,118 @@ function perbaikiPathGambar(data) {
 }
 
 
+// ======================================================
+// POP-UP DETAIL MENU (FRONTEND FETCH LANGSUNG)
+// ======================================================
+
+async function bukaDetailMenu(menuId) {
+  if (!menuId) {
+    console.error("ID Menu tidak valid.");
+    return;
+  }
+
+  const modal = document.getElementById('menuDetailModal');
+  const badgeContainer = document.getElementById('modalBadgeContainer');
+  const labelElement = document.getElementById('modalMenuLabel');
+  
+  const skelImg = document.getElementById('modalSkeletonImg');
+  const skelName = document.getElementById('modalSkeletonName');
+  const skelPrice = document.getElementById('modalSkeletonPrice');
+  const skelDesc = document.getElementById('modalSkeletonDesc');
+
+  const imgElement = document.getElementById('modalMenuImg');
+  const placeholder = document.getElementById('modalImgPlaceholder');
+  const nameElement = document.getElementById('modalMenuName');
+  const priceElement = document.getElementById('modalMenuPrice');
+  const descElement = document.getElementById('modalMenuDesc');
+  const errorMsg = document.getElementById('modalErrorMessage');
+  
+  // 1. Tampilkan modal & set kondisi awal (Skeleton wajib tampil)
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden', 'false');
+  
+  skelImg.style.display = 'block';
+  skelName.style.display = 'block';
+  skelPrice.style.display = 'block';
+  skelDesc.style.display = 'block';
+
+  imgElement.style.display = 'none';
+  placeholder.style.display = 'none';
+  nameElement.style.display = 'none';
+  priceElement.style.display = 'none';
+  descElement.style.display = 'none';
+  errorMsg.style.display = 'none';
+  badgeContainer.style.display = 'none';
+
+  try {
+    // Gunakan fungsi fetchData yang sudah ada, 
+    // karena helper ini sudah otomatis menangani BASE_URL dan membersihkan ?featured=1
+    const data = await fetchData(`/menu?id=${menuId}`);
+
+    if (!data) throw new Error("Gagal memuat detail menu dari database");
+
+    // Sembunyikan skeleton bagian teks
+    skelImg.style.display = 'none';
+    skelName.style.display = 'none';
+    skelPrice.style.display = 'none';
+    skelDesc.style.display = 'none';
+
+    // Munculkan badge HANYA JIKA ada label dari database
+    const badgeText = ambilBadge(data.label);
+    if (badgeText) {
+      labelElement.textContent = badgeText;
+      badgeContainer.style.display = 'inline-flex';
+    } else {
+      badgeContainer.style.display = 'none';
+    }
+
+    // Masukkan data asli ke elemen UI
+    nameElement.textContent = data.nama || "";
+    nameElement.style.display = 'block';
+
+    priceElement.textContent = formatHarga(data.harga);
+    priceElement.style.display = 'block';
+
+    // Kolom deskripsi dari database
+    descElement.textContent = data.deskripsi || "Deskripsi belum tersedia untuk menu ini.";
+    descElement.style.display = 'block';
+
+    // Tangani foto / placeholder
+    if (data.foto) {
+      imgElement.src = urlGambar(data.foto);
+      imgElement.onload = () => {
+        skelImg.style.display = 'none';
+        imgElement.style.display = 'block';
+      };
+      imgElement.onerror = () => {
+        skelImg.style.display = 'none';
+        placeholder.style.display = 'flex';
+      };
+    } else {
+      skelImg.style.display = 'none';
+      placeholder.style.display = 'flex';
+    }
+
+  } catch (err) {
+    console.error("Gagal memuat detail menu:", err);
+    
+    // Skeleton tetap tampil saat error sesuai ketentuan
+    skelImg.style.display = 'block';
+    skelName.style.display = 'block';
+    skelPrice.style.display = 'block';
+    skelDesc.style.display = 'block';
+
+    imgElement.style.display = 'none';
+    placeholder.style.display = 'none';
+    nameElement.style.display = 'none';
+    priceElement.style.display = 'none';
+    descElement.style.display = 'none';
+    badgeContainer.style.display = 'none';
+
+    errorMsg.style.display = 'block';
+  }
+}
+
 async function fetchData(endpoint) {
     const cleanEndpoint = endpoint.startsWith("/") ? endpoint : "/" + endpoint;
 
@@ -55,10 +167,12 @@ async function fetchData(endpoint) {
         throw new Error("Endpoint tidak terdaftar: " + endpoint);
     }
 
-    // --- BAGIAN INI YANG DIPERBAIKI ---
-    // Jika memanggil parameter spesifik seperti category_id, abaikan default ?featured=1
     let baseFile = fileName;
-    if (queryString && queryString.includes("category_id") && baseFile.includes("?featured=1")) {
+    
+    // --- BAGIAN INI YANG HARUS DIPERBAIKI ---
+    // Jika pemanggilan menyertakan parameter "id" atau "category_id", 
+    // abaikan default "?featured=1" agar tidak bentrok dengan backend menu.php
+    if (queryString && (queryString.includes("category_id") || queryString.includes("id")) && baseFile.includes("?featured=1")) {
         baseFile = baseFile.split("?")[0];
     }
 

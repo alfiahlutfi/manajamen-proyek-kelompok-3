@@ -508,6 +508,9 @@ async function tampilkanHero() {
 /* =======================================================
    SIGNATURE
 ======================================================= */
+/* =======================================================
+   SIGNATURE
+======================================================= */
 async function tampilkanSignature() {
   const menu = await ambil("/menu?label=signature");
   const wadah = document.getElementById("best-list");
@@ -524,9 +527,9 @@ async function tampilkanSignature() {
     return;
   }
 
-  const sorot = best.length >= 3 ? 2 : 0;
-  wadah.innerHTML = best.map((m, k) => `
-    <a class="best-card${k === sorot ? " sorot" : ""}" href="menu-detail.html?id=${encodeURIComponent(m.id)}">
+  // Hapus otomatisasi penambahan kelas 'sorot' di awal agar semua abu-abu
+  wadah.innerHTML = best.map((m) => `
+    <a class="best-card" href="menu-detail.html?id=${encodeURIComponent(m.id)}">
       <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(m.nama || "Menu")}" loading="lazy">
       <h3>${esc(m.nama || "")}</h3>
       <small>${rupiahSingkat(m.harga)}</small>
