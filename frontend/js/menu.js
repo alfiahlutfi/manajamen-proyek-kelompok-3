@@ -431,12 +431,23 @@ async function muatMenu() {
       return;
     }
 
+    // Datang dari "Our Signature" di beranda: menu.html?kategori={id kategori}
+    const paramKat = new URLSearchParams(location.search).get("kategori");
+    if (paramKat) {
+      const cocok = listKategori.find(k => String(k.id) === paramKat || k.slug === paramKat);
+      if (cocok) kategoriAktif = cocok.nama;
+    }
+
+    // Pengaman: jika kategori aktif kosong / tidak terdaftar, pakai kategori pertama
     if (!kategoriAktif || !daftarKat.includes(kategoriAktif)) {
       kategoriAktif = daftarKat[0] || "";
     }
     
     halamanAktif  = 0;
     tampilkan(false);
+
+    // Pastikan kategori aktif terlihat di daftar kategori
+    if (elKategori) elKategori.querySelector(".aktif")?.scrollIntoView({ block: "nearest" });
 
   } catch (err) {
     console.error("Gagal memuat data menu dan kategori:", err);

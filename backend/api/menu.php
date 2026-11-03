@@ -41,7 +41,7 @@ function kirim_menu_pilihan(): void
         $params[':label'] = $label;
     }
 
-    $sql .= ' ORDER BY urutan, id LIMIT ' . MAX_MENU_PILIHAN;
+    $sql .= ' ORDER BY FIELD(id, 80, 14, 20, 42) LIMIT ' . MAX_MENU_PILIHAN;
 
     try {
         $stmt = db()->prepare($sql);
