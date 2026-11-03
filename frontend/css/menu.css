@@ -64,33 +64,55 @@ aside {
 /* ======================================================
    SIDEBAR / KATEGORI: SPACING HURUF DISAMAKAN
    ====================================================== */
+/* ======================================================
+   SIDEBAR / KATEGORI: HOVER & AKTIF SEPERTI REFERENSI
+   ====================================================== */
+.kategori-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 25px; /* Spacing atas */
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Jarak antar menu agar lega dan pas */
+}
+
 .kategori-list li {
-  padding: 13px 22px;
+  padding: 10px 24px;
   font-family: "Montserrat", sans-serif;
   font-size: 15px;
   font-weight: 500;
-  letter-spacing: 2px; /* <--- Disesuaikan agar senada */
+  letter-spacing: 2px;
   color: #2D4229;
   background-color: transparent !important;
-  border-radius: 18px;
+  border-radius: 50px; /* Bentuk kapsul lonjong sempurna */
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  text-align: center; /* Teks berada di tengah */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.kategori-list li:hover {
-  color: var(--acala-hijau-tua, #2d5f2e);
-  background-color: rgba(255, 255, 255, 0.45) !important;
-  transform: translateX(4px);
+/* EFEK HOVER (Kapsul Semi-Transparan Halus) */
+.kategori-list li:hover:not(.aktif) {
+  color: var(--acala-teks-dark, #2d5f2e);
+  background-color: rgba(255, 255, 255, 0.3) !important; /* Putih pudar transparan yang menyatu lembut */
+  transform: scale(1.02); /* Sedikit membesar natural saat di-hover, tanpa geser ke kanan */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
+/* STATE AKTIF (Kapsul Putih Pudar Tebal) */
 .kategori-list li.aktif {
-  background-color: #E2EADF !important;
-  color: var(--acala-hijau-tua, #2d5f2e) !important;
+  background-color: #E2EADF !important; /* Ganti ke #EAEAEA jika ingin abu-abu pudar seperti "Black Coffe" */
+  color: var(--acala-teks-dark, #2d5f2e) !important;
   font-weight: 700;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-  padding-left: 26px;
-  border-left: 4px solid var(--acala-hijau-tua, #2d5f2e);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+  /* Bentuk kapsul utuh penuh di tengah, tanpa border-left dan geser padding lagi */
+  border-left: none !important;
+  padding: 10px 24px !important;
 }
 
 /* ======================================================
@@ -109,8 +131,14 @@ aside {
   animation: masuk 0.35s ease-in-out;
 }
 
+/* ======================================================
+   KARTU PEMBUNGKUS LUAR (Tempat bayangan belakang berada)
+   ====================================================== */
+/* ======================================================
+   1. PEMBUNGKUS LUAR (Diturunkan lagi jarak atasnya)
+   ====================================================== */
 .menu-item {
-  position: relative;
+  position: relative !important;
   width: 336px;
   height: 417px;
   background-color: #C8C8C8;
@@ -118,12 +146,15 @@ aside {
   display: flex;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   overflow: visible;
+  margin-top: 25px !important; /* <--- Diperbesar dari 15px jadi 25px agar semakin turun dari navbar */
 }
 
-/* KARTU HIJAU UTAMA (Menggunakan overflow: hidden agar pita & gambar rapi di dalam) */
+/* ======================================================
+   2. KARTU HIJAU UTAMA DI DALAMNYA
+   ====================================================== */
 .menu-card {
-  position: relative !important; /* <--- KUNCI UTAMA: Agar badge mengikut ke dalam kartu ini */
-  top: 21px;
+  position: relative !important; 
+  top: 10px !important;         
   left: 21px;
   width: 293.12px;
   height: 375.79px;
@@ -142,124 +173,90 @@ aside {
 }
 
 /* ======================================================
-   LABEL BADGE: KUNING (BELAKANG) -> ABU (MENIMPA KUNING) -> HIJAU -> TEKS
+   LABEL BADGE UTAMA (Ukuran pas sesuai pilihanmu + Lingkaran Putih)
    ====================================================== */
 .label-badge {
-  position: absolute;
-  top: -35px;           /* <--- Diperbesar agar perubahannya langsung terlihat ke atas */
-  left: -25px;
-  width: max-content;           /* <--- Diperbesar agar perubahannya langsung terlihat ke kiri */
-  z-index: 25;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: transparent; 
-  color: #FFFFFF;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 395;
-  font-size: 35px; 
-  letter-spacing: 0.2em;
-  height: 30px; 
-  padding: 0 25px 0 30px; 
-  pointer-events: none;
-  text-transform: uppercase;
+  position: absolute !important;
+  top: -12px !important;        
+  left: -25px !important;       
+  width: 230px !important;      
+  height: 40px !important;
+  z-index: 25 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background-color: transparent !important; 
+  pointer-events: none !important;
 }
 
-/* 1. LINGKARAN KUNING (Layer Paling Belakang) */
+/* LINGKARAN KUNING + EFEK LINGKARAN PUTIH DI BELAKANGNYA */
 .label-badge::before {
-  content: "";
-  position: absolute;
-  left: -26px;
-  top: 42%;
-  transform: translateY(-50%);
-  width: 98px;  
-  height: 98px;
-  background-color: var(--acala-kuning, #FFE77B);
-  border-radius: 50%;
-  z-index: 1; 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  content: "" !important;
+  position: absolute !important;
+  left: 1px !important;
+  top: 40% !important;
+  transform: translateY(-50%) !important;
+  width: 85px !important;  
+  height: 85px !important;
+  background-color: var(--acala-kuning, #FFE77B) !important;
+  border-radius: 50% !important;
+  z-index: 1 !important; 
+  /* Efek lingkaran putih menggunakan box-shadow luar */
+  box-shadow: 0 0 0 6px #FFFFFF, 0 3px 10px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* 2. OVAL ABU-ABU (Menimpa Lingkaran Kuning di Depan) */
+/* OVAL ABU-ABU (Sesuai ukuran pas yang kamu mau) */
 .label-badge::after {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 102%;
-  height: 85%;
-  background-color: #dadada; 
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  z-index: 2; 
+  content: "" !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 43px !important;
+  width: 269px !important;      
+  height: 25px !important;
+  background-color: #dadada !important; 
+  border-radius: 20px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+  z-index: 2 !important; 
 }
 
 /* ======================================================
-   PENGATURAN KHUSUS POSISI TEKS DI DALAM BADGE
+   KOTAK OVAL HIJAU & TEKS (Sesuai ukuran pas yang kamu mau)
    ====================================================== */
 .label-badge span {
-  position: relative !important;
-  z-index: 4 !important; 
-  display: inline-flex !important;
-  align-items: center !important;
-  height: 100% !important;
-  width: 100% !important;
-  transform: none !important; /* Pastikan translate dihapus */
-  
-  /* ATUR POSISI TEKS MENGGUNAKAN PADDING DI SINI: */
-  padding-left: -18px !important;   /* Ubah angka ini: Positif (+) geser teks ke KANAN, Negatif (-) ke KIRI */
-  padding-top: -15px !important;     /* Ubah angka ini: Positif (+) geser teks ke BAWAH, Negatif (-) ke ATAS */
-}
-
-.label-badge span::before {
-  content: "";
   position: absolute !important;
-  left: -10px !important;
+  left: 30px !important;        
   top: 25% !important;
   transform: translateY(-50%) !important;
-  width: 100px !important;   /* <-- ganti angka ini sesuai selera */
-  height: 40px !important;
-  background-color: var(--acala-hijau-tua, #2d5f2e) !important;
-  border-radius: 15px !important;
-  z-index: -1 !important;
-}
-
-/* ======================================================
-   1. WADAH UTAMA TEKS (DIKUNCI AGAR TIDAK MENARIK APAPUN)
-   ====================================================== */
-.label-badge span {
-  position: relative !important;
+  
   z-index: 4 !important; 
   display: inline-flex !important;
   align-items: center !important;
-  height: 100% !important;
-  width: 100% !important;
-  transform: none !important;
+  justify-content: center !important;
   
-  /* Hapus padding yang lama */
-  padding-left: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* 2. OVAL HIJAU DIKUNCI MATI (DIJAMIN TIDAK IKUT BERGESER) */
-.label-badge span::before {
-  content: "";
-  position: absolute !important;
-  left: -20px !important; 
-  top: 35% !important;
-  transform: translateY(-50%) !important;
-  width: calc(100% + 39px) !important; 
-  height: 40px !important;             
+  width: 265px !important;      
+  height: 40px !important;      
+  
   background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
-  border-radius: 15px !important;
-  z-index: -1 !important; 
+  border-radius: 14px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
+  
+  /* Styling Teks */
+  color: #FFFFFF !important;
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 25px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
 }
 
-/* 3. GESER HANYA TEKSNYA SAJA (POSISI HIJAU, ABU, KUNING AMAN) */
-.label-badge span {
-  /* --- ATUR POSISI TEKS DI SINI SEPUASNYA --- */
-  margin-left: -5px !important;  /* Ubah nilai ini: Plus (+) geser ke KANAN, Minus (-) ke KIRI */
-  margin-top: -8px !important;   /* Ubah nilai ini: Plus (+) geser ke BAWAH, Minus (-) ke ATAS */
+.label-badge span::before {
+  display: none !important;
+}
+
+.label-badge span small {
+  font-style: normal !important;
+  position: static !important;
 }
 
 /* ======================================================
@@ -346,22 +343,22 @@ aside {
 }
 
 .menu-card .harga {
-  width: 66px;
+  width: 60px;
   height: 40px;
   background-color: var(--kuning, #FFE77B);
   color: var(--hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-  letter-spacing: 1.5px;    /* <--- Jarak antar huruf pada harga disesuaikan */
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 1.9px;    /* <--- Jarak antar huruf pada harga disesuaikan */
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0px;
   flex-shrink: 0;
   
-  margin-right: -42px !important;
-  margin-bottom: -6px;
+  margin-right: -35px !important;
+  margin-bottom: 5px;
   padding: 0;
   box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
   position: relative;
@@ -626,13 +623,13 @@ aside {
 /* Kotak Harga: Keluar di kanan, teks harga diturunkan ke bawah */
 .modal-harga {
   width: 66px;
-  height: 43px;
+  height: 45px;
   background-color: var(--acala-kuning, #FFE77B);
   color: var(--acala-hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 1.5px;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 1.9px;
   display: flex;
   align-items: center;
   justify-content: center !important;
@@ -645,7 +642,7 @@ aside {
   margin-bottom: 0px;                    /* Disamakan agar sejajar dengan bagian bawah nama */
   
   /* TURUNKAN POSISI FONT DI DALAM KOTAK: Tambahkan padding-top */
-  padding-top: 8px !important;           
+  padding-top: 3px !important;           
   
   box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
   position: relative;
