@@ -21,137 +21,120 @@
   margin: 0;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden !important; /* Mencegah overflow horizontal keluar layar */
 }
 
 .menu-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 40px;
-  max-width: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0 35px 0 0;
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  
+  /* PENTING: Ubah padding atas jadi 0 agar sidebar menempel pol ke navbar */
+  padding: 0 25px 0 0 !important; 
+  
   flex: 1;
-  align-items: stretch;
+  align-items: stretch !important;
+  box-sizing: border-box;
+  overflow-x: hidden !important;
 }
 
 aside {
   background-color: var(--acala-hijau-sidebar, #C2D0BC) !important;
-  padding: 35px 20px !important;
-  border-top-right-radius: 28px;
-  border-bottom-right-radius: 28px;
+  
+  /* Sesuaikan padding isi sidebar */
+  padding: 30px 18px !important;
+  
+  /* Sudut kanan atas dan bawah melengkung */
+  border-top-right-radius: 28px !important;
+  border-bottom-right-radius: 28px !important;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
+  
   margin: 0 !important;
   box-shadow: 6px 0 20px rgba(0, 45, 20, 0.05);
   border-right: 2px solid rgba(255, 255, 255, 0.4);
-  align-self: stretch;
   
-  /* Menempel rapat persis di bawah navbar */
-  position: sticky;
-  top: 66px !important; 
-  height: calc(100vh - 66px);
-  box-sizing: border-box;
+  /* Menempel penuh dari navbar ke footer */
+  position: relative !important;
+  top: auto !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
   
-  /* TETAP BISA DI-SCROLL TAPI BILAH SCROLLBAR DIHILANGKAN BERSIH */
-  overflow-y: auto !important;
-  scrollbar-width: none !important; /* Untuk browser Firefox */
-  -ms-overflow-style: none !important; /* Untuk Internet Explorer & Edge lama */
-}
-
-/* Menyembunyikan scrollbar untuk Google Chrome, Safari, dan Opera */
-aside::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  background: transparent !important;
+  overflow-y: visible !important;
 }
 
 
-.kategori-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
 /* ======================================================
-   SIDEBAR / KATEGORI: SPACING HURUF DISAMAKAN
-   ====================================================== */
-/* ======================================================
-   SIDEBAR / KATEGORI: HOVER & AKTIF SEPERTI REFERENSI
+   SIDEBAR / KATEGORI: EFEK HOVER ABU-ABU PUDAR
    ====================================================== */
 .kategori-list {
   list-style: none;
   padding: 0;
-  margin-top: 25px; /* Spacing atas */
+  margin-top: 25px !important; /* Sejajar pas dengan baris kartu menu pertama */
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Jarak antar menu agar lega dan pas */
+  gap: 10px;
 }
 
 .kategori-list li {
-  padding: 10px 24px;
+  padding: 12px 22px;
   font-family: "Montserrat", sans-serif;
   font-size: 15px;
   font-weight: 500;
   letter-spacing: 2px;
   color: #2D4229;
   background-color: transparent !important;
-  border-radius: 50px; /* Bentuk kapsul lonjong sempurna */
+  border-radius: 50px;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
-  text-align: center; /* Teks berada di tengah */
+  text-align: center;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* EFEK HOVER (Kapsul Semi-Transparan Halus) */
+/* EFEK HOVER KATEGORI: Menjadi Abu-abu Pudar yang Bersih */
 .kategori-list li:hover:not(.aktif) {
-  color: var(--acala-teks-dark, #2d5f2e);
-  background-color: rgba(255, 255, 255, 0.3) !important; /* Putih pudar transparan yang menyatu lembut */
-  transform: scale(1.02); /* Sedikit membesar natural saat di-hover, tanpa geser ke kanan */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  color: var(--acala-teks-dark, #2d5f2e) !important;
+  background-color: #EAEAEA !important; /* Warna abu-abu pudar saat di-hover */
+  transform: scale(1.02);
 }
 
-/* STATE AKTIF (Kapsul Putih Pudar Tebal) */
 .kategori-list li.aktif {
-  background-color: #E2EADF !important; /* Ganti ke #EAEAEA jika ingin abu-abu pudar seperti "Black Coffe" */
-  color: var(--acala-teks-dark, #2d5f2e) !important;
+  background-color: #E2EADF !important;
+  color: var(--acala-hijau-tua, #2d5f2e) !important;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  
-  /* Bentuk kapsul utuh penuh di tengah, tanpa border-left dan geser padding lagi */
-  border-left: none !important;
-  padding: 10px 24px !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
 }
 
 /* ======================================================
-   GRID KARTU MENU & KARTU UTAMA ÁCALA
+   GRID KARTU MENU & KARTU UTAMA ÁCALA (AMAN DI DALAM PAGE)
    ====================================================== */
+/* Jarak turun untuk kartu menu di sebelah kanan diberikan di sini, bukan di layout */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 45px 35px;
   align-items: center;
   min-height: 520px;
-  padding-top: 25px;
+  
+  /* Memberikan jarak atas khusus untuk kartu menu agar turun di bawah navbar */
+  padding-top: 40px !important; 
 }
 
 .menu-grid.swap {
   animation: masuk 0.35s ease-in-out;
 }
 
-/* ======================================================
-   KARTU PEMBUNGKUS LUAR (Tempat bayangan belakang berada)
-   ====================================================== */
-/* ======================================================
-   1. PEMBUNGKUS LUAR (Diturunkan lagi jarak atasnya)
-   ====================================================== */
+/* KARTU PEMBUNGKUS LUAR */
 .menu-item {
   position: relative !important;
   width: 336px;
@@ -161,7 +144,7 @@ aside::-webkit-scrollbar {
   display: flex;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   overflow: visible;
-  margin-top: 25px !important; /* <--- Diperbesar dari 15px jadi 25px agar semakin turun dari navbar */
+  margin-top: 25px !important; 
 }
 
 /* ======================================================
@@ -333,7 +316,7 @@ aside::-webkit-scrollbar {
    ====================================================== */
 .menu-card .nama {
   font-family: "Montserrat", sans-serif;
-  font-weight: 400;
+  font-weight: 357;
   font-size: 19px;           /* <--- Sedikit dikecilkan agar nama panjang muat dengan sempurna */
   line-height: 1.25;        /* Jarak antar baris lebih padat */
   letter-spacing: 2px;      /* Jarak antar huruf disesuaikan */
