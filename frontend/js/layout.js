@@ -1,6 +1,6 @@
-/* =========================================================
-   LAYOUT GLOBAL: NAVBAR + FOOTER (ANTIGAGAL & STABIL)
-   ========================================================= */
+// =========================================================
+// LAYOUT GLOBAL: NAVBAR + FOOTER (ANTIGAGAL & STABIL)
+// =========================================================
 "use strict";
 
 const MENU_NAV = [
@@ -43,70 +43,109 @@ function isHalamanAktif(href, halaman) {
 }
 
 // ======================================================
-// LOGIKA HOVER INDIKATOR NAVBAR NGIKUTIN KURSOR
+// LOGIKA HOVER & AKTIF INDIKATOR NAVBAR (PRESISI & DIAM SAAT REFRESH)
 // ======================================================
 // ======================================================
-// LOGIKA HOVER & AKTIF INDIKATOR NAVBAR (DUAL INDIKATOR)
+// LOGIKA HOVER & AKTIF INDIKATOR NAVBAR (DIAM TOTAL & ANTI-LONCAT)
 // ======================================================
 function inisialisasiNavIndicator() {
   const nav = document.querySelector(".nav-acala nav");
   if (!nav) return;
 
-  // 1. Indikator untuk Hover (Ikut Kursor)
-  let hoverIndicator = nav.querySelector(".nav-indicator-hover");
-  if (!hoverIndicator) {
-    hoverIndicator = document.createElement("div");
-    hoverIndicator.className = "nav-indicator-hover";
-    nav.appendChild(hoverIndicator);
-  }
-
-  // 2. Indikator Tetap (Permanen di Halaman yang Sedang Dikunjungi)
-  let activeIndicator = nav.querySelector(".nav-indicator-active");
-  if (!activeIndicator) {
-    activeIndicator = document.createElement("div");
-    activeIndicator.className = "nav-indicator-active";
-    nav.appendChild(activeIndicator);
-  }
-
+  const hoverIndicator = nav.querySelector(".nav-indicator-hover");
+  const activeIndicator = nav.querySelector(".nav-indicator-active");
   const links = nav.querySelectorAll("a");
-  const activeLink = nav.querySelector("a.aktif");
 
-  function posisikanIndikator(indicatorEl, el) {
+  function posisikanIndikator(indicatorEl, el, instant = false) {
     if (!el || !indicatorEl) return;
-    const navRect = nav.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-
-    const leftPos = elRect.left - navRect.left;
     
+    const leftPos = el.offsetLeft;
+    const topPos = (nav.clientHeight - el.offsetHeight) / 2;
+    const width = el.offsetWidth;
+
+    if (width === 0) {
+      requestAnimationFrame(() => posisikanIndikator(indicatorEl, el, instant));
+      return;
+    }
+
+    if (instant) {
+      indicatorEl.style.cssText += "transition: none !important;";
+    } else {
+      indicatorEl.style.transition = "left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1)";
+    }
+
     indicatorEl.style.left = `${leftPos}px`;
-    indicatorEl.style.width = `${elRect.width}px`;
-    indicatorEl.style.top = `${(navRect.height - elRect.height) / 2}px`;
-    indicatorEl.style.height = `${elRect.height}px`;
+    indicatorEl.style.top = `${topPos}px`;
+    indicatorEl.style.width = `${width}px`;
+    indicatorEl.style.height = `${el.offsetHeight}px`;
     indicatorEl.style.opacity = "1";
+
+    if (instant) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          indicatorEl.style.transition = "";
+        });
+      });
+    }
   }
 
-  // Set posisi awal indikator aktif permanen pada halaman yang dikunjungi
-  if (activeLink) {
-    posisikanIndikator(activeIndicator, activeLink);
+  function aturPosisiAktif(instant = false) {
+    const halamanSkarang = location.pathname.split("/").pop() || "index.html";
+    let activeLink = null;
+
+    links.forEach(link => {
+      const href = link.getAttribute("href");
+      const isMatch = (href === halamanSkarang) || ((halamanSkarang === "" || halamanSkarang === "/") && href === "index.html");
+      if (isMatch) {
+        link.classList.add("aktif");
+        activeLink = link;
+      } else {
+        link.classList.remove("aktif");
+      }
+    });
+
+    if (!activeLink) {
+      activeLink = nav.querySelector('a[href="index.html"]');
+      if (activeLink) activeLink.classList.add("aktif");
+    }
+
+    if (activeLink && activeIndicator) {
+      posisikanIndikator(activeIndicator, activeLink, instant);
+    }
   }
 
-  // Sembunyikan hover indicator di awal
-  hoverIndicator.style.opacity = "0";
+  // Tunggu hingga font benar-benar siap agar posisi dihitung pas dalam 1 kali eksekusi matang
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      aturPosisiAktif(true);
+    });
+  }
 
-  // Saat kursor mendekati menu lain (hover)
+  // Eksekusi sekali saja secara instan untuk frame pertama
+  aturPosisiAktif(true);
+
+  if (hoverIndicator) {
+    hoverIndicator.style.opacity = "0";
+  }
+
+  // Logika Hover
   links.forEach(link => {
     link.addEventListener("mouseenter", () => {
-      posisikanIndikator(hoverIndicator, link);
+      if (hoverIndicator) posisikanIndikator(hoverIndicator, link, false);
     });
   });
 
-  // Saat kursor keluar dari navbar, sembunyikan hover indicator (indikator aktif tetap stay di tempatnya!)
   nav.addEventListener("mouseleave", () => {
-    hoverIndicator.style.opacity = "0";
+    if (hoverIndicator) hoverIndicator.style.opacity = "0";
+    const currentActive = nav.querySelector("a.aktif");
+    if (currentActive && activeIndicator) {
+      posisikanIndikator(activeIndicator, currentActive, false);
+    }
   });
 
   window.addEventListener("resize", () => {
-    if (activeLink) posisikanIndikator(activeIndicator, activeLink);
+    const currentActive = nav.querySelector("a.aktif");
+    if (currentActive && activeIndicator) posisikanIndikator(activeIndicator, currentActive, true);
   });
 }
 
@@ -114,26 +153,31 @@ async function renderLayout() {
   const halaman = location.pathname.split("/").pop() || "index.html";
   const navbar = document.getElementById("navbar");
 
-  // 1. RENDER NAVBAR DIJAMIN TAMPIL DULUAN
   if (navbar) {
     const links = MENU_NAV.map(item => {
-      const aktif = isHalamanAktif(item.href, halaman) ? ' class="aktif" aria-current="page"' : "";
+      const isAktif = isHalamanAktif(item.href, halaman) || ((halaman === "" || halaman === "/") && item.href === "index.html");
+      const aktif = isAktif ? ' class="aktif" aria-current="page"' : "";
       return `<a href="${item.href}"${aktif}>${item.label}</a>`;
     }).join("");
 
+    // RENDER NAVBAR DENGAN KUNCI TRANSISI MATI (AGAR TIDAK BERGESER SAAT HARD REFRESH)
     navbar.innerHTML = `
       <a href="index.html" class="brand" aria-label="Café Ácala - Beranda">
         <img src="assets/logo_acala-removebg-preview.png" class="logo-icon" alt="Logo Acala Icon">
         <img src="assets/logo_acala_-_Salin-removebg-preview.png" class="logo-text" alt="Acala Text">
       </a>
-      <nav aria-label="Navigasi utama">${links}</nav>
+      <nav aria-label="Navigasi utama">
+        <div class="nav-indicator-active" style="opacity: 1 !important; transition: none !important;"></div>
+        <div class="nav-indicator-hover"></div>
+        ${links}
+      </nav>
     `;
 
-    // Inisialisasi efek indikator kursor navbar setelah dirender
-    setTimeout(inisialisasiNavIndicator, 50);
+    // Jalankan kalkulasi posisi agar langsung klop di awal
+    inisialisasiNavIndicator();
   }
 
-  // 2. AMBIL DATA KONTAK & KAFE MURNI DARI DATABASE
+  // 2. AMBIL DATA KONTAK & KAFE DARI DATABASE
   let contact = null;
   let cafe = null;
   try {
@@ -186,5 +230,5 @@ async function renderLayout() {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", renderLayout);
 } else {
-    renderLayout();
+  renderLayout();
 }

@@ -64,7 +64,6 @@ main { animation: masuk .35s ease both; }
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Container Logo & Teks Brand (Sejajar presisi & digeser ke kiri) */
 .nav-acala .brand {
   display: flex;
   align-items: center;
@@ -96,15 +95,23 @@ main { animation: masuk .35s ease both; }
 }
 
 /* Kotak Indikator Tetap untuk Halaman yang Sedang Dikunjungi */
+/* Kotak Indikator Tetap untuk Halaman yang Sedang Dikunjungi */
 .nav-acala nav .nav-indicator-active {
   position: absolute;
-  background-color: #275932; /* Warna hijau tetap */
+  background-color: #275932 !important; /* Warna hijau tetap */
   border-radius: 24px;
   pointer-events: none;
   z-index: 1;
-  opacity: 1;
+  opacity: 1 !important;
   display: block !important;
-  transition: left 0.25s ease, width 0.25s ease, top 0.25s ease, height 0.25s ease;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  
+  /* Transisi mulus saat berpindah posisi */
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              width 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              top 0.25s ease, 
+              height 0.25s ease !important;
 }
 
 /* Kotak Indikator yang Bergerak Mengikuti Kursor */
@@ -118,7 +125,7 @@ main { animation: masuk .35s ease both; }
   opacity: 0;
 }
 
-/* Link Menu Navigasi - Pastikan padding seimbang */
+/* Link Menu Navigasi */
 .nav-acala nav a {
   position: relative;
   z-index: 2;
@@ -127,7 +134,7 @@ main { animation: masuk .35s ease both; }
   font-weight: 500;
   font-size: 0.95rem;
   letter-spacing: 0.5px;
-  padding: 8px 18px; /* Padding kiri-kanan disesuaikan agar proporsional */
+  padding: 8px 18px;
   border-radius: 24px;
   background: transparent !important;
   transition: color 0.25s ease;
@@ -136,7 +143,6 @@ main { animation: masuk .35s ease both; }
   justify-content: center;
 }
 
-/* Teks berubah kuning saat tersorot indikator atau saat halaman sedang aktif */
 .nav-acala nav a.highlighted,
 .nav-acala nav a.aktif {
   color: #fce881 !important;
