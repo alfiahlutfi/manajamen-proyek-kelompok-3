@@ -1,0 +1,239 @@
+/* =========================================================
+   HALAMAN GALERI  (card 10.1.3)
+   ========================================================= */
+
+/* ---------- Banner ---------- */
+.galeri-hero {
+  position: relative;
+  aspect-ratio: 280 / 158;
+  display: block;
+  background: #3b3b3b center / cover no-repeat;   /* gambar diisi dari database oleh gallery.js */
+  overflow: hidden;
+}
+.galeri-hero::before {
+    display: none;
+}
+
+/* Lapisan foto banner (diisi dari database): zoom-out saat muncul + parallax saat scroll */
+.galeri-hero__bg {
+  position: absolute; left: 0; right: 0; top: -25%; bottom: 0;
+  background: center 39% / cover no-repeat;
+  opacity: 0; will-change: transform;
+}
+.galeri-hero.siap .galeri-hero__bg {
+  opacity: 1;
+  transition: opacity .8s ease;
+  animation: heroZoom 1.8s cubic-bezier(.2, .7, .2, 1) both;
+}
+@keyframes heroZoom { from { scale: 1.14; } to { scale: 1; } }
+.galeri-hero.siap h1 { animation: judulMasuk 1s .35s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes judulMasuk {
+  from { opacity: 0; transform: translateY(calc(-50% + 28px)); letter-spacing: .34em; }
+  to   { opacity: 1; transform: translateY(-50%);             letter-spacing: .16em; }
+}
+.galeri-hero h1 {
+  position: absolute; left: 0; right: 0; top: 24%; transform: translateY(-50%);
+  text-align: center;
+  font-family: var(--font); font-weight: 700;
+  font-size: clamp(22px, 5.9vw, 110px);
+  letter-spacing: .16em; text-indent: .16em;
+  text-transform: uppercase; color: #000; -webkit-text-stroke: 1.5px #fff; paint-order: stroke fill;           
+  text-shadow: none;
+}
+
+/* ---------- Area grid ---------- */
+.galeri-area {
+  position: relative; padding: 0;
+  container-type: inline-size;
+  background: var(--latar-tembok) center / cover, #C8C8C8;
+}
+/* --u = 1/278 lebar area; semua ukuran grid memakai satuan ini */
+.galeri-grid {
+  --u: calc(100vw / 278);
+  --u: calc(100cqw / 278);
+  display: grid;
+}
+
+.galeri-item {
+  position: relative; display: block;
+  margin: calc(2 * var(--u));                 /* jarak antar foto = 4 satuan */
+  width: calc(100% - 4 * var(--u)); height: calc(100% - 4 * var(--u));
+  padding: 0; border: 0; border-radius: clamp(2px, .9cqw, 10px);
+  background: #9a9a9a; overflow: hidden; cursor: pointer;
+}
+.galeri-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: opacity .7s ease var(--d, 0ms), transform 1s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms),
+              filter .7s ease var(--d, 0ms), scale .7s cubic-bezier(.2, .7, .2, 1);
+}
+/* Sebelum muncul: foto samar, sedikit besar, agak blur -> mengecil dan menajam saat muncul */
+.galeri-item.memuat img { opacity: 0; transform: scale(1.12); filter: blur(8px); }
+
+/* Kotak naik halus saat muncul (fill-mode backwards: tidak mengunci efek hover sesudahnya) */
+.galeri-item.muncul { animation: kotakMuncul .9s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms) backwards; }
+@keyframes kotakMuncul { from { transform: translateY(26px); } }
+
+/* Hover: kotak terangkat + bayangan, foto zoom, kotak lain meredup (spotlight) */
+.galeri-item.muncul {
+  transition: transform .4s cubic-bezier(.2, .7, .2, 1), box-shadow .4s ease, opacity .4s ease;
+}
+.galeri-item.muncul:hover, .galeri-item.muncul:focus-visible {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, .35);
+  z-index: 3;
+}
+.galeri-item.muncul:hover img, .galeri-item.muncul:focus-visible img { scale: 1.08; }
+.galeri-grid:has(.galeri-item.muncul:hover) .galeri-item.muncul:not(:hover) { opacity: .55; }
+
+/* Lapisan gelap tipis + ikon perbesar yang muncul saat hover */
+.galeri-item.muncul::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(20, 40, 20, .55), transparent 55%);
+  opacity: 0; transition: opacity .35s ease;
+}
+.galeri-item.muncul::before {
+  content: ""; position: absolute; right: 12px; bottom: 12px; z-index: 2;
+  width: clamp(28px, 3.2cqw, 46px); aspect-ratio: 1; border-radius: 50%;
+  background: rgba(255, 255, 255, .92) center / 52% no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d5f2e' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  opacity: 0; transform: scale(.5);
+  transition: opacity .3s ease, transform .4s cubic-bezier(.34, 1.56, .64, 1);
+}
+.galeri-item.muncul:hover::after, .galeri-item.muncul:focus-visible::after { opacity: 1; }
+.galeri-item.muncul:hover::before, .galeri-item.muncul:focus-visible::before { opacity: 1; transform: scale(1); }
+.galeri-item.gagal { background: #f3f4f6; animation: none; }
+.galeri-gagal {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px; padding: 6px;
+  text-align: center; color: #4a4a4a;
+  font-size: clamp(8px, 1.5cqw, 14px); font-weight: 600;
+}
+.galeri-gagal img { width: min(90px, 38%); height: auto; max-height: 55%; object-fit: contain; }
+div.galeri-item.gagal { cursor: default; }
+
+/* ---------- Skeleton & pesan gagal ---------- */
+/* ---------- Skeleton: kotak putih polos (sesuai desain Figma) ---------- */
+.galeri-skel .galeri-item,
+.galeri-item.memuat { background: #fff; }
+/* Kotak yang fotonya belum siap: putih polos dan belum bisa diklik */
+.galeri-item.memuat { pointer-events: none; }
+
+/* Saat memuat: banner putih polos, tanpa judul (navbar & footer tampil normal) */
+.galeri-hero.memuat { background: #fff; }
+.galeri-hero.memuat .galeri-hero__bg { visibility: hidden; }
+.galeri-hero.memuat::before, .galeri-hero.memuat h1 { display: none; }
+.galeri-hero.gagal::before { display: none; }
+
+/* Foto gagal: kotak biru muda + ikon gambar */
+.galeri-item.gagal { background: #E0EDFF; }
+.galeri-gagal span { display: none; }
+.galeri-gagal img { width: min(60px, 45%); }
+
+/* Toast kuning (gagal memuat galeri / detail foto) */
+.galeri-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2100;
+  display: flex; align-items: center; gap: 14px; padding: 12px 26px;
+  background: #FFFDDF; color: #141414; border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  font: 700 14px var(--font); letter-spacing: .08em; text-align: center;
+}
+.galeri-toast button {
+  border: 0; background: none; padding: 0; cursor: pointer;
+  font: 600 12px var(--font); color: var(--hijau-tua); text-decoration: underline;
+}
+.galeri-toast button:disabled { opacity: .5; cursor: wait; }
+
+.galeri-pesan {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(30, 40, 30, .28);
+}
+.galeri-pesan__kotak {
+  width: min(420px, 100%); padding: 32px 24px; text-align: center;
+  background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+  color: var(--hijau-tua);
+}
+.galeri-pesan__kotak h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.galeri-pesan__kotak p  { margin: 0 0 18px; font-size: 14px; color: #4a4a4a; }
+.galeri-pesan__kotak .btn-retry {
+  padding: 10px 26px; border: 0; border-radius: 8px; cursor: pointer;
+  background: var(--hijau-tua); color: var(--kuning);
+  font: 700 14px var(--font);
+}
+.galeri-pesan__kotak .btn-retry:hover { opacity: .9; }
+.galeri-pesan__kotak .btn-retry:disabled { opacity: .6; cursor: wait; }
+
+.galeri-kosong {
+  grid-column: 1 / -1; padding: 60px 16px; text-align: center;
+  font-weight: 600; color: var(--hijau-tua);
+}
+
+/* ---------- Popup detail ---------- */
+.galeri-popup {
+  position: fixed; inset: 0; z-index: 2000;
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(0, 0, 0, .62);
+  animation: masuk .25s ease both;
+}
+.galeri-popup[hidden] { display: none; }
+.galeri-popup__kartu {
+  position: relative; display: flex; align-items: center; gap: clamp(16px, 3vw, 36px);
+  width: min(800px, 100%); padding: clamp(16px, 3vw, 32px);
+  background: #A9BA9D; border-radius: 6px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+  animation: popupMasuk .35s cubic-bezier(.34, 1.4, .64, 1) both;
+}
+@keyframes popupMasuk { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
+
+.galeri-popup__foto {
+  flex: 0 0 38%; aspect-ratio: 1 / 1.08;
+  padding: 10px 10px 26px; background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+.galeri-popup__foto > div { position: relative; width: 100%; height: 100%; background: #9a9a9a; overflow: hidden; }
+.galeri-popup__foto img { width: 100%; height: 100%; object-fit: cover; }
+.galeri-popup__foto .galeri-skel-foto { position: absolute; inset: 0; border-radius: 0; }
+
+.galeri-popup__isi { position: relative; flex: 1; align-self: stretch; padding-bottom: 54px; color: #141414; min-width: 0; }
+.galeri-popup__isi h2 {
+  font-family: var(--font); font-weight: 700; font-size: clamp(20px, 3vw, 30px);
+  letter-spacing: .06em; margin-bottom: 12px; overflow-wrap: anywhere;
+}
+.galeri-popup__isi p { margin: 0; font-size: clamp(12px, 1.5vw, 14px); line-height: 1.6; text-align: justify; text-indent: 2em; }
+.galeri-popup__logo { position: absolute; right: 0; bottom: 0; width: 62px; height: auto; opacity: .9; }
+
+.galeri-popup__skel-teks { height: 8px; margin-bottom: 8px; border-radius: 4px; background: #fff; animation: pulse .9s ease-in-out infinite; }
+.galeri-popup__skel-teks.judul { height: 14px; width: 92%; margin-bottom: 20px; border-radius: 3px; }
+.galeri-popup__skel-teks.pendek { width: 70%; }
+.galeri-popup__skel-logo { position: absolute; right: 0; bottom: 0; width: 38px; height: 38px; background: #E0E0E6; animation: pulse .9s ease-in-out infinite; }
+.galeri-popup .galeri-skel-foto { background: #E0E0E6; animation: pulse .9s ease-in-out infinite; }
+.galeri-popup__foto > div:has(.galeri-gagal) { background: #E0EDFF; }
+.galeri-popup__foto { transform: rotate(-1.5deg); }
+.galeri-popup__gagal { text-align: center; align-self: center; flex: 1; }
+.galeri-popup__gagal p { text-indent: 0; text-align: center; margin: 0 0 14px; }
+
+.galeri-popup__tutup, .galeri-popup__nav {
+  position: absolute; display: grid; place-items: center;
+  width: 36px; height: 36px; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .85); color: var(--hijau-tua);
+  font: 700 20px/1 var(--font); cursor: pointer;
+}
+.galeri-popup__tutup:hover, .galeri-popup__nav:hover { background: #fff; }
+.galeri-popup__tutup { top: 10px; right: 10px; z-index: 2; }
+.galeri-popup__nav { top: 50%; transform: translateY(-50%); }
+.galeri-popup__nav.prev { left: -18px; }
+.galeri-popup__nav.next { right: -18px; }
+body.popup-buka { overflow: hidden; }
+
+@media (max-width: 640px) {
+  .galeri-popup__kartu { flex-direction: column; align-items: stretch; max-height: 92vh; overflow-y: auto; }
+  .galeri-popup__foto { flex: none; width: 70%; margin: 0 auto; }
+  .galeri-popup__isi { padding-bottom: 60px; }
+  .galeri-popup__nav.prev { left: 6px; } .galeri-popup__nav.next { right: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .galeri-item img, .galeri-item, .galeri-item::before, .galeri-item::after,
+  .galeri-hero__bg, .galeri-hero h1, .galeri-popup, .galeri-popup__kartu { transition: none !important; animation: none !important; }
+  .galeri-item.memuat img { transform: none; filter: none; }
+}
