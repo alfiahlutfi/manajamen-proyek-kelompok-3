@@ -220,21 +220,6 @@ function munculkanKotak(el) {
   el.classList.add("muncul");
 }
 
-// Parallax banner: foto bergeser lebih lambat dari scroll (murni transform, ringan).
-let rafParallax = 0;
-function geserBanner() {
-  rafParallax = 0;
-  const r = elHero.getBoundingClientRect();
-  if (r.bottom < 0) return;
-  const geser = Math.min(Math.max(-r.top, 0), r.height) * 0.25;
-  elHeroBg.style.transform = `translate3d(0, ${geser.toFixed(1)}px, 0)`;
-}
-if (!kurangiGerak) {
-  window.addEventListener("scroll", () => {
-    if (!rafParallax) rafParallax = requestAnimationFrame(geserBanner);
-  }, { passive: true });
-}
-
 // Tiap kotak tampil sendiri begitu fotonya siap (tidak menunggu foto lain).
 function renderGrid() {
   elGrid.classList.remove("galeri-skel");
@@ -347,6 +332,18 @@ async function muatDetail(indeks) {
     // Skeleton teks tetap tampil, toast kuning di bawah popup.
     elPopup.appendChild(buatToast("Gagal memuat detail foto", "galeri-toast-detail", () => muatDetail(indeks)));
     return;
+  }
+
+  // Foto mengikuti data detail dari API (bila berbeda dari data daftar, pakai yang dari detail).
+  if (detail.foto && detail.foto !== foto.foto) {
+    bingkai.querySelector(".galeri-gagal")?.remove();
+    img.style.visibility = "hidden";
+    pasangFoto(img, detail.foto, (berhasil) => {
+      if (indeks !== indeksAktif) return;
+      if (berhasil) img.style.visibility = "visible";
+      else bingkai.insertAdjacentHTML("beforeend",
+        `<div class="galeri-gagal"><img src="${GAL_GAGAL_IMG}" alt="Foto gagal dimuat"></div>`);
+    });
   }
 
   const judul = String(detail.judul || "").trim() || "Galeri Ácala";
