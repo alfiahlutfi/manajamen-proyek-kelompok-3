@@ -21,7 +21,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden !important; /* Mencegah overflow horizontal keluar layar */
+  overflow-x: hidden !important;
 }
 
 .menu-layout {
@@ -31,40 +31,29 @@
   width: 100% !important;
   max-width: 100vw !important;
   margin: 0 !important;
-  
-  /* PENTING: Padding atas 0 agar puncak sidebar menempel pol persis di garis bawah navbar */
   padding: 0 25px 0 0 !important; 
-  
   flex: 1;
-  align-items: stretch !important; /* Memastikan tinggi sidebar membentang penuh ke footer */
+  align-items: stretch !important;
   box-sizing: border-box;
   overflow-x: hidden !important;
 }
 
 aside {
   background-color: var(--acala-hijau-sidebar, #C2D0BC) !important;
-  
-  /* Padding isi sidebar */
   padding: 30px 18px !important;
-  
-  /* Sudut kanan atas dan bawah melengkung estetik */
   border-top-right-radius: 28px !important;
   border-bottom-right-radius: 28px !important;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
-  
   margin: 0 !important;
   box-shadow: 6px 0 20px rgba(0, 45, 20, 0.05);
   border-right: 2px solid rgba(255, 255, 255, 0.4);
-  
-  /* Menempel penuh dari navbar hingga footer */
   position: relative !important;
   top: 0 !important;
   height: 100% !important;
   min-height: 100% !important;
   align-self: stretch !important;
   box-sizing: border-box !important;
-  
   overflow-y: visible !important;
 }
 
@@ -74,7 +63,7 @@ aside {
 .kategori-list {
   list-style: none;
   padding: 0;
-  margin-top: 35px !important; /* Diatur 35px agar posisi teks kategori sejajar rapi dengan baris kartu menu pertama */
+  margin-top: 35px !important;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -84,7 +73,7 @@ aside {
   padding: 12px 22px;
   font-family: "Montserrat", sans-serif;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 2px;
   color: #2D4229;
   background-color: transparent !important;
@@ -99,10 +88,9 @@ aside {
   justify-content: center;
 }
 
-/* EFEK HOVER KATEGORI: Menjadi Abu-abu Pudar yang Bersih */
 .kategori-list li:hover:not(.aktif) {
   color: var(--acala-teks-dark, #2d5f2e) !important;
-  background-color: #EAEAEA !important; /* Warna abu-abu pudar bersih */
+  background-color: #EAEAEA !important;
   transform: scale(1.02);
 }
 
@@ -114,59 +102,57 @@ aside {
 }
 
 /* ======================================================
-   GRID KARTU MENU & KARTU UTAMA ÁCALA (AMAN DI DALAM PAGE)
+   GRID KARTU MENU & KARTU UTAMA ÁCALA (TIDAK TERLALU ZOOM)
    ====================================================== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px 25px !important; /* Spacing dipadatkan sedikit agar tampilan kartu proporsional dan tidak terkesan terlalu zoom */
+  gap: 25px 20px !important; /* Jarak antar kartu dirapatkan */
   align-items: center;
-  min-height: 500px;
-  padding-top: 40px !important; /* Jarak aman di dalam grid agar kartu & badge tidak menabrak navbar */
+  min-height: 480px;
+  padding-top: 35px !important; 
 }
 
 .menu-grid.swap {
   animation: masuk 0.35s ease-in-out;
 }
 
-/* KARTU PEMBUNGKUS LUAR */
+/* KARTU PEMBUNGKUS LUAR (Ukuran diperkecil agar pas & proporsional) */
 .menu-item {
   position: relative !important;
-  width: 310px !important;   /* Skala ukuran kartu diperkecil sedikit agar tidak terlalu besar di layar */
-  height: 390px !important;
+  width: 285px !important;   
+  height: 360px !important;
   background-color: #C8C8C8;
-  border-radius: 26px;
+  border-radius: 24px;
   display: flex;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   overflow: visible;
   margin-top: 25px !important; 
 }
 
-/* ======================================================
-   2. KARTU HIJAU UTAMA DI DALAMNYA
-   ====================================================== */
+/* KARTU HIJAU UTAMA DI DALAMNYA */
 .menu-card {
   position: relative !important; 
-  top: 8px !important;         
-  left: 18px;
-  width: 274px !important;   /* Menyesuaikan skala kartu hijau dalam */
-  height: 352px !important; 
+  top: 7px !important;         
+  left: 15px;
+  width: 255px !important;   
+  height: 326px !important; 
   background-color: var(--hijau-tua, #2d5f2e);
-  border-top-right-radius: 60px;
-  border-bottom-left-radius: 60px;
+  border-top-right-radius: 55px;
+  border-bottom-left-radius: 55px;
   border-top-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  padding: 20px 18px;
+  padding: 18px 16px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   overflow: visible !important; 
   text-decoration: none;
 }
 
 /* ======================================================
-   LABEL BADGE UTAMA (Ukuran pas sesuai pilihanmu + Lingkaran Putih)
+   LABEL BADGE UTAMA
    ====================================================== */
 .label-badge {
   position: absolute !important;
@@ -182,7 +168,6 @@ aside {
   pointer-events: none !important;
 }
 
-/* LINGKARAN KUNING + EFEK LINGKARAN PUTIH DI BELAKANGNYA */
 .label-badge::before {
   content: "" !important;
   position: absolute !important;
@@ -197,7 +182,6 @@ aside {
   box-shadow: 0 0 0 6px #FFFFFF, 0 3px 10px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* OVAL ABU-ABU */
 .label-badge::after {
   content: "" !important;
   position: absolute !important;
@@ -211,25 +195,20 @@ aside {
   z-index: 2 !important; 
 }
 
-/* KOTAK OVAL HIJAU & TEKS */
 .label-badge span {
   position: absolute !important;
   left: 30px !important;        
   top: 25% !important;
   transform: translateY(-50%) !important;
-  
   z-index: 4 !important; 
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  
   width: 265px !important;      
   height: 40px !important;      
-  
   background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
   border-radius: 14px !important;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
-  
   color: #FFFFFF !important;
   font-family: "Montserrat", sans-serif !important;
   font-weight: 500 !important;
@@ -249,17 +228,17 @@ aside {
 }
 
 /* ======================================================
-   POSISI FOTO PRODUK (UTUH & CENTER SEMPURNA)
+   POSISI FOTO PRODUK
    ====================================================== */
 .menu-card .foto-menu,
 .menu-card .menu-img-wrapper {
   width: 100% !important;
-  height: 195px !important;
+  height: 175px !important;
   display: flex !important;
   align-items: center !important;       
   justify-content: center !important;   
   position: relative !important;
-  margin-top: 20px !important;         
+  margin-top: 15px !important;         
   overflow: visible !important;
   z-index: 2;
 }
@@ -272,20 +251,18 @@ aside {
   width: auto !important;
   height: 100% !important;
   max-width: 100% !important;
-  max-height: 185px !important;         
+  max-height: 165px !important;         
   object-fit: contain !important;
   object-position: center center !important;
   display: block !important;
-  
-  filter: drop-shadow(35px 15px 20px rgba(0, 0, 0, 0.35)) !important;
-          
+  filter: drop-shadow(30px 15px 20px rgba(0, 0, 0, 0.35)) !important;
   z-index: 2;
   transform: none !important;
   margin-left: 0 !important;
 }
 
 /* ======================================================
-   WADAH BAWAH (NAMA & HARGA) AGAR SELALU SEJAJAR
+   WADAH BAWAH (NAMA & HARGA)
    ====================================================== */
 .menu-card .meta {
   display: flex;
@@ -293,19 +270,18 @@ aside {
   justify-content: space-between;
   width: 100%;
   margin-top: auto;
-  margin-bottom: 8px;
-  padding: 0 4px 0 12px;
+  margin-bottom: 6px;
+  padding: 0 4px 0 10px;
   z-index: 3;
 }
 
 .menu-card .nama {
   font-family: "Montserrat", sans-serif;
   font-weight: 357;
-  font-size: 18px;           
+  font-size: 17px;           
   line-height: 1.25;        
-  letter-spacing: 2px;      
+  letter-spacing: 1.8px;      
   color: var(--kuning, #FFE77B);
-  
   flex: 1;
   text-align: center;
   white-space: normal;      
@@ -314,32 +290,30 @@ aside {
   margin: 0;
   padding: 0 4px;
   z-index: 3;
-
   display: flex;
   flex-direction: column;
   justify-content: center;  
-  min-height: 52px;         
+  min-height: 48px;         
   max-height: none;         
   overflow: visible;        
 }
 
 .menu-card .harga {
-  width: 58px;
-  height: 38px;
+  width: 55px;
+  height: 36px;
   background-color: var(--kuning, #FFE77B);
   color: var(--hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
-  font-size: 20px;
-  letter-spacing: 1.8px;    
+  font-size: 19px;
+  letter-spacing: 1.6px;    
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0px;
   flex-shrink: 0;
-  
-  margin-right: -32px !important;
-  margin-bottom: 5px;
+  margin-right: -28px !important;
+  margin-bottom: 4px;
   padding: 0;
   box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
   position: relative;
@@ -622,43 +596,6 @@ aside {
   text-align: justify !important;
   padding-left: 10px !important; 
   letter-spacing: 15%;
-}
-
-.modal-skeleton-nama {
-  width: 60%;
-  height: 24px;
-  background: #457847;
-  border-radius: 6px;
-  animation: pulse 0.9s ease-in-out infinite;
-}
-
-.modal-skeleton-harga {
-  width: 66px;
-  height: 40px;
-  background: var(--acala-kuning, #FFE77B);
-  opacity: 0.7;
-  border-radius: 0px;
-  animation: pulse 0.9s ease-in-out infinite;
-}
-
-.modal-skeleton-desc {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.modal-skeleton-desc .skel-line {
-  width: 100%;
-  height: 14px;
-  background: #457847;
-  border-radius: 4px;
-  animation: pulse 0.9s ease-in-out infinite;
-}
-
-.modal-skeleton-desc .skel-line:nth-child(even) {
-  width: 85%;
 }
 
 .modal-error-msg {
