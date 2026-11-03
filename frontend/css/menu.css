@@ -46,11 +46,26 @@ aside {
   box-shadow: 6px 0 20px rgba(0, 45, 20, 0.05);
   border-right: 2px solid rgba(255, 255, 255, 0.4);
   align-self: stretch;
+  
+  /* Menempel rapat persis di bawah navbar */
   position: sticky;
-  top: 0;
-  height: 100%;
+  top: 66px !important; 
+  height: calc(100vh - 66px);
   box-sizing: border-box;
+  
+  /* TETAP BISA DI-SCROLL TAPI BILAH SCROLLBAR DIHILANGKAN BERSIH */
+  overflow-y: auto !important;
+  scrollbar-width: none !important; /* Untuk browser Firefox */
+  -ms-overflow-style: none !important; /* Untuk Internet Explorer & Edge lama */
 }
+
+/* Menyembunyikan scrollbar untuk Google Chrome, Safari, dan Opera */
+aside::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  background: transparent !important;
+}
+
 
 .kategori-list {
   list-style: none;
