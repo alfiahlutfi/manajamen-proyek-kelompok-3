@@ -21,67 +21,77 @@
   margin: 0;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden !important;
 }
 
 .menu-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 40px;
-  max-width: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0 35px 0 0;
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 25px 0 0 !important; 
   flex: 1;
-  align-items: stretch;
+  align-items: stretch !important;
+  box-sizing: border-box;
+  overflow-x: hidden !important;
 }
 
 aside {
   background-color: var(--acala-hijau-sidebar, #C2D0BC) !important;
-  padding: 35px 20px !important;
-  border-top-right-radius: 28px;
-  border-bottom-right-radius: 28px;
+  padding: 30px 18px !important;
+  border-top-right-radius: 28px !important;
+  border-bottom-right-radius: 28px !important;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
   margin: 0 !important;
   box-shadow: 6px 0 20px rgba(0, 45, 20, 0.05);
   border-right: 2px solid rgba(255, 255, 255, 0.4);
-  align-self: stretch;
-  position: sticky;
-  top: 0;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.kategori-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  position: relative !important;
+  top: 0 !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+  overflow-y: visible !important;
 }
 
 /* ======================================================
-   SIDEBAR / KATEGORI: SPACING HURUF DISAMAKAN
+   SIDEBAR / KATEGORI: EFEK HOVER ABU-ABU PUDAR
    ====================================================== */
+.kategori-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 35px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .kategori-list li {
-  padding: 13px 22px;
+  padding: 12px 22px;
   font-family: "Montserrat", sans-serif;
   font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 2px; /* <--- Disesuaikan agar senada */
+  font-weight: 400;
+  letter-spacing: 2px;
   color: #2D4229;
   background-color: transparent !important;
-  border-radius: 18px;
+  border-radius: 50px;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.kategori-list li:hover {
-  color: var(--acala-hijau-tua, #2d5f2e);
-  background-color: rgba(255, 255, 255, 0.45) !important;
-  transform: translateX(4px);
+.kategori-list li:hover:not(.aktif) {
+  color: var(--acala-teks-dark, #2d5f2e) !important;
+  background-color: #EAEAEA !important;
+  transform: scale(1.02);
 }
 
 .kategori-list li.aktif {
@@ -89,198 +99,150 @@ aside {
   color: var(--acala-hijau-tua, #2d5f2e) !important;
   font-weight: 700;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-  padding-left: 26px;
-  border-left: 4px solid var(--acala-hijau-tua, #2d5f2e);
 }
 
 /* ======================================================
-   GRID KARTU MENU & KARTU UTAMA ÁCALA
+   GRID KARTU MENU & KARTU UTAMA ÁCALA (TIDAK TERLALU ZOOM)
    ====================================================== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 45px 35px;
+  gap: 25px 20px !important; /* Jarak antar kartu dirapatkan */
   align-items: center;
-  min-height: 520px;
-  padding-top: 25px;
+  min-height: 480px;
+  padding-top: 35px !important; 
 }
 
 .menu-grid.swap {
   animation: masuk 0.35s ease-in-out;
 }
 
+/* KARTU PEMBUNGKUS LUAR (Ukuran diperkecil agar pas & proporsional) */
 .menu-item {
-  position: relative;
-  width: 336px;
-  height: 417px;
+  position: relative !important;
+  width: 285px !important;   
+  height: 360px !important;
   background-color: #C8C8C8;
-  border-radius: 30px;
+  border-radius: 24px;
   display: flex;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   overflow: visible;
+  margin-top: 25px !important; 
 }
 
-/* KARTU HIJAU UTAMA (Menggunakan overflow: hidden agar pita & gambar rapi di dalam) */
+/* KARTU HIJAU UTAMA DI DALAMNYA */
 .menu-card {
-  position: relative !important; /* <--- KUNCI UTAMA: Agar badge mengikut ke dalam kartu ini */
-  top: 21px;
-  left: 21px;
-  width: 293.12px;
-  height: 375.79px;
+  position: relative !important; 
+  top: 7px !important;         
+  left: 15px;
+  width: 255px !important;   
+  height: 326px !important; 
   background-color: var(--hijau-tua, #2d5f2e);
-  border-top-right-radius: 70px;
-  border-bottom-left-radius: 70px;
+  border-top-right-radius: 55px;
+  border-bottom-left-radius: 55px;
   border-top-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  padding: 24px 22px;
+  padding: 18px 16px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   overflow: visible !important; 
   text-decoration: none;
 }
 
 /* ======================================================
-   LABEL BADGE: KUNING (BELAKANG) -> ABU (MENIMPA KUNING) -> HIJAU -> TEKS
+   LABEL BADGE UTAMA
    ====================================================== */
 .label-badge {
-  position: absolute;
-  top: -35px;           /* <--- Diperbesar agar perubahannya langsung terlihat ke atas */
-  left: -25px;
-  width: max-content;           /* <--- Diperbesar agar perubahannya langsung terlihat ke kiri */
-  z-index: 25;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: transparent; 
-  color: #FFFFFF;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 395;
-  font-size: 35px; 
-  letter-spacing: 0.2em;
-  height: 30px; 
-  padding: 0 25px 0 30px; 
-  pointer-events: none;
-  text-transform: uppercase;
-}
-
-/* 1. LINGKARAN KUNING (Layer Paling Belakang) */
-.label-badge::before {
-  content: "";
-  position: absolute;
-  left: -26px;
-  top: 42%;
-  transform: translateY(-50%);
-  width: 98px;  
-  height: 98px;
-  background-color: var(--acala-kuning, #FFE77B);
-  border-radius: 50%;
-  z-index: 1; 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* 2. OVAL ABU-ABU (Menimpa Lingkaran Kuning di Depan) */
-.label-badge::after {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 102%;
-  height: 85%;
-  background-color: #dadada; 
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  z-index: 2; 
-}
-
-/* ======================================================
-   PENGATURAN KHUSUS POSISI TEKS DI DALAM BADGE
-   ====================================================== */
-.label-badge span {
-  position: relative !important;
-  z-index: 4 !important; 
-  display: inline-flex !important;
-  align-items: center !important;
-  height: 100% !important;
-  width: 100% !important;
-  transform: none !important; /* Pastikan translate dihapus */
-  
-  /* ATUR POSISI TEKS MENGGUNAKAN PADDING DI SINI: */
-  padding-left: -18px !important;   /* Ubah angka ini: Positif (+) geser teks ke KANAN, Negatif (-) ke KIRI */
-  padding-top: -15px !important;     /* Ubah angka ini: Positif (+) geser teks ke BAWAH, Negatif (-) ke ATAS */
-}
-
-.label-badge span::before {
-  content: "";
   position: absolute !important;
-  left: -10px !important;
+  top: -12px !important;        
+  left: -25px !important;       
+  width: 230px !important;      
+  height: 40px !important;
+  z-index: 25 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background-color: transparent !important; 
+  pointer-events: none !important;
+}
+
+.label-badge::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 1px !important;
+  top: 40% !important;
+  transform: translateY(-50%) !important;
+  width: 85px !important;  
+  height: 85px !important;
+  background-color: var(--acala-kuning, #FFE77B) !important;
+  border-radius: 50% !important;
+  z-index: 1 !important; 
+  box-shadow: 0 0 0 6px #FFFFFF, 0 3px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+.label-badge::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 43px !important;
+  width: 269px !important;      
+  height: 25px !important;
+  background-color: #dadada !important; 
+  border-radius: 20px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+  z-index: 2 !important; 
+}
+
+.label-badge span {
+  position: absolute !important;
+  left: 30px !important;        
   top: 25% !important;
   transform: translateY(-50%) !important;
-  width: 100px !important;   /* <-- ganti angka ini sesuai selera */
-  height: 40px !important;
-  background-color: var(--acala-hijau-tua, #2d5f2e) !important;
-  border-radius: 15px !important;
-  z-index: -1 !important;
-}
-
-/* ======================================================
-   1. WADAH UTAMA TEKS (DIKUNCI AGAR TIDAK MENARIK APAPUN)
-   ====================================================== */
-.label-badge span {
-  position: relative !important;
   z-index: 4 !important; 
   display: inline-flex !important;
   align-items: center !important;
-  height: 100% !important;
-  width: 100% !important;
-  transform: none !important;
-  
-  /* Hapus padding yang lama */
-  padding-left: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* 2. OVAL HIJAU DIKUNCI MATI (DIJAMIN TIDAK IKUT BERGESER) */
-.label-badge span::before {
-  content: "";
-  position: absolute !important;
-  left: -20px !important; 
-  top: 35% !important;
-  transform: translateY(-50%) !important;
-  width: calc(100% + 39px) !important; 
-  height: 40px !important;             
+  justify-content: center !important;
+  width: 265px !important;      
+  height: 40px !important;      
   background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
-  border-radius: 15px !important;
-  z-index: -1 !important; 
+  border-radius: 14px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
+  color: #FFFFFF !important;
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 25px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
 }
 
-/* 3. GESER HANYA TEKSNYA SAJA (POSISI HIJAU, ABU, KUNING AMAN) */
-.label-badge span {
-  /* --- ATUR POSISI TEKS DI SINI SEPUASNYA --- */
-  margin-left: -5px !important;  /* Ubah nilai ini: Plus (+) geser ke KANAN, Minus (-) ke KIRI */
-  margin-top: -8px !important;   /* Ubah nilai ini: Plus (+) geser ke BAWAH, Minus (-) ke ATAS */
+.label-badge span::before {
+  display: none !important;
+}
+
+.label-badge span small {
+  font-style: normal !important;
+  position: static !important;
 }
 
 /* ======================================================
-   POSISI FOTO PRODUK (UTUH & CENTER SEMPURNA)
+   POSISI FOTO PRODUK
    ====================================================== */
 .menu-card .foto-menu,
 .menu-card .menu-img-wrapper {
   width: 100% !important;
-  height: 220px !important;
+  height: 175px !important;
   display: flex !important;
-  align-items: center !important;       /* Posisi vertikal di tengah */
-  justify-content: center !important;   /* Posisi horizontal di tengah */
+  align-items: center !important;       
+  justify-content: center !important;   
   position: relative !important;
-  margin-top: 25px !important;         /* Mengangkat area foto sedikit ke atas */
+  margin-top: 15px !important;         
   overflow: visible !important;
   z-index: 2;
 }
 
-/* ======================================================
-   EFEK BAYANGAN PRODUK (JATUH KE KANAN SESUAI REFERENSI)
-   ====================================================== */
 .menu-card img,
 .menu-card .cup {
   position: relative !important;
@@ -289,44 +251,37 @@ aside {
   width: auto !important;
   height: 100% !important;
   max-width: 100% !important;
-  max-height: 210px !important;         
+  max-height: 165px !important;         
   object-fit: contain !important;
   object-position: center center !important;
   display: block !important;
-  
-  /* BAYANGAN CONDONG KE KANAN (Mengikuti referensi: box-shadow: 55px 23px 31px rgba(0,0,0,0.25)) */
-  filter: drop-shadow(45px 20px 25px rgba(0, 0, 0, 0.35)) !important;
-          
+  filter: drop-shadow(30px 15px 20px rgba(0, 0, 0, 0.35)) !important;
   z-index: 2;
   transform: none !important;
   margin-left: 0 !important;
 }
 
 /* ======================================================
-   WADAH BAWAH (NAMA & HARGA) AGAR SELALU SEJAJAR
+   WADAH BAWAH (NAMA & HARGA)
    ====================================================== */
 .menu-card .meta {
   display: flex;
-  align-items: flex-end !important; /* <--- KUNCI UTAMA: Meratakan posisi bawah nama & harga agar selalu sejajar */
+  align-items: flex-end !important; 
   justify-content: space-between;
   width: 100%;
   margin-top: auto;
-  margin-bottom: 8px;
-  padding: 0 4px 0 12px;
+  margin-bottom: 6px;
+  padding: 0 4px 0 10px;
   z-index: 3;
 }
 
-/* ======================================================
-   PERBAIKAN NAMA MENU: TIDAK TERPOTONG & SEJAJAR RAPI
-   ====================================================== */
 .menu-card .nama {
   font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  font-size: 19px;           /* <--- Sedikit dikecilkan agar nama panjang muat dengan sempurna */
-  line-height: 1.25;        /* Jarak antar baris lebih padat */
-  letter-spacing: 2px;      /* Jarak antar huruf disesuaikan */
+  font-weight: 357;
+  font-size: 17px;           
+  line-height: 1.25;        
+  letter-spacing: 1.8px;      
   color: var(--kuning, #FFE77B);
-  
   flex: 1;
   text-align: center;
   white-space: normal;      
@@ -335,33 +290,30 @@ aside {
   margin: 0;
   padding: 0 4px;
   z-index: 3;
-
-  /* --- MENGHINDARI TERPOTONG & MENJAGA KESEJAJARAN --- */
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* Menjaga teks di tengah secara vertikal */
-  min-height: 56px;         /* Tinggi minimal untuk mengakomodasi hingga 2 baris teks */
-  max-height: none;         /* <--- Membuka batasan agar teks panjang bebas turun ke bawah */
-  overflow: visible;        /* <--- Menjamin tidak ada teks yang disembunyikan/terpotong */
+  justify-content: center;  
+  min-height: 48px;         
+  max-height: none;         
+  overflow: visible;        
 }
 
 .menu-card .harga {
-  width: 66px;
-  height: 40px;
+  width: 55px;
+  height: 36px;
   background-color: var(--kuning, #FFE77B);
   color: var(--hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-  letter-spacing: 1.5px;    /* <--- Jarak antar huruf pada harga disesuaikan */
+  font-weight: 400;
+  font-size: 19px;
+  letter-spacing: 1.6px;    
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0px;
   flex-shrink: 0;
-  
-  margin-right: -42px !important;
-  margin-bottom: -6px;
+  margin-right: -28px !important;
+  margin-bottom: 4px;
   padding: 0;
   box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
   position: relative;
@@ -376,8 +328,8 @@ aside {
   align-items: center;
   justify-content: center;
   gap: 18px;
-  margin-top: 50px;
-  margin-bottom: 60px;
+  margin-top: 40px;
+  margin-bottom: 50px;
   grid-column: 1 / -1;
 }
 
@@ -435,7 +387,7 @@ aside {
 }
 
 /* ======================================================
-   POP-UP / MODAL DETAIL MENU ÁCALA (DENGAN EFEK BLUR ESTETIK)
+   POP-UP / MODAL DETAIL MENU ÁCALA
    ====================================================== */
 .menu-modal-overlay {
   position: fixed;
@@ -443,16 +395,13 @@ aside {
   left: 0;
   width: 100vw;
   height: 100vh;
-  
-  /* Bayangan hitam transparan dengan efek blur estetik */
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  
-  display: none; /* Default tertutup, akan diubah menjadi flex via JavaScript */
+  display: none;
   align-items: center;
   justify-content: center;
-  z-index: 99999; /* Paling depan di atas segalanya */
+  z-index: 99999;
   padding: 20px;
 }
 
@@ -465,17 +414,13 @@ aside {
   border-bottom-left-radius: 70px;
   border-top-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  
-  /* Kotak pop-up diperpanjang ke bawah (padding bawah ditambah jadi 55px) */
   padding: 40px 30px 55px 30px;
-  
   display: flex;
   flex-direction: column;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
   overflow: visible;
 }
 
-/* Badge 3 Lapis pada Pop-up */
 .label-badge-popup {
   position: absolute;
   top: -20px;
@@ -551,7 +496,6 @@ aside {
   top: -5px !important;
 }
 
-/* Area Foto & Skeleton */
 .modal-img-wrapper {
   width: 100%;
   height: 230px;
@@ -596,21 +540,15 @@ aside {
   border-radius: 15px;
 }
 
-/* ======================================================
-   PERBAIKAN POSISI MODAL DETAIL MENU ÁCALA
-   ====================================================== */
-
-/* Wadah bagian bawah (Nama & Harga) agar sejajar rapi */
 .modal-meta {
   display: flex;
-  align-items: flex-end !important;     /* Memastikan posisi bawah nama dan harga sejajar */
+  align-items: flex-end !important;
   justify-content: space-between;
   width: 100%;
   margin-bottom: 15px;
   position: relative;
 }
 
-/* Judul Nama Menu: Rata tengah sempurna */
 .modal-nama {
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
@@ -618,108 +556,46 @@ aside {
   line-height: 1.3;
   letter-spacing: 2px;
   color: var(--acala-kuning, #FFE77B);
-  margin: 0 auto;                       /* Membuat posisi otomatis di tengah */
-  text-align: center !important;        /* Teks rata tengah */
-  width: 75%;                           /* Batasi lebar agar rapi dan tidak terlalu panjang */
+  margin: 0 auto;
+  text-align: center !important;
+  width: 75%;
 }
 
-/* Kotak Harga: Keluar di kanan, teks harga diturunkan ke bawah */
 .modal-harga {
   width: 66px;
-  height: 43px;
+  height: 45px;
   background-color: var(--acala-kuning, #FFE77B);
   color: var(--acala-hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 1.5px;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 1.9px;
   display: flex;
   align-items: center;
   justify-content: center !important;
   text-align: center;
   border-radius: 0px;
   flex-shrink: 0;
-  
-  /* Posisi kotak keluar menjorok ke sebelah kanan */
   margin-right: -42px !important;          
-  margin-bottom: 0px;                    /* Disamakan agar sejajar dengan bagian bawah nama */
-  
-  /* TURUNKAN POSISI FONT DI DALAM KOTAK: Tambahkan padding-top */
-  padding-top: 8px !important;           
-  
+  margin-bottom: 0px;
+  padding-top: 3px !important;           
   box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
   position: relative;
   z-index: 4;
 }
 
-/* ======================================================
-   DESKRIPSI: POSISI DI TENGAH, TAPI TEKSNYA RATA KIRI-KANAN (JUSTIFY)
-   ====================================================== */
 .modal-deskripsi {
   font-family: "Montserrat", sans-serif;
   font-weight: 300;
   font-size: 14px;
   line-height: 1.6;
   color: #FFE77B !important;
-  
-  /* Posisi wadah teks tetap berada di tengah modal */
   width: 100% !important;
   max-width: 82% !important;
   margin: 0 auto !important;
-  
-  /* Membuat gaya tulisan rata kiri-kanan (rapi di kedua sisi) */
   text-align: justify !important;
-  
-  /* Penyesuaian mikro agar tetap seimbang dengan kotak harga di kanan */
   padding-left: 10px !important; 
-  
   letter-spacing: 15%;
-}
-
-.modal-skeleton-nama {
-  width: 60%;
-  height: 24px;
-  background: #457847;
-  border-radius: 6px;
-  animation: pulse 0.9s ease-in-out infinite;
-}
-
-.modal-skeleton-harga {
-  width: 66px;
-  height: 40px;
-  background: var(--acala-kuning, #FFE77B);
-  opacity: 0.7;
-  border-radius: 0px;
-  animation: pulse 0.9s ease-in-out infinite;
-}
-
-.modal-skeleton-desc {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.modal-skeleton-desc .skel-line {
-  width: 100%;
-  height: 14px;
-  background: #457847;
-  border-radius: 4px;
-  animation: pulse 0.9s ease-in-out infinite;
-}
-
-.modal-skeleton-desc .skel-line:nth-child(even) {
-  width: 85%;
-}
-
-.modal-deskripsi {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #FFFFFF;
-  margin: 0;
 }
 
 .modal-error-msg {

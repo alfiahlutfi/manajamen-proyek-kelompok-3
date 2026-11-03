@@ -431,13 +431,12 @@ main { animation: masuk .35s ease both; }
   object-position: center;
   display: block;
 }
-/* =========================================================
-   FOOTER STYLES (Font Lebih Besar & Proporsional Penuh)
-   ========================================================= */
+
+/* ========== FOOTER STYLES ========== */
 .footer-section {
   background-color: #A9BA9D !important;
   color: #2D5F2E !important;
-  padding: 70px 6% 45px 6% !important;
+  padding: 45px 6% 25px !important;
   width: 100% !important;
   box-sizing: border-box !important;
   font-family: var(--font, "Montserrat", sans-serif) !important;
@@ -445,102 +444,90 @@ main { animation: masuk .35s ease both; }
 }
 
 .footer-container {
-  max-width: 1400px !important;
+  max-width: 1200px !important;
   margin: 0 auto !important;
   display: flex !important;
-  justify-content: space-around !important;
+  justify-content: space-between !important;
   align-items: flex-start !important;
   flex-wrap: wrap !important;
-  gap: 50px !important;
-  padding-bottom: 25px !important;
+  gap: 30px !important;
+  padding-bottom: 20px !important;
 }
 
 .footer-col {
-  flex: 0 1 auto !important;
-  min-width: 280px !important;
+  flex: 1 1 200px !important;
+  min-width: 0 !important;
 }
 
-/* Kolom 1: Logo Utuh di Kiri (Diperbesar sedikit agar makin pas) */
 .footer-brand-col {
   display: flex !important;
   align-items: flex-start !important;
   justify-content: flex-start !important;
-  flex: 0 0 260px !important;
+  flex: 0 1 220px !important;
   padding-top: 0 !important;
 }
 
 .footer-logo-img {
-  width: 240px !important;  /* Ukuran logo diperbesar proporsional */
+  width: 190px !important;
+  max-width: 100% !important;
   height: auto !important;
   object-fit: contain !important;
 }
 
-/* Judul Kolom (GET TO KNOW US & CONNECT WITH US) - Font Diperbesar */
 .footer-col h3 {
-  font-size: 1.35rem !important;
+  font-size: 1.1rem !important;
   font-weight: 700 !important;
-  letter-spacing: 2px !important;
+  letter-spacing: 1.5px !important;
   color: #2D5F2E !important;
   margin-top: 0 !important;
-  margin-bottom: 28px !important;
+  margin-bottom: 20px !important;
 }
 
-/* Daftar Link GET TO KNOW US - Font Diperbesar */
 .footer-links {
   list-style: none !important;
   padding: 0 !important;
   margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
+  gap: 12px !important;
 }
 
 .footer-links li {
   margin-bottom: 0 !important;
 }
 
-.footer-links li a {
+.footer-links li a,
+.footer-contact-link {
   text-decoration: none !important;
   color: #2D5F2E !important;
-  font-size: 1.18rem !important; /* Ukuran font menu diperbesar */
+  font-size: 0.95rem !important;
   font-weight: 500 !important;
-  letter-spacing: 0.5px !important;
+  letter-spacing: 0.3px !important;
   transition: opacity 0.2s ease !important;
 }
 
-.footer-links li a:hover {
-  opacity: 0.7 !important;
-}
-
-/* Link Kontak (WhatsApp & Email) - Font Diperbesar */
 .footer-contact-link {
   display: block !important;
-  text-decoration: none !important;
-  color: #2D5F2E !important;
-  font-size: 1.18rem !important; /* Ukuran font kontak (no WA & email) diperbesar */
-  font-weight: 500 !important;
-  letter-spacing: 0.5px !important;
-  margin-bottom: 16px !important;
-  transition: opacity 0.2s ease !important;
+  margin-bottom: 12px !important;
 }
 
+.footer-links li a:hover,
 .footer-contact-link:hover {
   opacity: 0.7 !important;
 }
 
-/* Ikon Sosial Media (Instagram & TikTok) - Diperbesar */
 .footer-socials {
   display: flex !important;
   align-items: center !important;
-  gap: 20px !important;
-  margin-top: 24px !important;
+  gap: 14px !important;
+  margin-top: 18px !important;
 }
 
 .footer-socials a img {
-  width: 46px !important;  /* Ukuran ikon sosmed diperbesar */
-  height: 46px !important;
+  width: 36px !important;
+  height: 36px !important;
   object-fit: contain !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   transition: transform 0.2s ease !important;
 }
 
@@ -548,42 +535,75 @@ main { animation: masuk .35s ease both; }
   transform: scale(1.08) !important;
 }
 
-/* Copyright di Bawah (Bersih tanpa garis) - Font Diperbesar */
 .footer-bottom {
   text-align: center !important;
-  margin-top: 55px !important;
-  padding-top: 10px !important;
+  margin: 25px auto 0 !important;
+  padding-top: 12px !important;
   border-top: none !important;
-  max-width: 1400px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  max-width: 1200px !important;
 }
 
 .footer-bottom p {
-  font-size: 1.02rem !important; /* Ukuran teks copyright diperbesar */
+  font-size: 0.85rem !important;
   color: #2D5F2E !important;
   opacity: 0.85 !important;
-  letter-spacing: 0.5px !important;
+  letter-spacing: 0.3px !important;
   margin: 0 !important;
 }
 
-/* Copyright di Bawah (Bersih tanpa garis) */
-.footer-bottom {
-  text-align: center !important;
-  margin-top: 50px !important;
-  padding-top: 10px !important;
-  border-top: none !important; /* Tanpa garis sesuai permintaan */
-  max-width: 1300px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+/* Tampilan tablet dan HP */
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 35px 6% 20px !important;
+  }
+
+  .footer-container {
+    justify-content: flex-start !important;
+    gap: 28px !important;
+  }
+
+  .footer-brand-col {
+    flex: 1 1 100% !important;
+  }
+
+  .footer-logo-img {
+    width: 160px !important;
+  }
+
+  .footer-col {
+    flex: 1 1 180px !important;
+  }
+
+  .footer-col h3 {
+    font-size: 1rem !important;
+    margin-bottom: 14px !important;
+  }
+
+  .footer-links li a,
+  .footer-contact-link {
+    font-size: 0.9rem !important;
+  }
 }
 
-.footer-bottom p {
-  font-size: 0.9rem !important; /* Ukuran teks copyright diperbesar agar proporsional */
-  color: #2D5F2E !important;
-  opacity: 0.85 !important;
-  letter-spacing: 0.5px !important;
-  margin: 0 !important;
+@media (max-width: 480px) {
+  .footer-container {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+
+  .footer-col,
+  .footer-brand-col {
+    width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .footer-logo-img {
+    width: 145px !important;
+  }
+
+  .footer-bottom {
+    margin-top: 20px !important;
+  }
 }
 
 /* ========== SKELETON LOADING ========== */
