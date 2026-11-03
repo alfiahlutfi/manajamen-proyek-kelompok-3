@@ -95,15 +95,23 @@ main { animation: masuk .35s ease both; }
 }
 
 /* Kotak Indikator Tetap untuk Halaman yang Sedang Dikunjungi */
+/* Kotak Indikator Tetap untuk Halaman yang Sedang Dikunjungi */
 .nav-acala nav .nav-indicator-active {
   position: absolute;
-  background-color: #275932; /* Warna hijau tetap */
+  background-color: #275932 !important; /* Warna hijau tetap */
   border-radius: 24px;
   pointer-events: none;
   z-index: 1;
-  opacity: 1;
+  opacity: 1 !important;
   display: block !important;
-  transition: left 0.25s ease, width 0.25s ease, top 0.25s ease, height 0.25s ease;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  
+  /* Transisi mulus saat berpindah posisi */
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              width 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              top 0.25s ease, 
+              height 0.25s ease !important;
 }
 
 /* Kotak Indikator yang Bergerak Mengikuti Kursor */
