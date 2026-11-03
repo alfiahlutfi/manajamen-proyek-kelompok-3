@@ -2,18 +2,18 @@ const BASE_URL   = "../backend/api/";   // folder file PHP API
 const BASE_ASSET = "../backend/";       // folder yang berisi "uploads/" (lihat tabel di atas)
 
 const API_MAP = {
-    "/cafe": "cafe.php",
-    "/menu": "menu.php?featured=1",
-    "/gallery": "gallery.php",
-    "/areas": "area.php",
-    "/events": "event.php",
-    "/carousel": "carousel.php",
-    "/faqs": "faq.php",
-    "/menu-category": "menu_category.php",
-    "/operating-hours": "operating_hours.php",
-    "/lokasi": "location.php",
-    "/reservasi": "reservation.php",
-    "/contact": "contact.php"
+    "/cafe": "cafe",
+    "/menu": "menu?featured=1",
+    "/gallery": "gallery",
+    "/area": "area",
+    "/events": "event",
+    "/carousel": "carousel",
+    "/faqs": "faq",
+    "/menu-category": "menu_category",
+    "/operating-hours": "operating_hours",
+    "/lokasi": "location",
+    "/reservasi": "reservation",
+    "/contact": "contact"
 
 };
 
