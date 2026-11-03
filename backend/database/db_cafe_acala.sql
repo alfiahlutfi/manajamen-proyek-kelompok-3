@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 02, 2026 at 01:58 PM
+-- Generation Time: Nov 03, 2026 at 03:22 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -201,17 +201,18 @@ CREATE TABLE `gallery` (
 --
 
 INSERT INTO `gallery` (`id`, `judul`, `foto`, `deskripsi`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Lorem ipsum', 'uploads/gallery/gallery-cafe1.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 1, 'aktif', '2026-10-20 06:56:49', '2026-10-30 06:11:54'),
-(2, 'Lorem ipsum', 'uploads/gallery/gallery-cafe2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 2, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
-(3, 'Lorem ipsum', 'uploads/gallery/gallery-cafe3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 3, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
-(4, 'Lorem ipsum', 'uploads/gallery/gallery-cafe4.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 4, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
-(5, 'Lorem ipsum', 'uploads/gallery/gallery-cafe5.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 5, 'aktif', '2026-10-30 06:13:24', '2026-10-30 06:13:24'),
-(6, 'Lorem ipsum', 'uploads/gallery/gallery-cafe6.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 6, 'aktif', '2026-11-02 04:32:22', '2026-11-02 04:32:22'),
-(7, 'Lorem ipsum', 'uploads/gallery/gallery-cafe7.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 7, 'aktif', '2026-11-02 04:32:22', '2026-11-02 04:32:22'),
-(8, 'Lorem ipsum', 'uploads/gallery/gallery-cafe8.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 8, 'aktif', '2026-11-02 04:32:22', '2026-11-02 04:32:22'),
-(9, 'Lorem ipsum', 'uploads/gallery/gallery-cafe9.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 9, 'aktif', '2026-11-02 04:32:22', '2026-11-02 04:32:22'),
-(10, 'Lorem ipsum', 'uploads/gallery/gallery-cafe10.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 10, 'aktif', '2026-11-02 04:32:22', '2026-11-02 04:32:22'),
-(11, 'Lorem ipsum', 'uploads/gallery/gallery-cafe11.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 11, 'aktif', '2026-11-02 04:32:22', '2026-11-02 04:32:22');
+(1, 'Lorem ipsum', 'uploads/gallery/gallery-cafe3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 1, 'aktif', '2026-10-20 06:56:49', '2026-11-03 03:16:46'),
+(2, 'Lorem ipsum', 'uploads/gallery/gallery-cafe1.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 2, 'aktif', '2026-10-30 06:13:24', '2026-11-03 03:17:00'),
+(3, 'Lorem ipsum', 'uploads/gallery/gallery-cafe2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 3, 'aktif', '2026-10-30 06:13:24', '2026-11-03 03:17:11'),
+(4, 'Lorem ipsum', 'uploads/gallery/gallery-cafe3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 4, 'aktif', '2026-10-30 06:13:24', '2026-11-03 03:17:25'),
+(5, 'Lorem ipsum', 'uploads/gallery/gallery-cafe4.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 5, 'aktif', '2026-10-30 06:13:24', '2026-11-03 03:17:37'),
+(6, 'Lorem ipsum', 'uploads/gallery/gallery-cafe5.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 6, 'aktif', '2026-11-02 04:32:22', '2026-11-03 03:17:50'),
+(7, 'Lorem ipsum', 'uploads/gallery/gallery-cafe6.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 7, 'aktif', '2026-11-02 04:32:22', '2026-11-03 03:18:07'),
+(8, 'Lorem ipsum', 'uploads/gallery/gallery-cafe7.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 8, 'aktif', '2026-11-02 04:32:22', '2026-11-03 03:18:19'),
+(9, 'Lorem ipsum', 'uploads/gallery/gallery-cafe8.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 9, 'aktif', '2026-11-02 04:32:22', '2026-11-03 03:18:30'),
+(10, 'Lorem ipsum', 'uploads/gallery/gallery-cafe9.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 10, 'aktif', '2026-11-02 04:32:22', '2026-11-03 03:18:49'),
+(11, 'Lorem ipsum', 'uploads/gallery/gallery-cafe10.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 11, 'aktif', '2026-11-02 04:32:22', '2026-11-03 03:19:00'),
+(12, 'Lorem ipsum', 'uploads/gallery/gallery-cafe11.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 12, 'aktif', '2026-11-03 03:21:51', '2026-11-03 03:21:51');
 
 -- --------------------------------------------------------
 
@@ -497,7 +498,7 @@ ALTER TABLE `faq`
 -- AUTO_INCREMENT for table `gallery`
 --
 ALTER TABLE `gallery`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `menu`
