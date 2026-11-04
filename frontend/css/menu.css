@@ -104,6 +104,9 @@ aside {
 /* ======================================================
    GRID KARTU MENU
    ====================================================== */
+/* ======================================================
+   GRID KARTU MENU
+   ====================================================== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -117,24 +120,28 @@ aside {
   animation: masuk 0.35s ease-in-out;
 }
 
-/* KARTU PEMBUNGKUS LUAR */
+/* KARTU PEMBUNGKUS LUAR (KOTAK ABU-ABU) */
+/* KARTU PEMBUNGKUS LUAR (KOTAK ABU-ABU) */
 .menu-item {
   position: relative !important;
   width: 250px !important;   
   height: 320px !important;
-  background-color: #C8C8C8;
+  background-color: #c2c1c1 !important; /* Warna abu-abu yang lebih solid dan jelas */
   border-radius: 22px;
   display: flex;
+  align-items: center !important;     
+  justify-content: center !important; 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   overflow: visible;
   margin-top: 20px !important; 
 }
 
-/* KARTU HIJAU UTAMA DI DALAMNYA */
+/* KARTU HIJAU UTAMA DI DALAMNYA (PAS DI TENGAH KOTAK ABU-ABU) */
 .menu-card {
-  position: relative !important; 
-  top: 6px !important;         
-  left: 13px;
+  position: absolute !important; 
+  top: 50% !important;         
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important; /* Mengunci posisi agar benar-benar persis di tengah */
   width: 224px !important;   
   height: 290px !important; 
   background-color: var(--hijau-tua, #2d5f2e);
@@ -233,12 +240,12 @@ aside {
 .menu-card .foto-menu,
 .menu-card .menu-img-wrapper {
   width: 100% !important;
-  height: 165px !important; /* Diperbesar agar foto lebih ideal */
+  height: 170px !important; /* Diperbesar agar foto lebih ideal */
   display: flex !important;
   align-items: center !important;       
   justify-content: center !important;   
   position: relative !important;
-  margin-top: 10px !important;         
+  margin-top: 25px !important;         
   overflow: visible !important;
   z-index: 2;
 }
@@ -280,7 +287,7 @@ aside {
   font-weight: 357;
   font-size: 15px;           
   line-height: 1.2;        
-  letter-spacing: 1.5px;      
+  letter-spacing: 1.8px;      
   color: var(--kuning, #FFE77B);
   flex: 1;
   text-align: center;
@@ -375,6 +382,9 @@ aside {
 /* ======================================================
    POP-UP / MODAL DETAIL MENU ÁCALA (PROPORSIONAL & TIDAK ZOOM)
    ====================================================== */
+/* ======================================================
+   POP-UP / MODAL DETAIL MENU ÁCALA (PROPORSIONAL & TIDAK ZOOM)
+   ====================================================== */
 .menu-modal-overlay {
   position: fixed;
   top: 0;
@@ -393,7 +403,7 @@ aside {
 
 .menu-modal-container {
   position: relative;
-  width: 300px !important; /* Diperkecil agar tidak terlalu besar/zoom */
+  width: 300px !important;
   max-width: 90vw;
   background-color: var(--acala-hijau-tua, #2d5f2e);
   border-top-right-radius: 50px !important;
@@ -407,78 +417,81 @@ aside {
   overflow: visible;
 }
 
-/* Badge 3 Lapis pada Pop-up */
+/* Badge 3 Lapis pada Pop-up (Disesuaikan Ukuran & Posisi Sudut Kanan Atas) */
 .label-badge-popup {
   position: absolute;
-  top: -15px !important;
-  left: -10px !important;
-  right: 10px;
-  z-index: 25;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 32px !important;
-  pointer-events: none;
+  top: -14px !important;
+  left: -15px !important;
+  width: 255px !important;
+  height: 36px !important;
+  z-index: 25 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background-color: transparent !important;
+  pointer-events: none !important;
   text-transform: uppercase;
 }
 
+/* Lingkaran Kuning (Dibuat agak lebih besar) */
 .label-badge-popup::before {
-  content: "";
-  position: absolute;
-  left: -20px !important;
-  top: 20%;
-  transform: translateY(-50%);
-  width: 80px !important;  
-  height: 80px !important;
-  background-color: var(--acala-kuning, #FFE77B);
-  border-radius: 50%;
-  z-index: 1; 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.label-badge-popup::after {
-  content: "";
-  position: absolute;
-  top: 6px !important;
-  left: 25px;
-  width: 272px !important;
-  height: 23px !important;
-  background-color: #dadada; 
-  border-radius: 15px !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-  z-index: 2; 
-}
-
-.label-badge-popup span::before {
-  content: "";
+  content: "" !important;
   position: absolute !important;
-  left: 15px !important; 
-  top: -5% !important;
+  left: 1px !important;
+  top: 30% !important;
   transform: translateY(-50%) !important;
-  width: 262px !important; 
-  height: 39px !important;             
-  background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
-  border-radius: 12px !important;
-  z-index: -1 !important; 
+  width: 74px !important;  
+  height: 74px !important;
+  background-color: var(--acala-kuning, #FFE77B) !important;
+  border-radius: 50% !important;
+  z-index: 1 !important; 
+  box-shadow: 0 0 0 5px #FFFFFF, 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Latar Abu-abu (Memanjang ke sudut kanan atas & sedikit lebih) */
+.label-badge-popup::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 8px !important;
+  left: 38px !important;
+  width: 273px !important;      
+  height: 22px !important;
+  background-color: #dadada !important; 
+  border-radius: 15px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+  z-index: 2 !important; 
+}
+
+/* Teks Label Hijau (Di tengah oval hijau secara rapi & sampai sudut kanan atas) */
 .label-badge-popup span {
-  position: relative !important;
+  position: absolute !important;
+  left: 28px !important;        
+  top: 8% !important;
+  transform: translateY(-50%) !important;
   z-index: 4 !important; 
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 200px !important;
-  height: 32px !important;
-  font-family: "Montserrat", sans-serif;
-  font-size: 18px !important; /* Ukuran font disesuaikan agar pas dan tidak raksasa */
+  width: 265px !important;      
+  height: 34px !important;      
+  background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
+  border-radius: 12px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+  color: #FFFFFF !important;
+  font-family: "Montserrat", sans-serif !important;
   font-weight: 500 !important;
-  letter-spacing: 0.15em !important;
-  color: #FFFFFF;
+  font-size: 28px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+}
+
+.label-badge-popup span::before {
+  display: none !important;
 }
 
 .label-badge-popup span small {
-  font-style: normal;
+  font-style: normal !important;
   position: static !important;
 }
 
@@ -516,7 +529,7 @@ aside {
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
   font-size: 18px !important;
-  line-height: 1.3;
+  line-height: 1.5;
   letter-spacing: 1.5px;
   color: var(--acala-kuning, #FFE77B);
   margin: 0 auto;
@@ -558,18 +571,25 @@ aside {
   margin: 0 auto !important;
   text-align: justify !important;
   padding-left: 0 !important; 
-  letter-spacing: 0.05em;
+  letter-spacing: 0.2em;
 }
 
 .modal-error-msg {
-  color: #FFE77B;
-  background-color: rgba(217, 83, 79, 0.4);
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  text-align: center;
-  margin-top: 15px;
-  font-weight: 600;
+  position: absolute !important;
+  top: -85px !important; /* Dinaikkan lebih tinggi agar tidak menabrak badge */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 100% !important;
+  max-width: 280px !important;
+  color: #FFFFFF !important;
+  background-color: #d9534f !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  z-index: 99999 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* ======================================================
