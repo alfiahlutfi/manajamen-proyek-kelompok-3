@@ -26,12 +26,12 @@
 
 .menu-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 40px;
+  grid-template-columns: 240px 1fr;
+  gap: 30px;
   width: 100% !important;
   max-width: 100vw !important;
   margin: 0 !important;
-  padding: 0 25px 0 0 !important; 
+  padding: 0 20px 0 0 !important; 
   flex: 1;
   align-items: stretch !important;
   box-sizing: border-box;
@@ -40,7 +40,7 @@
 
 aside {
   background-color: var(--acala-hijau-sidebar, #C2D0BC) !important;
-  padding: 30px 18px !important;
+  padding: 25px 15px !important;
   border-top-right-radius: 28px !important;
   border-bottom-right-radius: 28px !important;
   border-top-left-radius: 0px !important;
@@ -63,18 +63,18 @@ aside {
 .kategori-list {
   list-style: none;
   padding: 0;
-  margin-top: 35px !important;
+  margin-top: 30px !important;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .kategori-list li {
-  padding: 12px 22px;
+  padding: 10px 16px;
   font-family: "Montserrat", sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
   color: #2D4229;
   background-color: transparent !important;
   border-radius: 50px;
@@ -102,51 +102,51 @@ aside {
 }
 
 /* ======================================================
-   GRID KARTU MENU & KARTU UTAMA ÁCALA (TIDAK TERLALU ZOOM)
+   GRID KARTU MENU
    ====================================================== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px 20px !important; /* Jarak antar kartu dirapatkan */
+  gap: 25px 20px !important; 
   align-items: center;
-  min-height: 480px;
-  padding-top: 35px !important; 
+  min-height: 420px;
+  padding-top: 30px !important; 
 }
 
 .menu-grid.swap {
   animation: masuk 0.35s ease-in-out;
 }
 
-/* KARTU PEMBUNGKUS LUAR (Ukuran diperkecil agar pas & proporsional) */
+/* KARTU PEMBUNGKUS LUAR */
 .menu-item {
   position: relative !important;
-  width: 285px !important;   
-  height: 360px !important;
+  width: 250px !important;   
+  height: 320px !important;
   background-color: #C8C8C8;
-  border-radius: 24px;
+  border-radius: 22px;
   display: flex;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   overflow: visible;
-  margin-top: 25px !important; 
+  margin-top: 20px !important; 
 }
 
 /* KARTU HIJAU UTAMA DI DALAMNYA */
 .menu-card {
   position: relative !important; 
-  top: 7px !important;         
-  left: 15px;
-  width: 255px !important;   
-  height: 326px !important; 
+  top: 6px !important;         
+  left: 13px;
+  width: 224px !important;   
+  height: 290px !important; 
   background-color: var(--hijau-tua, #2d5f2e);
-  border-top-right-radius: 55px;
-  border-bottom-left-radius: 55px;
+  border-top-right-radius: 45px;
+  border-bottom-left-radius: 45px;
   border-top-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  padding: 18px 16px;
+  padding: 14px 14px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: visible !important; 
   text-decoration: none;
 }
@@ -156,10 +156,10 @@ aside {
    ====================================================== */
 .label-badge {
   position: absolute !important;
-  top: -12px !important;        
-  left: -25px !important;       
-  width: 230px !important;      
-  height: 40px !important;
+  top: -10px !important;        
+  left: -20px !important;       
+  width: 180px !important;      
+  height: 32px !important;
   z-index: 25 !important;
   display: flex !important;
   align-items: center !important;
@@ -174,46 +174,46 @@ aside {
   left: 1px !important;
   top: 40% !important;
   transform: translateY(-50%) !important;
-  width: 85px !important;  
-  height: 85px !important;
+  width: 65px !important;  
+  height: 65px !important;
   background-color: var(--acala-kuning, #FFE77B) !important;
   border-radius: 50% !important;
   z-index: 1 !important; 
-  box-shadow: 0 0 0 6px #FFFFFF, 0 3px 10px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 0 0 5px #FFFFFF, 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
 .label-badge::after {
   content: "" !important;
   position: absolute !important;
-  top: 20px !important;
-  left: 43px !important;
-  width: 269px !important;      
-  height: 25px !important;
+  top: 16px !important;
+  left: 35px !important;
+  width: 210px !important;      
+  height: 20px !important;
   background-color: #dadada !important; 
-  border-radius: 20px !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
   z-index: 2 !important; 
 }
 
 .label-badge span {
   position: absolute !important;
-  left: 30px !important;        
+  left: 25px !important;        
   top: 25% !important;
   transform: translateY(-50%) !important;
   z-index: 4 !important; 
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 265px !important;      
-  height: 40px !important;      
+  width: 205px !important;      
+  height: 32px !important;      
   background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
-  border-radius: 14px !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
   color: #FFFFFF !important;
   font-family: "Montserrat", sans-serif !important;
   font-weight: 500 !important;
-  font-size: 25px !important;
-  letter-spacing: 0.12em !important;
+  font-size: 18px !important;
+  letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
   text-align: center !important;
 }
@@ -228,17 +228,17 @@ aside {
 }
 
 /* ======================================================
-   POSISI FOTO PRODUK
+   POSISI FOTO PRODUK (DIPERBESAR & CENTER SEMPURNA)
    ====================================================== */
 .menu-card .foto-menu,
 .menu-card .menu-img-wrapper {
   width: 100% !important;
-  height: 175px !important;
+  height: 165px !important; /* Diperbesar agar foto lebih ideal */
   display: flex !important;
   align-items: center !important;       
   justify-content: center !important;   
   position: relative !important;
-  margin-top: 15px !important;         
+  margin-top: 10px !important;         
   overflow: visible !important;
   z-index: 2;
 }
@@ -251,14 +251,14 @@ aside {
   width: auto !important;
   height: 100% !important;
   max-width: 100% !important;
-  max-height: 165px !important;         
+  max-height: 160px !important; /* Ukuran maksimal gambar ditingkatkan */
   object-fit: contain !important;
   object-position: center center !important;
   display: block !important;
-  filter: drop-shadow(30px 15px 20px rgba(0, 0, 0, 0.35)) !important;
+  margin: 0 auto !important; /* Pastikan benar-benar di tengah */
+  filter: drop-shadow(25px 12px 18px rgba(0, 0, 0, 0.35)) !important;
   z-index: 2;
   transform: none !important;
-  margin-left: 0 !important;
 }
 
 /* ======================================================
@@ -270,17 +270,17 @@ aside {
   justify-content: space-between;
   width: 100%;
   margin-top: auto;
-  margin-bottom: 6px;
-  padding: 0 4px 0 10px;
+  margin-bottom: 4px;
+  padding: 0 2px 0 8px;
   z-index: 3;
 }
 
 .menu-card .nama {
   font-family: "Montserrat", sans-serif;
   font-weight: 357;
-  font-size: 17px;           
-  line-height: 1.25;        
-  letter-spacing: 1.8px;      
+  font-size: 15px;           
+  line-height: 1.2;        
+  letter-spacing: 1.5px;      
   color: var(--kuning, #FFE77B);
   flex: 1;
   text-align: center;
@@ -288,34 +288,34 @@ aside {
   word-wrap: break-word;    
   position: static !important;
   margin: 0;
-  padding: 0 4px;
+  padding: 0 2px;
   z-index: 3;
   display: flex;
   flex-direction: column;
   justify-content: center;  
-  min-height: 48px;         
+  min-height: 40px;         
   max-height: none;         
   overflow: visible;        
 }
 
 .menu-card .harga {
-  width: 55px;
-  height: 36px;
+  width: 48px;
+  height: 30px;
   background-color: var(--kuning, #FFE77B);
   color: var(--hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
-  font-size: 19px;
-  letter-spacing: 1.6px;    
+  font-size: 16px;
+  letter-spacing: 1.2px;    
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0px;
   flex-shrink: 0;
-  margin-right: -28px !important;
-  margin-bottom: 4px;
+  margin-right: -24px !important;
+  margin-bottom: 3px;
   padding: 0;
-  box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: -3px 2px 8px rgba(0, 0, 0, 0.25);
   position: relative;
   z-index: 4;
 }
@@ -327,15 +327,15 @@ aside {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-top: 40px;
-  margin-bottom: 50px;
+  gap: 15px;
+  margin-top: 30px;
+  margin-bottom: 40px;
   grid-column: 1 / -1;
 }
 
 .menu-pager .nav-arrow {
-  width: 39px;
-  height: 36px;
+  width: 35px;
+  height: 32px;
   border-radius: 50%;
   background-color: #B8B8B8 !important;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -345,17 +345,8 @@ aside {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   padding: 0;
-  opacity: 1 !important;
-}
-
-.menu-pager .nav-arrow:disabled,
-.menu-pager .nav-arrow[disabled] {
-  background-color: #B8B8B8 !important;
-  opacity: 1 !important;
-  color: #111111 !important;
-  cursor: not-allowed;
 }
 
 .menu-pager .nav-arrow:hover:not(:disabled) {
@@ -366,8 +357,8 @@ aside {
 }
 
 .menu-pager button.dot {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -381,13 +372,8 @@ aside {
   transform: scale(1.25);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
-}
-
 /* ======================================================
-   POP-UP / MODAL DETAIL MENU ÁCALA
+   POP-UP / MODAL DETAIL MENU ÁCALA (PROPORSIONAL & TIDAK ZOOM)
    ====================================================== */
 .menu-modal-overlay {
   position: fixed;
@@ -407,30 +393,31 @@ aside {
 
 .menu-modal-container {
   position: relative;
-  width: 420px;
+  width: 300px !important; /* Diperkecil agar tidak terlalu besar/zoom */
   max-width: 90vw;
   background-color: var(--acala-hijau-tua, #2d5f2e);
-  border-top-right-radius: 70px;
-  border-bottom-left-radius: 70px;
+  border-top-right-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
   border-top-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  padding: 40px 30px 55px 30px;
+  padding: 30px 22px 40px 22px !important;
   display: flex;
   flex-direction: column;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
   overflow: visible;
 }
 
+/* Badge 3 Lapis pada Pop-up */
 .label-badge-popup {
   position: absolute;
-  top: -20px;
-  left: -5px;
+  top: -15px !important;
+  left: -10px !important;
   right: 10px;
   z-index: 25;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  height: 30px;
+  height: 32px !important;
   pointer-events: none;
   text-transform: uppercase;
 }
@@ -438,11 +425,11 @@ aside {
 .label-badge-popup::before {
   content: "";
   position: absolute;
-  left: -45px;
-  top: 42%;
+  left: -20px !important;
+  top: 20%;
   transform: translateY(-50%);
-  width: 90px;  
-  height: 90px;
+  width: 80px !important;  
+  height: 80px !important;
   background-color: var(--acala-kuning, #FFE77B);
   border-radius: 50%;
   z-index: 1; 
@@ -452,26 +439,26 @@ aside {
 .label-badge-popup::after {
   content: "";
   position: absolute;
-  top: 15px;
-  left: -1px;
-  width: 100%;
-  height: 85%;
+  top: 6px !important;
+  left: 25px;
+  width: 272px !important;
+  height: 23px !important;
   background-color: #dadada; 
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 15px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   z-index: 2; 
 }
 
 .label-badge-popup span::before {
   content: "";
   position: absolute !important;
-  left: -15px !important; 
-  top: 35% !important;
+  left: 15px !important; 
+  top: -5% !important;
   transform: translateY(-50%) !important;
-  width: calc(100% + -5px) !important; 
-  height: 40px !important;             
+  width: 262px !important; 
+  height: 39px !important;             
   background-color: var(--acala-hijau-tua, #2d5f2e) !important; 
-  border-radius: 15px !important;
+  border-radius: 12px !important;
   z-index: -1 !important; 
 }
 
@@ -480,106 +467,82 @@ aside {
   z-index: 4 !important; 
   display: inline-flex !important;
   align-items: center !important;
-  width: 300% !important;
-  height: 100%!important;
+  justify-content: center !important;
+  width: 200px !important;
+  height: 32px !important;
   font-family: "Montserrat", sans-serif;
-  font-size: 38px;
-  font-weight: 400;
-  letter-spacing: 0.4em;
+  font-size: 18px !important; /* Ukuran font disesuaikan agar pas dan tidak raksasa */
+  font-weight: 500 !important;
+  letter-spacing: 0.15em !important;
   color: #FFFFFF;
 }
 
 .label-badge-popup span small {
   font-style: normal;
-  position: relative !important;
-  left: 20px !important;
-  top: -5px !important;
+  position: static !important;
 }
 
+/* Area Foto pada Pop-up */
 .modal-img-wrapper {
   width: 100%;
-  height: 230px;
+  height: 165px !important;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   margin-top: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .modal-img {
-  max-height: 100%;
+  max-height: 155px !important;
   max-width: 100%;
   object-fit: contain;
-  filter: drop-shadow(35px 15px 20px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(25px 10px 18px rgba(0, 0, 0, 0.35));
   z-index: 2;
 }
 
-.modal-skeleton-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: #457847;
-  animation: pulse 0.9s ease-in-out infinite;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.img-placeholder {
-  color: #FFFFFF;
-  font-size: 14px;
-  font-style: italic;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.2);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-}
-
+/* Wadah Nama & Harga pada Pop-up */
 .modal-meta {
   display: flex;
   align-items: flex-end !important;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   position: relative;
 }
 
 .modal-nama {
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
-  font-size: 21px;
+  font-size: 18px !important;
   line-height: 1.3;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   color: var(--acala-kuning, #FFE77B);
   margin: 0 auto;
   text-align: center !important;
-  width: 75%;
+  width: 80%;
 }
 
 .modal-harga {
-  width: 66px;
-  height: 45px;
+  width: 55px !important;
+  height: 36px !important;
   background-color: var(--acala-kuning, #FFE77B);
   color: var(--acala-hijau-tua, #2d5f2e);
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
-  font-size: 22px;
-  letter-spacing: 1.9px;
+  font-size: 18px !important;
+  letter-spacing: 1.2px;
   display: flex;
   align-items: center;
   justify-content: center !important;
   text-align: center;
   border-radius: 0px;
   flex-shrink: 0;
-  margin-right: -42px !important;          
+  margin-right: -32px !important;          
   margin-bottom: 0px;
-  padding-top: 3px !important;           
-  box-shadow: -4px 3px 10px rgba(0, 0, 0, 0.25);
+  padding-top: 2px !important;           
+  box-shadow: -3px 2px 8px rgba(0, 0, 0, 0.25);
   position: relative;
   z-index: 4;
 }
@@ -587,15 +550,15 @@ aside {
 .modal-deskripsi {
   font-family: "Montserrat", sans-serif;
   font-weight: 300;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13px !important;
+  line-height: 1.5;
   color: #FFE77B !important;
   width: 100% !important;
-  max-width: 82% !important;
+  max-width: 90% !important;
   margin: 0 auto !important;
   text-align: justify !important;
-  padding-left: 10px !important; 
-  letter-spacing: 15%;
+  padding-left: 0 !important; 
+  letter-spacing: 0.05em;
 }
 
 .modal-error-msg {
