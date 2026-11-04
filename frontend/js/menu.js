@@ -527,6 +527,9 @@ async function muatMenu() {
     halamanAktif  = 0;
     tampilkan(false);
 
+    // Pastikan kategori aktif terlihat di daftar kategori
+    if (elKategori) elKategori.querySelector(".aktif")?.scrollIntoView({ block: "nearest" });
+
   } catch (err) {
     console.error("Gagal memuat data menu dan kategori:", err);
 

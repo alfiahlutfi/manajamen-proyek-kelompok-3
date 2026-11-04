@@ -62,7 +62,7 @@ function kirim_detail_galeri(): void
 
     try {
         $stmt = db()->prepare(
-            'SELECT id, foto, judul, deskripsi
+            'SELECT id, foto, judul
                FROM gallery
               WHERE id = :id AND status = \'aktif\'
               LIMIT 1'
@@ -78,7 +78,6 @@ function kirim_detail_galeri(): void
             'id'    => (int) $r['id'],
             'foto'  => $r['foto'],    // path relatif, contoh: uploads/gallery/suasana1.png
             'judul' => $r['judul'],   // judul atau nama kegiatan foto
-            'deskripsi' => $r['deskripsi'],
         ]);
 
     } catch (PDOException $e) {

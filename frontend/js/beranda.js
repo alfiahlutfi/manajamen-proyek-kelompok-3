@@ -1,4 +1,3 @@
-
 /* =======================================================
    PENGATURAN
 ======================================================= */
@@ -508,33 +507,74 @@ async function tampilkanHero() {
 /* =======================================================
    SIGNATURE
 ======================================================= */
-/* =======================================================
-   SIGNATURE
-======================================================= */
+const JUMLAH_SKELETON_SIGNATURE = 4;
+
+// Skeleton kartu menu pilihan (bentuk kartu sama dengan aslinya)
+function skeletonSignature(wadah) {
+  wadah.setAttribute("aria-busy", "true");
+  wadah.innerHTML = Array.from({ length: JUMLAH_SKELETON_SIGNATURE }, () => `
+    <div class="best-card best-skel" aria-hidden="true">
+      <div class="best-skel__foto"></div>
+      <div class="best-skel__teks"></div>
+      <div class="best-skel__teks pendek"></div>
+    </div>`).join("");
+}
+
+// Gagal: skeleton TETAP tampil, pesan "Gagal memuat menu" muncul di atasnya.
+function gagalSignature(wadah) {
+  wadah.setAttribute("aria-busy", "false");
+  wadah.querySelector(".best-gagal")?.remove();
+
+  const pesan = document.createElement("div");
+  pesan.className = "best-gagal block-failed";
+  pesan.setAttribute("role", "alert");
+  pesan.innerHTML = `
+    <p class="failed-title">Gagal memuat menu</p>
+    <p class="failed-description">Menu belum dapat ditampilkan. Silakan coba lagi.</p>
+    <button type="button" class="btn-retry">Muat Ulang</button>`;
+  wadah.appendChild(pesan);
+
+  const tombol = pesan.querySelector(".btn-retry");
+  tombol.addEventListener("click", () => {
+    tombol.disabled = true;
+    tampilkanSignature();
+  });
+}
+
 async function tampilkanSignature() {
-  const menu = await ambil("/menu?label=signature");
   const wadah = document.getElementById("best-list");
   if (!wadah) return;
 
+  skeletonSignature(wadah);
+
+  // Skeleton tampil minimal 800 ms supaya tidak berkedip
+  const [menu] = await Promise.all([ambil("/menu?label=signature"), tunggu(800)]);
+
   if (!Array.isArray(menu)) {
-    wadah.textContent = "Menu gagal dimuat.";
+    gagalSignature(wadah);
     return;
   }
 
-  const best = menu.filter(m => m.label === "signature").slice(0, 4);
-  if (best.length === 0) {
+  // Tampilkan SEMUA menu yang dikembalikan API (API sudah membatasi jumlahnya)
+  if (menu.length === 0) {
+    wadah.setAttribute("aria-busy", "false");
     wadah.innerHTML = `<p>Menu signature belum tersedia.</p>`;
     return;
   }
 
-  // Hapus otomatisasi penambahan kelas 'sorot' di awal agar semua abu-abu
-  wadah.innerHTML = best.map((m) => `
-    <a class="best-card" href="menu-detail.html?id=${encodeURIComponent(m.id)}">
+  // Klik kartu -> halaman menu dengan kategori menu tersebut langsung aktif
+  wadah.innerHTML = menu.map(m => {
+    const tujuan = m.category_id != null
+      ? `menu.html?kategori=${encodeURIComponent(m.category_id)}`
+      : "menu.html";
+    return `
+    <a class="best-card" href="${tujuan}">
       <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(m.nama || "Menu")}" loading="lazy">
       <h3>${esc(m.nama || "")}</h3>
       <small>${rupiahSingkat(m.harga)}</small>
-    </a>
-  `).join("");
+    </a>`;
+  }).join("");
+  wadah.setAttribute("aria-busy", "false");
 }
 
 /* =======================================================
