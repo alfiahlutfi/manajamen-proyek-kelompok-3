@@ -114,6 +114,7 @@ aside {
   align-items: center;
   min-height: 420px;
   padding-top: 30px !important; 
+  padding-left: 25px !important; /* <--- Di bagian inilah letak pengaturannya */
 }
 
 .menu-grid.swap {
@@ -133,7 +134,7 @@ aside {
   justify-content: center !important; 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   overflow: visible;
-  margin-top: 20px !important; 
+  margin-top: 15px !important; 
 }
 
 /* KARTU HIJAU UTAMA DI DALAMNYA (PAS DI TENGAH KOTAK ABU-ABU) */
@@ -382,9 +383,7 @@ aside {
 /* ======================================================
    POP-UP / MODAL DETAIL MENU ÁCALA (PROPORSIONAL & TIDAK ZOOM)
    ====================================================== */
-/* ======================================================
-   POP-UP / MODAL DETAIL MENU ÁCALA (PROPORSIONAL & TIDAK ZOOM)
-   ====================================================== */
+
 .menu-modal-overlay {
   position: fixed;
   top: 0;
