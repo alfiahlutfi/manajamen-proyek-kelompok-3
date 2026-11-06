@@ -285,7 +285,7 @@ async function bukaDetailMenu(menuId) {
   try {
     // Ambil data dari API dan jalankan penundaan 700ms paralel agar skeleton selalu tampil
     const [data] = await Promise.all([
-      fetchData(`/menu?id=${menuId}`),
+      fetchData(`/menu?id=${menuId}`), //cek
       new Promise(resolve => setTimeout(resolve, 700))
     ]);
 
