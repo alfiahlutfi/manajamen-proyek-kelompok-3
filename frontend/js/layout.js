@@ -215,10 +215,10 @@ async function renderLayout() {
     }
   }
 
-  setLink("footer-whatsapp", waUrl, formatTelp(waNumber), "block");
-  setLink("footer-email", emailUrl, emailVal, "block");
-  setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-block");
-  setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-block");
+  setLink("footer-whatsapp", waUrl, null, "inline-flex");
+  setLink("footer-email", emailUrl, null, "inline-flex");
+  setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-flex");
+  setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-flex");
 
   const copyright = document.querySelector(".footer-bottom p");
   if (copyright) {

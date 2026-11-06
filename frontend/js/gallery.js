@@ -282,10 +282,7 @@ elGrid.addEventListener("click", (e) => {
 ======================================================= */
 function kerangkaPopup() {
   elPopup.innerHTML = `
-    <div class="galeri-popup__kartu">
-      <button type="button" class="galeri-popup__tutup" aria-label="Tutup">&times;</button>
-      <button type="button" class="galeri-popup__nav prev" aria-label="Foto sebelumnya">&#8249;</button>
-      <button type="button" class="galeri-popup__nav next" aria-label="Foto berikutnya">&#8250;</button>
+    <div class="galeri-popup__kartu" tabindex="-1">
       <div class="galeri-popup__foto"><div><div class="galeri-skel-foto"></div><img alt=""></div></div>
       <div class="galeri-popup__isi" id="galeri-popup-isi"></div>
     </div>`;
@@ -364,11 +361,9 @@ function bukaPopup(indeks, pemicu) {
     kerangkaPopup();
     elPopup.hidden = false;
     document.body.classList.add("popup-buka");
-    elPopup.querySelector(".galeri-popup__tutup").focus();
+    elPopup.querySelector(".galeri-popup__kartu").focus();
   }
 
-  const satu = daftarFoto.length < 2;
-  elPopup.querySelectorAll(".galeri-popup__nav").forEach((b) => { b.hidden = satu; });
   muatDetail(indeks);
 }
 
@@ -388,9 +383,7 @@ function pindahFoto(arah) {
 }
 
 elPopup.addEventListener("click", (e) => {
-  if (e.target === elPopup || e.target.closest(".galeri-popup__tutup")) return tutupPopup();
-  if (e.target.closest(".galeri-popup__nav.prev")) return pindahFoto(-1);
-  if (e.target.closest(".galeri-popup__nav.next")) return pindahFoto(1);
+  if (e.target === elPopup) return tutupPopup();   // klik area gelap di luar foto = tutup
 });
 
 document.addEventListener("keydown", (e) => {

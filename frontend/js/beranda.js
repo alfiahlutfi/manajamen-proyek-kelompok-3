@@ -422,6 +422,7 @@ async function tampilkanHero() {
     slider.innerHTML = "";
     bg.style.backgroundImage = "";
     btn.href = "#";
+    btn.hidden = true;                  // tidak ada event: tombol detail disembunyikan
     return;
   }
 
@@ -432,7 +433,18 @@ async function tampilkanHero() {
   function render() {
     const item = carousel[i];
     judul.textContent = item.nama || "Café Ácala";
-    btn.href = item.id_event ? "event.html?id=" + encodeURIComponent(item.id_event) : "#";
+    // Tombol "Lihat Detail Event" menuju bagian event terkait di halaman event.
+    // API /carousel mengirim id event pada field `id` (bukan `id_event`).
+    // Halaman event cukup memberi elemen tiap event atribut id="event-{id}" agar langsung tergulir ke bagiannya.
+    const idEvent = item.id ?? item.id_event;
+    if (idEvent !== undefined && idEvent !== null && idEvent !== "") {
+      const kode = encodeURIComponent(idEvent);
+      btn.href = `event.html?id=${kode}#event-${kode}`;
+      btn.hidden = false;
+    } else {
+      btn.href = "#";
+      btn.hidden = true;
+    }
 
     const gambarItem = cariGambar(item);
     bg.style.backgroundImage = gambarItem ? `url("${gambarItem}")` : "";
