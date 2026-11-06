@@ -29,18 +29,26 @@
 @keyframes heroZoom { from { scale: 1.14; } to { scale: 1; } }
 .galeri-hero.siap h1 { animation: judulMasuk 1s .35s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes judulMasuk {
-  from { opacity: 0; transform: translateY(calc(-50% + 28px)); letter-spacing: .34em; }
-  to   { opacity: 1; transform: translateY(-50%);             letter-spacing: .16em; }
+  from { opacity: 0; transform: translateY(28px); letter-spacing: .15em; }
+  to   { opacity: 1; transform: none;             letter-spacing: .05em; }
 }
+
+/* Judul "MY GALLERY": rata kiri, dua baris, huruf kapital hanya garis tepi putih (isi transparan) */
 .galeri-hero h1 {
-  position: absolute; left: 0; right: 0; top: 24%; transform: translateY(-50%);
-  text-align: center;
-  font-family: var(--font); font-weight: 700;
-  font-size: clamp(22px, 5.9vw, 110px);
-  letter-spacing: .16em; text-indent: .16em;
-  text-transform: uppercase; color: #000; -webkit-text-stroke: 1.5px #fff; paint-order: stroke fill;           
+  position: absolute; left: 3.4%; top: 15%; margin: 0;
+  width: min-content;                       /* "My" dan "Gallery" otomatis jadi dua baris */
+  text-align: left;
+  font-family: "Montserrat", sans-serif; font-weight: 700;
+  /* Figma: 100px pada frame 1440px -> 100 / 1440 = 6.94vw (ikut mengecil di layar kecil) */
+  font-size: clamp(22px, 6.5vw, 140px);
+  line-height: 1;                           /* 100% */
+  letter-spacing: .05em;                    /* jarak antar huruf (di Figma terlihat rapat) */
+  text-transform: uppercase;
+  color: #fff;
   text-shadow: none;
+  filter: url(#garis-judul);                /* diubah jadi garis tepi saja; tebal garis diatur di gallery.html */
 }
+@media (max-width: 900px) { .galeri-hero h1 { filter: url(#garis-judul-tipis); } }
 
 /* ---------- Area grid ---------- */
 .galeri-area {
@@ -202,24 +210,13 @@ div.galeri-item.gagal { cursor: default; }
 .galeri-popup__gagal { text-align: center; align-self: center; flex: 1; }
 .galeri-popup__gagal p { text-indent: 0; text-align: center; margin: 0 0 14px; }
 
-.galeri-popup__tutup, .galeri-popup__nav {
-  position: absolute; display: grid; place-items: center;
-  width: 36px; height: 36px; border: 0; border-radius: 50%;
-  background: rgba(255, 255, 255, .85); color: var(--hijau-tua);
-  font: 700 20px/1 var(--font); cursor: pointer;
-}
-.galeri-popup__tutup:hover, .galeri-popup__nav:hover { background: #fff; }
-.galeri-popup__tutup { top: 10px; right: 10px; z-index: 2; }
-.galeri-popup__nav { top: 50%; transform: translateY(-50%); }
-.galeri-popup__nav.prev { left: -18px; }
-.galeri-popup__nav.next { right: -18px; }
+.galeri-popup__kartu:focus { outline: none; }
 body.popup-buka { overflow: hidden; }
 
 @media (max-width: 640px) {
   .galeri-popup__kartu { flex-direction: column; align-items: stretch; max-height: 92vh; overflow-y: auto; }
   .galeri-popup__foto { flex: none; width: 70%; margin: 0 auto; }
   .galeri-popup__isi { padding-bottom: 60px; }
-  .galeri-popup__nav.prev { left: 6px; } .galeri-popup__nav.next { right: 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -243,3 +240,46 @@ main { animation: none; }
 /* Scrollbar tetap dipesan ruangnya: saat pop-up dibuka (scroll dikunci) lalu ditutup,
    lebar grid tidak berubah sehingga galeri tampil kembali persis seperti semula. */
 html { scrollbar-gutter: stable; }
+
+/* ===== Popup galeri: foto penuh + judul di bawah ===== */
+.galeri-popup__kartu {
+  display: block; padding: 0; background: none; border-radius: 6px;
+  width: min(420px, 100%, calc(88vh * .8)); aspect-ratio: 4 / 5;
+  max-height: none; overflow: visible;
+}
+.galeri-popup__foto {
+  width: 100%; height: 100%; flex: none; margin: 0; padding: 0;
+  background: none; box-shadow: none; transform: none; aspect-ratio: auto;
+}
+.galeri-popup__foto > div { border-radius: 6px; }
+
+.galeri-popup__isi {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+  padding: 90px 20px 26px; border-radius: 0 0 6px 6px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .15), rgba(0, 0, 0, 0));   /* .35 = tingkat gelap, kecilkan jika masih terlalu pekat */
+  /* >>> ATUR INTENSITAS BLUR DI SINI (0px = tanpa blur) <<< */
+  --blur-popup: 5px;
+  -webkit-backdrop-filter: blur(var(--blur-popup)); backdrop-filter: blur(var(--blur-popup));
+  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent);
+  mask-image: linear-gradient(to top, #000 40%, transparent);
+  color: #fff; text-align: center; pointer-events: none;
+}
+.galeri-popup__isi h2 {
+  margin: 0; font-family: "Moon Dance", cursive; font-weight: 400; font-style: normal;
+  font-size: min(50px, 22vw); line-height: 100%; letter-spacing: .10em; text-align: center; overflow-wrap: anywhere;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .45);
+}
+
+/* deskripsi disembunyikan secara visual (tetap terbaca screen reader), logo dihilangkan */
+.galeri-popup__isi p {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+.galeri-popup__logo, .galeri-popup__skel-logo { display: none; }
+
+/* skeleton saat memuat: cukup satu garis di tempat judul */
+.galeri-popup__skel-teks { display: none; }
+.galeri-popup__skel-teks.judul {
+  display: block; width: 55%; height: 22px; margin: 0 auto;
+  background: rgba(255, 255, 255, .6);
+}

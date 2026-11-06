@@ -103,6 +103,53 @@ function tampilkanSkeletonMenu() {
   elGrid.innerHTML = skeletonHTML;
 }
 
+function tampilkanSkeletonKategori() {
+  if (!elKategori) return;
+  let skelKatHTML = "";
+  for (let i = 0; i < 5; i++) {
+    skelKatHTML += `
+      <li style="background: rgba(45, 95, 46, 0.15) !important; animation: pulse 0.9s ease-in-out infinite; height: 38px; border-radius: 50px; margin-bottom: 8px;"></li>
+    `;
+  }
+  elKategori.innerHTML = skelKatHTML;
+}
+
+function tampilkanNotifikasiError(pesan) {
+  let banner = document.getElementById('top-error-notification');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'top-error-notification';
+    banner.style.cssText = `
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100%);
+      width: 90%;
+      max-width: 400px;
+      background-color: #d9534f;
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      z-index: 999999;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease-in-out;
+    `;
+    document.body.appendChild(banner);
+  }
+  
+  banner.textContent = pesan;
+  banner.style.transform = 'translateX(-50%) translateY(0)';
+
+  // Notifikasi muncul sekilas, lalu bergeser ke atas setelah 4 detik
+  setTimeout(() => {
+    banner.style.transform = 'translateX(-50%) translateY(-150%)';
+  }, 4000);
+}
+
 function renderKategori() {
   if (!elKategori) return;
   elKategori.innerHTML = daftarKat.map(k => `
@@ -135,7 +182,7 @@ function renderProduk(animasi = false) {
                src="${esc(p.gambar)}"
                alt="${esc(p.nama)}"
                loading="lazy"
-               onerror="this.onerror=null;this.src='${FALLBACK_IMG}'">
+               onerror="this.onerror=null; this.src='assets/Placeholder Menu.svg';">
         </div>
         <div class="meta">
           <span class="nama">${esc(p.nama)}</span>
@@ -206,8 +253,7 @@ async function bukaDetailMenu(menuId) {
   }
 
   const modal = document.getElementById('menuDetailModal');
-  const badgeContainer = document.getElementById('modalBadgeContainer');
-  const labelElement = document.getElementById('modalMenuLabel');
+  const modalContainer = modal.querySelector('.menu-modal-container');
   
   const skeletonState = document.getElementById('modalSkeletonState');
   const realContent = document.getElementById('modalRealContent');
@@ -219,39 +265,62 @@ async function bukaDetailMenu(menuId) {
   const priceElement = document.getElementById('modalMenuPrice');
   const descElement = document.getElementById('modalMenuDesc');
   
-  // 1. BUKA MODAL: Tampilkan skeleton, sembunyikan konten & badge dulu
+  // ==============================================================
+  // BERSIHKAN SEMUA ELEMEN BADGE / SKELETON LAMA DARI KLIK SEBELUMNYA
+  // ==============================================================
+  const existingSkelBadge = document.getElementById('modalDynamicSkeletonBadge');
+  if (existingSkelBadge) existingSkelBadge.remove();
+
+  const existingRealBadge = document.getElementById('modalDynamicRealBadge');
+  if (existingRealBadge) existingRealBadge.remove();
+
+  // Buka modal & tampilkan skeleton utama
   modal.style.display = 'flex';
   modal.setAttribute('aria-hidden', 'false');
   
   if (skeletonState) skeletonState.setAttribute('style', 'display: block !important; width: 100%;');
   if (realContent) realContent.setAttribute('style', 'display: none !important; width: 100%;');
   if (errorMsg) errorMsg.style.display = 'none';
-  if (badgeContainer) badgeContainer.style.display = 'none';
 
   try {
+    // Ambil data dari API dan jalankan penundaan 700ms paralel agar skeleton selalu tampil
     const [data] = await Promise.all([
-      fetchData(`/menu?id=${menuId}`),
+      fetchData(`/menu?id=${menuId}`), //cek
       new Promise(resolve => setTimeout(resolve, 700))
     ]);
 
-    if (!data) throw new Error("Gagal memuat detail menu dari database");
+    if (!data) throw new Error("Gagal memuat detail menu");
 
-    // 2. CEK DAN TAMPILKAN BADGE LABEL DI ATAS KARTU JIKA ADA
+    // ==============================================================
+    // CEK APAKAH MENU INI PUNYA LABEL
+    // ==============================================================
     const badgeText = ambilBadge(data.label);
-    if (badgeText && badgeContainer && labelElement) {
-      labelElement.textContent = badgeText;
-      // Wajib menggunakan inline-flex atau block agar posisinya keluar dan menimpa atas card
-      badgeContainer.style.display = 'inline-flex'; 
-    } else if (badgeContainer) {
-      badgeContainer.style.display = 'none';
-    }
 
-    // Masukkan data teks & harga ke konten asli
+    if (badgeText) {
+      // 1. TAMPILKAN SKELETON BADGE SELAMA LOADING (Kapsul Hijau) khusus untuk yang berlabel[cite: 6]
+      const skelBadge = document.createElement('div');
+      skelBadge.id = 'modalDynamicSkeletonBadge';
+      skelBadge.style.cssText = 'position: absolute; top: -14px; left: -15px; width: 255px; height: 36px; background: #2d5f2e; border-radius: 20px; animation: pulse 0.9s ease-in-out infinite; z-index: 25;';
+      modalContainer.appendChild(skelBadge);
+
+      // Setelah data siap, hapus skeleton badge
+      skelBadge.remove();
+
+      // 2. BUAT & TAMPILKAN BADGE ASLI SECARA DINAMIS
+      const realBadge = document.createElement('div');
+      realBadge.id = 'modalDynamicRealBadge';
+      realBadge.className = 'label-badge-popup';
+      realBadge.innerHTML = `<span><small>${esc(badgeText)}</small></span>`;
+      modalContainer.appendChild(realBadge);
+    } 
+    // JIKA TIDAK ADA LABEL: Kodenya melewati blok di atas, sehingga tidak ada elemen badge yang dibuat sama sekali[cite: 6].
+
+    // Masukkan data teks, harga, dan deskripsi ke konten asli
     if (nameElement) nameElement.textContent = data.nama || "";
     if (priceElement) priceElement.textContent = formatHarga(data.harga);
     if (descElement) descElement.textContent = data.deskripsi || "Deskripsi belum tersedia untuk menu ini.";
 
-// Penanganan Foto / Placeholder di dalam bukaDetailMenu
+    // Penanganan Foto / Placeholder
     if (data.foto || data.gambar) {
       const sourceFoto = urlGambar(data.foto || data.gambar);
       if (imgElement && placeholder) {
@@ -265,22 +334,35 @@ async function bukaDetailMenu(menuId) {
         };
       }
     } else {
-      // JIKA FOTO KOSONG/NULL DARI API: Tampilkan placeholder, informasi lain tetap tampil
       if (imgElement) imgElement.style.display = 'none';
       if (placeholder) placeholder.style.display = 'flex';
     }
 
-    // 3. KONTEN SIAP: Matikan skeleton, tampilkan konten asli
+    // 3. KONTEN SIAP: Sembunyikan skeleton, tampilkan konten asli
     if (skeletonState) skeletonState.setAttribute('style', 'display: none !important;');
     if (realContent) realContent.setAttribute('style', 'display: block !important; width: 100%;');
 
   } catch (err) {
     console.error("Gagal memuat detail menu:", err);
 
-    if (skeletonState) skeletonState.setAttribute('style', 'display: block !important; width: 100%;');
-    if (realContent) realContent.setAttribute('style', 'display: none !important;');
-    if (badgeContainer) badgeContainer.style.display = 'none';
-    if (errorMsg) errorMsg.style.display = 'block';
+    const errSkelBadge = document.getElementById('modalDynamicSkeletonBadge');
+    if (errSkelBadge) errSkelBadge.remove();
+
+    if (skeletonState) skeletonState.setAttribute('style', 'display: block !important; width: 100%; opacity: 0.3;');
+    
+    if (errorMsg) {
+      errorMsg.style.display = 'block';
+      errorMsg.style.opacity = '1';
+      errorMsg.style.transition = 'opacity 0.3s ease';
+
+      setTimeout(() => {
+        errorMsg.style.opacity = '0';
+        setTimeout(() => {
+          errorMsg.style.display = 'none';
+          errorMsg.style.opacity = '1';
+        }, 300);
+      }, 4000);
+    }
   }
 }
 
@@ -391,6 +473,8 @@ function ambilDaftar(respon) {
 }
 
 async function muatMenu() {
+  // Tampilkan skeleton di awal untuk kategori dan menu
+  tampilkanSkeletonKategori();
   tampilkanSkeletonMenu();
 
   try {
@@ -431,16 +515,13 @@ async function muatMenu() {
       return;
     }
 
-    // Datang dari "Our Signature" di beranda: menu.html?kategori={id kategori}
-    const paramKat = new URLSearchParams(location.search).get("kategori");
-    if (paramKat) {
-      const cocok = listKategori.find(k => String(k.id) === paramKat || k.slug === paramKat);
-      if (cocok) kategoriAktif = cocok.nama;
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const kategoriDariUrl = urlParams.get('kategori');
 
-    // Pengaman: jika kategori aktif kosong / tidak terdaftar, pakai kategori pertama
-    if (!kategoriAktif || !daftarKat.includes(kategoriAktif)) {
-      kategoriAktif = daftarKat[0] || "";
+    if (kategoriDariUrl && daftarKat.includes(kategoriDariUrl)) {
+      kategoriAktif = kategoriDariUrl;
+    } else if (!kategoriAktif || !daftarKat.includes(kategoriAktif)) {
+      kategoriAktif = daftarKat[0] || ""; 
     }
     
     halamanAktif  = 0;
@@ -452,19 +533,10 @@ async function muatMenu() {
   } catch (err) {
     console.error("Gagal memuat data menu dan kategori:", err);
 
+    // KONDISI GAGAL: Pertahankan skeleton di kategori dan grid menu, lalu tampilkan notifikasi sekilas di atas
+    tampilkanSkeletonKategori();
     tampilkanSkeletonMenu();
-
-    setTimeout(() => {
-      if (elGrid) {
-        elGrid.innerHTML = `
-          <div class="block-failed" style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: rgba(217, 83, 79, 0.12); border-radius: 20px; margin: 20px auto; max-width: 500px;">
-            <h3 class="failed-title" style="color: #2d5f2e; margin-bottom: 8px; font-weight: 700; font-size: 20px;">Gagal memuat menu</h3>
-            <p class="failed-description" style="color: #4a4a4a; font-size: 14px; margin-bottom: 20px;">Periksa kembali koneksi internet Anda atau coba muat ulang halaman.</p>
-            <button class="btn-retry" onclick="location.reload()" style="padding: 10px 26px; background: var(--acala-hijau-tua, #2d5f2e); color: #FFE77B; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">Coba Lagi</button>
-          </div>
-        `;
-      }
-    }, 400);
+    tampilkanNotifikasiError("Gagal Memuat Menu");
   }
 }
 

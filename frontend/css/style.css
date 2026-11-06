@@ -293,7 +293,7 @@ main { animation: masuk .35s ease both; }
   font-size: clamp(36px, 5vw, 50px);
   color: #F5D76E;
   font-weight: 700;
-  margin-bottom: 55px;
+  margin-bottom: 85px;
   border-bottom: none;
   letter-spacing: 5px;
 }
@@ -433,10 +433,11 @@ main { animation: masuk .35s ease both; }
 }
 
 /* ========== FOOTER STYLES ========== */
+/* Ukuran memakai clamp(vw) supaya proporsi sama persis di semua lebar layar */
 .footer-section {
   background-color: #A9BA9D !important;
   color: #2D5F2E !important;
-  padding: 45px 6% 25px !important;
+  padding: clamp(28px, 5.3vw, 54px) 5% clamp(9px, 1.4vw, 14px) !important;
   width: 100% !important;
   box-sizing: border-box !important;
   font-family: var(--font, "Montserrat", sans-serif) !important;
@@ -444,44 +445,45 @@ main { animation: masuk .35s ease both; }
 }
 
 .footer-container {
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: flex-start !important;
-  flex-wrap: wrap !important;
-  gap: 30px !important;
-  padding-bottom: 20px !important;
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+
+    grid-template-columns: 240fr 220fr 255fr 47fr !important;
+
+    align-items: start !important;
+    gap: 0 !important;
 }
 
-.footer-col {
-  flex: 1 1 200px !important;
-  min-width: 0 !important;
-}
+.footer-col { min-width: 0 !important; }
 
+/* Kolom logo: rata kiri, sejajar dengan atas heading */
 .footer-brand-col {
   display: flex !important;
-  align-items: flex-start !important;
   justify-content: flex-start !important;
-  flex: 0 1 220px !important;
-  padding-top: 0 !important;
+  align-items: flex-start !important;
 }
+.footer-brand-col a { display: inline-block !important; line-height: 0 !important; }
 
 .footer-logo-img {
-  width: 190px !important;
+  width: clamp(84px, 19vw, 210px) !important;
   max-width: 100% !important;
   height: auto !important;
   object-fit: contain !important;
+  margin-top: clamp(0px, 0.4vw, 4px) !important;
 }
 
 .footer-col h3 {
-  font-size: 1.1rem !important;
+  font-size: clamp(0.62rem, 2.2vw, 1.3rem) !important;
   font-weight: 700 !important;
-  letter-spacing: 1.5px !important;
+  letter-spacing: 0.15em !important;
+  line-height: 1.2 !important;
   color: #2D5F2E !important;
-  margin-top: 0 !important;
-  margin-bottom: 20px !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
 }
+
+.footer-nav-col h3 { margin-bottom: clamp(9px, 2.2vw, 22px) !important; }
 
 .footer-links {
   list-style: none !important;
@@ -489,121 +491,59 @@ main { animation: masuk .35s ease both; }
   margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: clamp(3px, 0.95vw, 10px) !important;
 }
 
-.footer-links li {
-  margin-bottom: 0 !important;
-}
+.footer-links li { margin: 0 !important; line-height: 1.2 !important; }
 
-.footer-links li a,
-.footer-contact-link {
+.footer-links li a {
   text-decoration: none !important;
   color: #2D5F2E !important;
-  font-size: 0.95rem !important;
+  font-size: clamp(0.6rem, 1.9vw, 1.1rem) !important;
   font-weight: 500 !important;
-  letter-spacing: 0.3px !important;
+  letter-spacing: 0.12em !important;
   transition: opacity 0.2s ease !important;
 }
+.footer-links li a:hover { opacity: 0.65 !important; }
 
-.footer-contact-link {
-  display: block !important;
-  margin-bottom: 12px !important;
-}
-
-.footer-links li a:hover,
-.footer-contact-link:hover {
-  opacity: 0.7 !important;
-}
+/* Kolom connect: heading dan ikon rata tengah */
+.footer-connect-col { text-align: center !important; }
+.footer-connect-col h3 { margin-bottom: clamp(12px, 3.3vw, 32px) !important; }
 
 .footer-socials {
   display: flex !important;
   align-items: center !important;
-  gap: 14px !important;
-  margin-top: 18px !important;
-}
-
-.footer-socials a img {
-  width: 36px !important;
-  height: 36px !important;
-  object-fit: contain !important;
-  border-radius: 8px !important;
-  transition: transform 0.2s ease !important;
-}
-
-.footer-socials a img:hover {
-  transform: scale(1.08) !important;
-}
-
-.footer-bottom {
-  text-align: center !important;
-  margin: 25px auto 0 !important;
-  padding-top: 12px !important;
-  border-top: none !important;
-  max-width: 1200px !important;
-}
-
-.footer-bottom p {
-  font-size: 0.85rem !important;
-  color: #2D5F2E !important;
-  opacity: 0.85 !important;
-  letter-spacing: 0.3px !important;
+  justify-content: center !important;
+  gap: clamp(6px, 1.75vw, 16px) !important;
   margin: 0 !important;
 }
 
-/* Tampilan tablet dan HP */
-@media (max-width: 768px) {
-  .footer-section {
-    padding: 35px 6% 20px !important;
-  }
+.footer-socials a {
+  display: inline-flex !important;
+  width: clamp(20px, 4.4vw, 42px) !important;
+  height: clamp(20px, 4.4vw, 42px) !important;
+  color: #2D5F2E !important;
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
+}
+.footer-socials a svg { width: 100% !important; height: 100% !important; display: block !important; }
+.footer-socials a:hover { transform: scale(1.1) !important; opacity: 0.8 !important; }
 
-  .footer-container {
-    justify-content: flex-start !important;
-    gap: 28px !important;
-  }
-
-  .footer-brand-col {
-    flex: 1 1 100% !important;
-  }
-
-  .footer-logo-img {
-    width: 160px !important;
-  }
-
-  .footer-col {
-    flex: 1 1 180px !important;
-  }
-
-  .footer-col h3 {
-    font-size: 1rem !important;
-    margin-bottom: 14px !important;
-  }
-
-  .footer-links li a,
-  .footer-contact-link {
-    font-size: 0.9rem !important;
-  }
+.footer-bottom {
+  text-align: center !important;
+  margin: clamp(28px, 7.8vw, 76px) auto 0 !important;
+  padding: 0 !important;
+  border-top: none !important;
+  max-width: 1100px !important;
 }
 
-@media (max-width: 480px) {
-  .footer-container {
-    flex-direction: column !important;
-    gap: 24px !important;
-  }
-
-  .footer-col,
-  .footer-brand-col {
-    width: 100% !important;
-    flex: 1 1 auto !important;
-  }
-
-  .footer-logo-img {
-    width: 145px !important;
-  }
-
-  .footer-bottom {
-    margin-top: 20px !important;
-  }
+.footer-bottom p {
+  font-family: "Inter", Arial, sans-serif !important;
+  font-size: clamp(0.5rem, 1.25vw, 0.7rem) !important;
+  font-weight: 400 !important;
+  color: #2D5F2E !important;
+  opacity: 0.9 !important;
+  letter-spacing: 0 !important;
+  margin: 0 !important;
 }
 
 /* ========== SKELETON LOADING ========== */

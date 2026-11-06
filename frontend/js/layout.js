@@ -4,11 +4,11 @@
 "use strict";
 
 const MENU_NAV = [
-  { label: "Beranda", href: "index.html" },
+  { label: "Home", href: "index.html" },
   { label: "Menu", href: "menu.html" },
   { label: "Event", href: "event.html" },
-  { label: "Galeri", href: "gallery.html" },
-  { label: "Reservasi", href: "reservasi.html" },
+  { label: "Gallery", href: "gallery.html" },
+  { label: "Reservation", href: "reservasi.html" },
   { label: "FAQ", href: "faq.html" }
 ];
 
@@ -215,10 +215,10 @@ async function renderLayout() {
     }
   }
 
-  setLink("footer-whatsapp", waUrl, formatTelp(waNumber), "block");
-  setLink("footer-email", emailUrl, emailVal, "block");
-  setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-block");
-  setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-block");
+  setLink("footer-whatsapp", waUrl, null, "inline-flex");
+  setLink("footer-email", emailUrl, null, "inline-flex");
+  setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-flex");
+  setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-flex");
 
   const copyright = document.querySelector(".footer-bottom p");
   if (copyright) {

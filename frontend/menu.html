@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Menu | Café Ácala</title>
+  <title>Menu | Café Acala</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/menu.css">
+  <link rel="icon" href="assets/logo_acala.png">
 </head>
 <body>
   <header id="navbar" class="nav-acala"></header>
@@ -34,36 +35,40 @@
   <footer class="footer-section">
     <div class="footer-container">
 
-      <!-- Kolom 1: Logo Utuh Acala -->
+      <!-- Kolom 1: Logo -->
       <div class="footer-col footer-brand-col">
-        <img src="assets/logo_acala.png" alt="Logo Café Ácala" class="footer-logo-img" loading="lazy">
+        <a href="index.html" aria-label="Café Ácala - Beranda">
+          <img src="assets/logo_acala.png" alt="Logo Café Ácala" class="footer-logo-img" loading="lazy">
+        </a>
       </div>
 
       <!-- Kolom 2: Get to Know Us -->
-      <div class="footer-col">
+      <div class="footer-col footer-nav-col">
         <h3>GET TO KNOW US</h3>
         <ul class="footer-links">
           <li><a href="menu.html">Menu</a></li>
           <li><a href="event.html">Event</a></li>
-          <li><a href="gallery.html">Galeri</a></li>
-          <li><a href="reservasi.html">Reservasi</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="reservasi.html">Reservation</a></li>
           <li><a href="faq.html">FAQ</a></li>
         </ul>
       </div>
 
-      <!-- Kolom 3: Connect With Us -->
-      <div class="footer-col">
+      <!-- Kolom 3: Connect With Us (ikon, tautan dinamis dari database) -->
+      <div class="footer-col footer-connect-col">
         <h3>CONNECT WITH US</h3>
-
-        <a id="footer-whatsapp" class="footer-contact-link" href="#" target="_blank" rel="noopener noreferrer"></a>
-        <a id="footer-email" class="footer-contact-link" href="#"></a>
-
         <div class="footer-socials">
           <a id="footer-instagram" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <img src="assets/Instagram_logo_2022.svg.webp" alt="Instagram" loading="lazy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.3" y="1.3" width="21.4" height="21.4" rx="6"/><circle cx="11.6" cy="12.2" r="4.6"/><circle cx="18.2" cy="5.7" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a id="footer-email" href="#" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.9" width="21" height="16.2" rx="2.2"/><path d="M2.6 5.6L12 12.9l9.4-7.3"/></svg>
+          </a>
+          <a id="footer-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.6" fill="none" stroke="currentColor" stroke-width="0.8"/><circle cx="12" cy="12" r="9.9" fill="currentColor"/><g transform="translate(5.7 5.7) scale(0.52)"><path fill="#fff" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g></svg>
           </a>
           <a id="footer-tiktok" href="#" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-            <img src="assets/tiktok-icon2.png" alt="TikTok" loading="lazy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.1" y="1.1" width="21.8" height="21.8" rx="5.4"/><g fill="currentColor" stroke="none" transform="translate(12 12) scale(1.153) translate(-12 -12)"><path fill-rule="evenodd" d="M8.51 14.26a2.57 2.57 0 1 0 5.14 0a2.57 2.57 0 1 0-5.14 0zM12.05 13.95a.85.85 0 1 1-1.7 0a.85.85 0 1 1 1.7 0z"/><path d="M12.12 6.2h1.53c.2 1.4 1.15 2.3 2.35 2.5c-.7.7-1.45.95-2.35 1v5H12.12z"/></g></svg>
           </a>
         </div>
       </div>
@@ -72,7 +77,7 @@
 
     <!-- Copyright -->
     <div class="footer-bottom">
-      <p>© 2021-2026 Cafe Acala & Eatery</p>
+      <p>© 2021-2026 Cafe Acala &amp; Eatery</p>
     </div>
   </footer>
 
