@@ -13,67 +13,164 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reservasi.css">
 </head>
-<body>
+<body class="reservasi-page">
 
-  <!-- Navbar -->
+  <!-- Navbar (Otomatis dimuat oleh layout.js) -->
   <header id="navbar" class="nav-acala"></header>
 
-  <!-- Konten Utama (Kosong & Berjarak Proporsional dari Footer) -->
-  <main style="min-height: 60vh;">
-    <!-- Container untuk form/konten reservasi kamu nanti -->
-    <div id="reservasi-container"></div>
-  </main>
+  <!-- Konten Utama Reservasi -->
+  <main class="reservasi-main-content">
+    <section class="reservasi-hero">
+      <h1>RESERVATIONS</h1>
+      <p>Syarat & Ketentuan Reservasi Area Café Ácala & Eatery</p>
+    </section>
 
-<!-- FOOTER -->
-  <footer class="footer-section">
-    <div class="footer-container">
-
-      <!-- Kolom 1: Logo -->
-      <div class="footer-col footer-brand-col">
-        <a href="index.html" aria-label="Café Ácala - Beranda">
-          <img src="assets/logo_acala.png" alt="Logo Café Ácala" class="footer-logo-img" loading="lazy">
-        </a>
-      </div>
-
-      <!-- Kolom 2: Get to Know Us -->
-      <div class="footer-col footer-nav-col">
-        <h3>GET TO KNOW US</h3>
-        <ul class="footer-links">
-          <li><a href="menu.html">Menu</a></li>
-          <li><a href="event.html">Event</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-          <li><a href="reservasi.html">Reservation</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-        </ul>
-      </div>
-
-      <!-- Kolom 3: Connect With Us (ikon, tautan dinamis dari database) -->
-      <div class="footer-col footer-connect-col">
-        <h3>CONNECT WITH US</h3>
-        <div class="footer-socials">
-          <a id="footer-instagram" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.3" y="1.3" width="21.4" height="21.4" rx="6"/><circle cx="11.6" cy="12.2" r="4.6"/><circle cx="18.2" cy="5.7" r="1.5" fill="currentColor" stroke="none"/></svg>
-          </a>
-          <a id="footer-email" href="#" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.9" width="21" height="16.2" rx="2.2"/><path d="M2.6 5.6L12 12.9l9.4-7.3"/></svg>
-          </a>
-          <a id="footer-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.6" fill="none" stroke="currentColor" stroke-width="0.8"/><circle cx="12" cy="12" r="9.9" fill="currentColor"/><g transform="translate(5.7 5.7) scale(0.52)"><path fill="#fff" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g></svg>
-          </a>
-          <a id="footer-tiktok" href="#" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.1" y="1.1" width="21.8" height="21.8" rx="5.4"/><g fill="currentColor" stroke="none" transform="translate(12 12) scale(1.153) translate(-12 -12)"><path fill-rule="evenodd" d="M8.51 14.26a2.57 2.57 0 1 0 5.14 0a2.57 2.57 0 1 0-5.14 0zM12.05 13.95a.85.85 0 1 1-1.7 0a.85.85 0 1 1 1.7 0z"/><path d="M12.12 6.2h1.53c.2 1.4 1.15 2.3 2.35 2.5c-.7.7-1.45.95-2.35 1v5H12.12z"/></g></svg>
-          </a>
+    <!-- Bagian Galeri & Daftar Area (Sesuai Card 12.2.1) -->
+    <div class="reservasi-wrapper" id="areaContainerWrapper">
+      <!-- Skeleton Loading untuk Area -->
+      <div id="areaSkeleton" class="res-card light skeleton-loading">
+        <div class="res-card-grid">
+          <div class="skeleton-box" style="height: 270px; border-radius: 14px;"></div>
+          <div class="d-flex flex-column gap-3 justify-content-center">
+            <div class="skeleton-box" style="width: 60%; height: 30px;"></div>
+            <div class="skeleton-box" style="width: 40%; height: 20px;"></div>
+            <div class="skeleton-box" style="width: 100%; height: 80px;"></div>
+          </div>
         </div>
       </div>
-
+      <!-- Konten Card Area akan dimuat dinamis via JS -->
+      <div id="dynamicAreaCards" style="display: none; display: flex; flex-direction: column; gap: 35px;"></div>
     </div>
 
-    <!-- Copyright -->
-    <div class="footer-bottom">
-      <p>© 2021-2026 Cafe Acala &amp; Eatery</p>
+    <!-- Bagian Form Pengajuan Reservasi -->
+    <section class="form-reservasi-section">
+      <div class="form-reservasi-card">
+        <h3 class="text-center mb-1" style="color: #2d5f2e; font-weight: 700; letter-spacing: 2px;">FORMULIR PENGAJUAN RESERVASI</h3>
+        <p class="text-center text-muted mb-4" style="font-size: 13.5px;">Silakan lengkapi data di bawah ini untuk pemesanan meja.</p>
+
+        <form id="formReservasiAcala" novalidate>
+          
+          <!-- 1. Nama Lengkap -->
+          <div class="form-group mb-3">
+            <label for="nama" class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+            <input type="text" id="nama" class="form-control-acala" placeholder="Masukkan nama lengkap Anda">
+            <div class="invalid-feedback-custom" id="error-nama"></div>
+          </div>
+
+          <!-- 2. Nomor WhatsApp -->
+          <div class="form-group mb-3">
+            <label for="whatsapp" class="form-label fw-semibold">Nomor WhatsApp <span class="text-danger">*</span></label>
+            <input type="tel" id="whatsapp" class="form-control-acala" placeholder="Contoh: 081234567890 / +6281234567890">
+            <div class="invalid-feedback-custom" id="error-whatsapp"></div>
+          </div>
+
+          <!-- 3. Tanggal Reservasi -->
+          <div class="form-group mb-3">
+            <label for="tanggal" class="form-label fw-semibold">Tanggal Kunjungan <span class="text-danger">*</span></label>
+            <input type="date" id="tanggal" class="form-control-acala">
+            <small id="infoHari" class="form-text text-muted d-block mt-1"></small>
+            <div class="invalid-feedback-custom" id="error-tanggal"></div>
+          </div>
+
+          <!-- 4. Waktu Reservasi -->
+          <div class="form-group mb-3">
+            <label for="jam" class="form-label fw-semibold">Waktu / Jam Kedatangan <span class="text-danger">*</span></label>
+            <select id="jam" class="form-control-acala" disabled>
+              <option value="">-- Pilih tanggal terlebih dahulu --</option>
+            </select>
+            <small id="infoJamOperasional" class="form-text text-muted d-block mt-1">Pilihan waktu menyesuaikan jam operasional kafe.</small>
+            <div class="invalid-feedback-custom" id="error-jam"></div>
+          </div>
+
+          <!-- 5. Jumlah Pengunjung -->
+          <div class="form-group mb-3">
+            <label for="jumlah" class="form-label fw-semibold">Jumlah Pengunjung (Orang) <span class="text-danger">*</span></label>
+            <input type="number" id="jumlah" class="form-control-acala" min="1" value="2" placeholder="Minimal 1 orang">
+            <div class="invalid-feedback-custom" id="error-jumlah"></div>
+          </div>
+
+          <!-- 6. Area Reservasi (Dropdown) -->
+          <div class="form-group mb-3">
+            <label for="areaSelect" class="form-label fw-semibold">Pilihan Area Reservasi <span class="text-danger">*</span></label>
+            <select id="areaSelect" class="form-control-acala" disabled>
+              <option value="">Memuat data area...</option>
+            </select>
+            <div class="invalid-feedback-custom" id="error-area"></div>
+          </div>
+
+          <!-- 7. Catatan (Opsional) -->
+          <div class="form-group mb-4">
+            <label for="catatan" class="form-label fw-semibold">Catatan Khusus (Opsional)</label>
+            <textarea id="catatan" class="form-control-acala" rows="2" placeholder="Misal: Butuh dekat colokan, kursi bayi, dll."></textarea>
+          </div>
+
+          <button type="submit" id="btnKirimReservasi" class="btn-submit-reservasi">KIRIM RESERVASI</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- POP-UP PERINGATAN (Form Kosong / Belum Valid) -->
+  <div class="modal-reservasi-overlay" id="modalPeringatan">
+    <div class="modal-reservasi-container text-center">
+      <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+      <h3 class="modal-header-title text-warning">Perhatian</h3>
+      <p id="pesanPeringatan" class="my-3 text-white" style="font-size: 14px;"></p>
+      <button class="btn-submit-reservasi mt-2" onclick="tutupModalPeringatan()">MENGERTI</button>
     </div>
-  </footer>
+  </div>
+
+  <!-- POP-UP KONFIRMASI DENGAN TOMBOL OK & LOADING BAR -->
+  <div class="modal-reservasi-overlay" id="modalKonfirmasi">
+    <div class="modal-reservasi-container text-center">
+      <h3 class="modal-header-title">KONFIRMASI RESERVASI</h3>
+      <p class="my-3 text-white" style="font-size: 13.5px;">Apakah data reservasi yang Anda masukkan sudah benar? Silakan tekan OK untuk melanjutkan ke WhatsApp.</p>
+      
+      <!-- Loading Bar Container (Muncul setelah klik OK) -->
+      <div id="loadingBarContainer" style="display: none;" class="my-3">
+        <div class="progress" style="height: 8px; background-color: rgba(255,255,255,0.2);">
+          <div id="progressBarFill" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+        </div>
+        <small class="text-warning mt-2 d-block">Menyiapkan pesan WhatsApp...</small>
+      </div>
+
+      <div id="konfirmasiButtonWrapper" class="d-flex gap-2 mt-4">
+        <button type="button" class="btn btn-secondary w-50 py-2 fw-bold" onclick="tutupModalKonfirmasi()" style="border-radius: 8px;">BATAL</button>
+        <button type="button" id="btnOkKonfirmasi" class="btn btn-warning w-50 py-2 fw-bold" onclick="prosesKonfirmasiOK()" style="border-radius: 8px; color: #2d5f2e;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POP-UP FALLBACK JIKA WHATSAPP TIDAK TERBUKA -->
+  <div class="modal-reservasi-overlay" id="modalFallbackWA">
+    <div class="modal-reservasi-container">
+      <h3 class="modal-header-title text-warning">WhatsApp Gagal Terbuka</h3>
+      <p class="my-2 text-white" style="font-size: 13px;">Browser Anda memblokir jendela otomatis WhatsApp. Jangan khawatir, Anda dapat menyalin teks di bawah ini atau mencoba tautan manual:</p>
+      
+      <div class="mb-3">
+        <textarea id="fallbackTextarea" class="form-control-acala" rows="5" readonly style="font-size: 12px; background: #fff;"></textarea>
+      </div>
+      
+      <div class="d-flex flex-column gap-2">
+        <button type="button" class="btn btn-warning fw-bold py-2" onclick="salinPesanFallback()" style="border-radius: 8px; color: #2d5f2e;">SALIN PESAN</button>
+        <a id="linkManualWA" href="#" target="_blank" class="btn btn-success fw-bold py-2 text-decoration-none" style="border-radius: 8px;">BUKA WHATSAPP MANUAL</a>
+        <button type="button" class="btn btn-secondary py-1 mt-1" onclick="tutupModalFallback()" style="font-size: 12px; border-radius: 6px;">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="#" id="floating-wa-btn" class="floating-wa" target="_blank" rel="noopener noreferrer" title="Chat Admin via WhatsApp">
+    <svg viewBox="0 0 24 24">
+      <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.763.459 3.487 1.332 5.003l-1.416 5.176 5.297-1.389c1.47.802 3.13 1.224 4.773 1.225h.004c5.505 0 9.988-4.478 9.989-9.985 0-2.667-1.037-5.174-2.925-7.062-1.887-1.886-4.394-2.924-7.064-2.924zm5.82 14.161c-.246.691-1.424 1.326-1.956 1.398-.532.072-1.226.103-3.514-.84-2.928-1.206-4.81-4.183-4.957-4.378-.146-.195-1.196-1.592-1.196-3.037 0-1.445.757-2.156 1.025-2.45.268-.293.585-.366.78-.366.195 0 .39.002.56.01.182.008.428-.069.67.512.246.585.83 2.025.903 2.172.073.146.122.317.024.512-.097.195-.146.317-.292.488-.146.171-.307.361-.439.485-.146.137-.298.286-.128.578.17.293.757 1.248 1.624 2.019 1.116.993 2.057 1.3 2.35 1.446.293.146.463.122.634-.073.171-.195.731-.853.926-1.146.195-.293.39-.244.658-.146.268.097 1.706.805 2.001.951.293.146.488.219.56.341.072.122.072.707-.174 1.398z"/>
+    </svg>
+  </a>
+
+  <!-- Footer (Otomatis dimuat oleh layout.js) -->
+  <footer class="footer-section"></footer>
 
   <!-- Script Pendukung -->
   <script src="js/api.js"></script>

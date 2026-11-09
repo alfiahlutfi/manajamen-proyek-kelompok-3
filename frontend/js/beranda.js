@@ -298,7 +298,7 @@ async function isiBeranda() {
   const deskripsi  = document.getElementById("deskripsi");
 
   // Judul: pakai database kalau ada, kalau tidak pertahankan teks statis HTML
-  const judulDb = c.judul_about || c.judul;
+  const judulDb = c.judul_deskripsi || c.judul_about || c.judul;
   if (judulAbout && judulDb) judulAbout.textContent = judulDb;
 
   const deskripsiOk = isiTeks(deskripsi, c.deskripsi_about || c.deskripsi);
@@ -393,6 +393,14 @@ async function isiLokasi() {
       btnMaps.style.pointerEvents = "none";
       btnMaps.style.opacity = "0.6";
     }
+
+    // BARU: pesan "Gagal membuka Google Maps" (hanya jika data lokasi
+    // berhasil dimuat tetapi link Google Maps-nya kosong / tidak valid)
+    tampilPesan(
+      btnMaps,
+      "maps",
+      lokasi && !linkOk ? "Gagal membuka Google Maps" : ""
+    );
   }
 
   // Peta embed
@@ -400,7 +408,15 @@ async function isiLokasi() {
   const wadahPeta = peta ? peta.parentElement : null;
 
   if (wadahPeta) {
-    await pasangPeta(wadahPeta, peta, mapUrl);
+    const petaOk = await pasangPeta(wadahPeta, peta, mapUrl);
+
+    // BARU: pesan "Gagal memuat peta" di bawah kotak peta.
+    // Alamat dan tombol Maps tidak terpengaruh, tetap tampil.
+    tampilPesan(
+      wadahPeta,
+      "peta",
+      petaOk ? "" : "Gagal memuat peta"
+    );
   }
 }
 
