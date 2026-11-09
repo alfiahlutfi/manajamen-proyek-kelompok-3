@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 03, 2026 at 09:49 AM
+-- Generation Time: Nov 06, 2026 at 10:23 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -111,7 +111,6 @@ CREATE TABLE `carousel` (
   `id` int NOT NULL,
   `id_event` int NOT NULL,
   `urutan` int NOT NULL DEFAULT '1',
-  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -120,10 +119,10 @@ CREATE TABLE `carousel` (
 -- Dumping data for table `carousel`
 --
 
-INSERT INTO `carousel` (`id`, `id_event`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'aktif', '2026-10-07 04:38:35', '2026-10-07 05:09:11'),
-(2, 2, 2, 'aktif', '2026-10-07 05:16:04', '2026-10-07 05:16:04'),
-(3, 3, 3, 'aktif', '2026-10-07 05:16:04', '2026-10-07 05:16:04');
+INSERT INTO `carousel` (`id`, `id_event`, `urutan`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2026-10-07 04:38:35', '2026-11-06 05:03:12'),
+(2, 2, 2, '2026-10-07 05:16:04', '2026-11-06 05:03:21'),
+(3, 3, 3, '2026-10-07 05:16:04', '2026-11-06 05:03:29');
 
 -- --------------------------------------------------------
 
@@ -150,9 +149,15 @@ CREATE TABLE `event` (
 --
 
 INSERT INTO `event` (`id`, `nama`, `slug`, `deskripsi`, `foto`, `tanggal`, `waktu`, `lokasi`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Coffee Workshop', 'coffee-workshop', 'Pelajari teknik meracik dan menyeduh kopi dalam pengalaman workshop yang seru dan interaktif.', 'uploads/event/coffe-workshop.png', '2026-10-11', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:48:25', '2026-10-20 09:30:39'),
-(2, 'Open Mic', 'open-mic', 'Nikmati malam penuh musik dan kreativitas, saat para talenta berbagi suara, cerita, dan penampilan terbaik mereka di panggung Cafe Acala.', 'uploads/event/open-mic.png', '2026-10-18', '09:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:50:16', '2026-10-13 08:10:09'),
-(3, 'Live Music', 'live-music', 'Nikmati suasana hangat bersama alunan musik secara langsung, ditemani kopi dan hidangan favorit di Cafe Acala.', 'uploads/event/live-music.png', '2026-10-31', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-10-13 08:10:46');
+(1, 'Lorem ipsum', 'lorem-ipsum', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event1.png', '2025-07-06', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:48:25', '2026-11-06 09:51:02'),
+(2, 'Lorem ipsum', 'lorem-ipsum2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event2.png', '2024-11-03', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:50:16', '2026-11-06 09:51:27'),
+(3, 'Lorem ipsum', 'lorem-ipsum3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event3.png', '2024-02-28', '10:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-11-06 09:52:07'),
+(4, 'Lorem ipsum', 'lorem-ipsum4', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event4.png', '2023-07-16', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 09:35:20', '2026-11-06 09:52:52'),
+(5, 'Lorem ipsum', 'lorem-ipsum5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event5.png', '2023-06-08', '09:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 09:35:20', '2026-11-06 10:07:04'),
+(6, 'Lorem ipsum', 'lorem-ipsum6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event6.png', '2023-06-08', '08:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 10:02:09', '2026-11-06 10:02:09'),
+(7, 'Lorem ipsum', 'lorem-ipsum7', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event7.png', '2023-06-08', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 10:02:09', '2026-11-06 10:08:52'),
+(8, 'Lorem ipsum', 'lorem-ipsum8', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event8.png', '2022-11-28', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 10:03:30', '2026-11-06 10:09:55'),
+(9, 'Live Music', 'live-music', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/live-music.png', '2026-01-01', '19:00:00', 'Acala Cafe & Eatery', 'nonaktif', '2026-11-06 10:03:30', '2026-11-06 10:14:18');
 
 -- --------------------------------------------------------
 
@@ -239,7 +244,7 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `foto`, `label`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(5, 1, 'Cafe Latte', 'cafe-latte', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 14000, 'uploads/menu/sample.png', 'new', 1, 'aktif', '2026-10-13 07:56:12', '2026-11-02 11:28:21'),
+(5, 1, 'Cafe Latte', 'cafe-latte', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 14000, 'uploads/menu/sample.png', 'new', 1, 'aktif', '2026-10-13 07:56:12', '2026-11-04 09:43:25'),
 (6, 1, 'Cappuccino', 'cappuccino', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 16000, 'uploads/menu/sample.png', 'best_seller', 2, 'aktif', '2026-10-13 07:56:12', '2026-11-02 11:28:38'),
 (7, 1, 'Mochoccino', 'mochoccino', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 7, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (8, 1, 'Cafe Latte Vanilla', 'cafe-latte-vanilla', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 8, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
@@ -248,7 +253,7 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (11, 1, 'Cafe Latte Tiramisu', 'cafe-latte-tiramisu', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 11, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (12, 1, 'Cafe Latte Salted Caramel', 'cafe-latte-salted-caramel', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 12, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (13, 1, 'Comel', 'comel', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/sample.png', NULL, 13, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
-(14, 1, 'Acala Basic', 'acala-basic', 'Hanya tersedia dingin (ice only).', 18000, 'uploads/menu/acala-basic.png', 'signature', 4, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:58:12'),
+(14, 1, 'Acala Basic', 'acala-basic', 'Hanya tersedia dingin (ice only).', 18000, 'uploads/menu/acala-basic.png', 'signature', 4, 'aktif', '2026-10-13 07:56:12', '2026-11-03 15:09:08'),
 (15, 1, 'Hammock', 'hammock', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/sample.png', NULL, 14, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (16, 1, 'Bootcamp', 'bootcamp', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/sample.png', NULL, 15, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (17, 1, 'Salted Caramel Mocca', 'salted-caramel-mocca', 'Hanya tersedia dingin (ice only).', 20000, 'uploads/menu/sample.png', NULL, 16, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
@@ -374,10 +379,10 @@ CREATE TABLE `operating_hours` (
 --
 
 INSERT INTO `operating_hours` (`id`, `cafe_id`, `hari`, `urutan`, `is_closed`, `jam_buka`, `jam_tutup`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Monday', 1, 0, '11:00:00', '23:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
-(2, 1, 'Tuesday', 2, 0, '11:00:00', '23:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
-(3, 1, 'Wednesday', 3, 0, '11:00:00', '23:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
-(4, 1, 'Thursday', 4, 0, '11:00:00', '23:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
+(1, 1, 'Monday', 1, 0, '11:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-11-06 09:27:05'),
+(2, 1, 'Tuesday', 2, 0, '11:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-11-06 09:27:18'),
+(3, 1, 'Wednesday', 3, 0, '11:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-11-06 09:27:45'),
+(4, 1, 'Thursday', 4, 0, '09:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-11-06 09:28:13'),
 (5, 1, 'Friday', 5, 0, '09:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
 (6, 1, 'Saturday', 6, 0, '09:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
 (7, 1, 'Sunday', 7, 0, '09:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09');
@@ -485,7 +490,7 @@ ALTER TABLE `carousel`
 -- AUTO_INCREMENT for table `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `faq`

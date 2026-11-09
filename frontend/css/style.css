@@ -195,6 +195,15 @@ main { animation: masuk .35s ease both; }
 .slide img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
 .slide.kiri, .slide.kanan { opacity: .8; }
 .slide.tengah { flex: 1.6 1 0; box-shadow: 0 6px 24px rgba(0,0,0,.6); cursor: default; }
+/* Efek gerak carousel (tambahan saja, tampilan tidak berubah) */
+@keyframes gulir-masuk {
+  from { opacity: 0; transform: translateX(48px); }
+}
+.hero-slider .slide { animation: gulir-masuk .7s cubic-bezier(.65, 0, .35, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider .slide { animation: none; }
+}
 
 /* ========== TEMBOK BETON (About & Reservasi) ========== */
 .tembok {

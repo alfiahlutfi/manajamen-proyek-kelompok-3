@@ -1,0 +1,113 @@
+/* css/event.css — Halaman Event (kartu 11.2.2) */
+.ev-page { --ev-krem:#FAF5E8; --ev-bata:#B5573D; --ev-hijau:#1F3D2B; --ev-merah:#FF3B3B; --ev-kuning:#F2B632;
+  --ev-nav: 72px; }
+.ev-page main { background: var(--latar-tembok) center/cover; }
+.ev-page h1, .ev-page h2, .ev-title { font-family: "Playfair Display", Georgia, serif; }
+
+/* HERO (disesuaikan dengan Figma; semua ukuran memakai satuan --u = 1% lebar layar, maks 14,4px,
+   sehingga proporsi huruf, spasi, dan bingkai foto sama di semua lebar layar) */
+.ev-page { --u: min(1vw, 14.4px); }
+.ev-hero { position:relative; width:min(100%, calc(var(--u)*100)); height:calc(var(--u)*60); margin:0 auto;
+  padding:calc(var(--u)*11) 0 0 calc(var(--u)*4.2); overflow:hidden; }
+
+.ev-hero h1 { margin:0; font-family:"Playfair Display",Georgia,serif; font-weight:700; text-transform:uppercase;
+  font-size:calc(var(--u)*8.5); line-height:1.05; letter-spacing:-.03em; word-spacing:0; color:#1b2a20; }
+.ev-hero h1 span { display:block; font-size:.82em; line-height:1.58; padding-left:1.75em; }
+.ev-hero p { margin:calc(var(--u)*.7) 0 0 calc(var(--u)*1.7); max-width:calc(var(--u)*40);
+  font:400 max(14px, calc(var(--u)*2.4))/1.18 var(--font); letter-spacing:0; color:#222; }
+
+/* Ilustrasi hero — diukur dari crop Figma. Semua posisi = pusat elemen di hero (1u = 1% lebar layar). */
+.ev-hero-art { position:static; }
+
+/* Lingkaran kuning: elips 21,9u × 31,8u, miring -20,5° (atas ke kiri, bawah ke kanan) */
+.ev-blob { position:absolute; z-index:0; left:calc(var(--u)*63.35); top:calc(var(--u)*15.1);
+  width:calc(var(--u)*21.9); height:calc(var(--u)*31.75); border-radius:50%; background:#F2B632; transform:rotate(20.5deg); }
+
+/* Daun oval runcing (SVG): lebar = panjang daun, tinggi = tebal daun, lalu diputar */
+.ev-leaf { position:absolute; z-index:1; display:block; overflow:visible; }
+.ev-leaf path { fill:#265c3b; }
+.ev-leaf .vein { fill:none; stroke:#2f5f2c; stroke-width:1.4; vector-effect:non-scaling-stroke; }
+.ev-leaf.a { left:calc(var(--u)*59.85); top:calc(var(--u)*18.2);  width:calc(var(--u)*4.1); height:calc(var(--u)*2.2);  transform:rotate(29.7deg); }
+.ev-leaf.a path:first-child { fill:#4a8040; }
+.ev-leaf.b { left:calc(var(--u)*90.85); top:calc(var(--u)*16.25); width:calc(var(--u)*8.7); height:calc(var(--u)*3.7);  transform:rotate(-59deg); }
+.ev-leaf.c { left:calc(var(--u)*92.76); top:calc(var(--u)*32.1);  width:calc(var(--u)*8);   height:calc(var(--u)*3.3);  transform:rotate(-42deg); }
+.ev-leaf.d { left:calc(var(--u)*50.54); top:calc(var(--u)*42.7);  width:calc(var(--u)*8.8); height:calc(var(--u)*3.85); transform:rotate(73.4deg); }
+
+/* Bingkai polaroid. Per bingkai: --w lebar (u), --pt/--ps/--pb tepi atas/samping/bawah (pecahan dari lebar), --r rasio foto (lebar/tinggi) */
+.ev-polaroid { position:absolute; margin:0; box-sizing:border-box; background:#fff; width:calc(var(--u)*var(--w));
+  padding:calc(var(--u)*var(--w)*var(--pt)) calc(var(--u)*var(--w)*var(--ps)) calc(var(--u)*var(--w)*var(--pb));
+  border-radius:calc(var(--u)*1); box-shadow:0 calc(var(--u)*.3) calc(var(--u)*1) rgba(0,0,0,.25); }
+.ev-polaroid img { display:block; width:100%; height:auto; aspect-ratio:var(--r); object-fit:cover; }
+/* gambar 1 (atas/belakang): 416,08 × 445,62px, sudut -7,33° (Figma) → CSS rotate(+7,33deg) */
+.ev-polaroid.p2 { --w:24.077; --pt:.04; --ps:.035; --pb:.19; --r:1.106; left:calc(var(--u)*68.83); top:calc(var(--u)*9.98); transform:rotate(7.33deg); z-index:2; }
+/* gambar 2 (bawah/depan): 333,50 × 404,74px, sudut +8,78° (Figma) → CSS rotate(-8,78deg) */
+.ev-polaroid.p1 { --w:19.299; --pt:.05; --ps:.049; --pb:.262; --r:1;    left:calc(var(--u)*59.06); top:calc(var(--u)*25.34); transform:rotate(-8.78deg); z-index:3; }
+
+.ev-section { width:min(100%, calc(var(--u)*100)); margin:0 auto; padding:0 calc(var(--u)*2.1) 72px; }
+.ev-section > h2 { margin:0 0 calc(var(--u)*2.4) calc(var(--u)*2); font-family:"Playfair Display",Georgia,serif; font-weight:700;
+  font-size:calc(var(--u)*4); line-height:1.2; letter-spacing:-.01em; text-transform:uppercase; color:#111; }
+.ev-list { background:linear-gradient(180deg,rgba(60,50,30,.17),rgba(60,50,30,.24)); border:calc(var(--u)*.2) solid #222;
+  border-radius:calc(var(--u)*1.5); padding:calc(var(--u)*3.2) calc(var(--u)*.9) calc(var(--u)*3.2);
+  display:flex; flex-direction:column; gap:calc(var(--u)*7.2); }
+
+/* KARTU (ukuran dari frame prototipe; 1u = 1% lebar layar) */
+.ev-page { --fs-meta:max(9px, calc(var(--u)*.95)); --fs-pill:max(11px, calc(var(--u)*1.4));
+  --fs-title:max(14px, calc(var(--u)*1.65)); --fs-desc:max(13px, calc(var(--u)*1.5)); }
+.ev-card { position:relative; display:flex; align-items:flex-start; gap:calc(var(--u)*.8);
+  width:calc(var(--u)*69.3); max-width:100%; margin-right:auto;
+  background:var(--ev-krem); border-radius:calc(var(--u)*3.9); padding:calc(var(--u)*1.4) calc(var(--u)*1.8); color:#1f1f1f;
+  scroll-margin-top: calc(var(--ev-nav) + 16px); }
+.ev-card:nth-of-type(even) { flex-direction:row-reverse; margin-right:0; margin-left:auto; }
+.ev-card:target, .ev-card.ev-sorot { box-shadow:0 0 0 4px var(--ev-kuning); }
+
+.ev-photo { position:relative; flex:0 0 auto; width:calc(var(--u)*27.9); aspect-ratio:1.508; border-radius:calc(var(--u)*1.8); overflow:hidden; background:#ddd; }
+.ev-photo img { width:100%; height:100%; object-fit:cover; }
+.ev-photo.tanpa-foto { background:#e5e1d6 url("../assets/placeholder.png") center/40% no-repeat; }
+.ev-photo.tanpa-foto img { display:none; }
+
+/* Tag tanggal: menempel di sudut foto, menonjol sedikit di atas kartu */
+.ev-tanggal { position:absolute; z-index:4; top:calc(var(--u)*-1.5); left:calc(var(--u)*2.7);
+  width:calc(var(--u)*5.5); padding:calc(var(--u)*1.5) 0 calc(var(--u)*.9); text-align:center; font-family:"Inter",var(--font);
+  background:#F0B431; border-radius:calc(var(--u)*.5); transform:rotate(-6deg); box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.6) rgba(0,0,0,.22); }
+.ev-card:nth-of-type(even) .ev-tanggal { left:auto; right:calc(var(--u)*5.4); transform:rotate(6deg); }
+.ev-tanggal::before { content:""; position:absolute; top:calc(var(--u)*-.8); left:calc(var(--u)*1.6); width:calc(var(--u)*1.3); height:calc(var(--u)*3);
+  border:calc(var(--u)*.18) solid #b5553d; border-radius:calc(var(--u)*.7); }
+.ev-tanggal small { display:block; font-size:max(7px, calc(var(--u)*.9)); font-weight:700; line-height:1.3; letter-spacing:.04em; color:#1f1f1f; }
+.ev-tanggal strong { display:block; font-family:"Playfair Display",serif; font-size:max(14px, calc(var(--u)*1.9)); font-weight:700; line-height:1.25; color:#1f1f1f; }
+
+.ev-body { flex:1; min-width:0; padding:calc(var(--u)*.4) calc(var(--u)*1.2) 0 0; }
+.ev-badges { display:flex; flex-wrap:wrap; gap:calc(var(--u)*1.3); align-items:center; }
+.ev-badge { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; min-width:calc(var(--u)*8.4); height:calc(var(--u)*2.3); min-height:20px;
+  padding:0 calc(var(--u)*1); border-radius:999px; color:#fff; font:600 var(--fs-pill)/1 "Inter",var(--font); white-space:nowrap; background:#A9503C; }
+.ev-badge.status-akan { background:#1F3D2B; min-width:calc(var(--u)*17); }
+.ev-badge.status-selesai { background:#F02A3F; min-width:calc(var(--u)*17); }
+.ev-meta { margin:calc(var(--u)*.3) 0 0; font:400 var(--fs-meta)/1.3 "Inter",var(--font); color:#444; }
+.ev-title { margin:calc(var(--u)*1.6) 0 calc(var(--u)*.9) calc(var(--u)*.6); font-family:"Playfair Display",Georgia,serif; font-size:var(--fs-title); line-height:1.25; font-weight:700; color:#1b2a20; white-space:pre-line; }
+.ev-desc { margin:0 0 0 calc(var(--u)*.6); font-family:"Playfair Display",Georgia,serif; font-size:var(--fs-desc); line-height:1.22; color:#3a3a3a; white-space:pre-line; overflow-wrap:anywhere; }
+
+/* SKELETON */
+.ev-card.ev-skel { pointer-events:none; }
+.ev-skel .ev-photo, .ev-skel .ev-line { background:linear-gradient(90deg,#d8d4c8 25%,#ebe8de 50%,#d8d4c8 75%); background-size:200% 100%; animation:media-shimmer 1.2s infinite linear; }
+.ev-skel .ev-line { height:calc(var(--u)*1.2); min-height:10px; border-radius:6px; margin:calc(var(--u)*1) 0; }
+.ev-skel .ev-line.w1 { width:45%; height:calc(var(--u)*2.3); min-height:20px; border-radius:999px; }
+.ev-skel .ev-line.w2 { width:70%; }
+.ev-skel .ev-line.w3 { width:100%; }
+.ev-skel .ev-line.w4 { width:85%; }
+
+/* PESAN */
+.ev-pesan { text-align:center; color:#fff; padding:24px 12px; font-weight:600; }
+.ev-pesan .ev-btn { margin-top:10px; padding:9px 22px; border:0; border-radius:4px; background:var(--hijau-tua); color:#FFE77B; font:700 13px var(--font); cursor:pointer; }
+.ev-pesan .ev-btn:disabled { opacity:.6; cursor:wait; }
+.ev-info { background:var(--ev-krem); color:#1f1f1f; border-radius:12px; padding:10px 16px; margin:0 0 4px; font-size:14px; }
+
+@media (max-width:720px) {
+  .ev-list { gap:34px; padding:24px 10px; }
+  .ev-card, .ev-card:nth-of-type(even) { flex-direction:column; align-items:stretch; width:100%; margin:0; border-radius:28px; padding:14px; }
+  .ev-photo { width:100%; border-radius:18px; }
+  .ev-body { padding:4px 6px 6px; }
+  .ev-badge, .ev-badge.status-akan, .ev-badge.status-selesai { min-height:24px; padding:0 14px; min-width:0; }
+  .ev-title { margin:12px 0 6px; } .ev-desc { margin:0; }
+  .ev-tanggal, .ev-card:nth-of-type(even) .ev-tanggal { width:56px; top:-14px; left:24px; right:auto; padding:16px 0 8px; }
+  .ev-tanggal::before { top:-9px; left:16px; width:12px; height:26px; }
+}
+@media (prefers-reduced-motion:reduce) { .ev-skel .ev-photo, .ev-skel .ev-line { animation:none; } }

@@ -7,13 +7,12 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// true  = ?simulate_error=1 aktif (untuk SQA saat pengujian)
+// true  = ?simulate_error=1 aktif (untuk saat pengujian)
 // false = dimatikan (ubah ke false sebelum rilis / produksi)
 const APP_DEBUG = true;
 
 /**
  * Kirim response JSON lalu hentikan script.
- * Format sekarang mendukung error_code untuk keperluan SQA/Testing.
  */
 function respond(int $status, bool $success, string $message, $data = null, ?string $error_code = null): void
 {
@@ -25,7 +24,7 @@ function respond(int $status, bool $success, string $message, $data = null, ?str
         'message' => $message
     ];
 
-    // PERBAIKAN QA: Jika gagal dan ada error_code, sisipkan ke dalam JSON
+    // Jika gagal dan ada error_code, sisipkan ke dalam JSON
     if (!$success && $error_code !== null) {
         $payload['error_code'] = $error_code;
     }
@@ -61,7 +60,7 @@ function only_get(): void
 }
 
 /**
- * Cara SQA mensimulasikan error: tambahkan ?simulate_error=1 pada URL.
+ * Caramensimulasikan error: tambahkan ?simulate_error=1 pada URL.
  * Hanya aktif jika APP_DEBUG = true.
  */
 // PERBAIKAN QA: Menambahkan parameter $error_code agar simulasi error memiliki kode unik

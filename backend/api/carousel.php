@@ -21,8 +21,7 @@ try {
         'SELECT e.id, e.nama, e.foto, e.deskripsi, e.tanggal
            FROM carousel c
            JOIN event e ON e.id = c.id_event
-          WHERE c.status = \'aktif\'
-            AND e.status = \'aktif\'
+          WHERE e.status = \'aktif\'
           ORDER BY c.urutan, c.id
           LIMIT ' . MAX_EVENT_PILIHAN
     );
