@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 06, 2026 at 10:23 AM
+-- Generation Time: Nov 08, 2026 at 05:30 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -31,6 +31,7 @@ CREATE TABLE `admin` (
   `id` int NOT NULL,
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -39,8 +40,8 @@ CREATE TABLE `admin` (
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`id`, `username`, `password_hash`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '$2y$10$M8kUR4T23xii7GoUxSHAPuKzRmziwj.z.Gw/bpuxnG5TYtrAQR2xq', '2026-10-07 04:18:13', '2026-10-07 04:18:13');
+INSERT INTO `admin` (`id`, `username`, `password_hash`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '$2y$10$M8kUR4T23xii7GoUxSHAPuKzRmziwj.z.Gw/bpuxnG5TYtrAQR2xq', 'aktif', '2026-10-07 04:18:13', '2026-10-07 04:18:13');
 
 -- --------------------------------------------------------
 
@@ -51,9 +52,6 @@ INSERT INTO `admin` (`id`, `username`, `password_hash`, `created_at`, `updated_a
 CREATE TABLE `area` (
   `id` int NOT NULL,
   `nama_area` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lantai` int DEFAULT NULL,
-  `jenis` enum('indoor','outdoor') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
   `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `urutan` int NOT NULL DEFAULT '0',
   `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
@@ -65,10 +63,11 @@ CREATE TABLE `area` (
 -- Dumping data for table `area`
 --
 
-INSERT INTO `area` (`id`, `nama_area`, `lantai`, `jenis`, `deskripsi`, `foto`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Indoor Area', 1, 'indoor', 'Area indoor yang nyaman untuk menikmati kopi, makanan, maupun berkumpul bersama teman dan keluarga.', 'uploads/gallery/area-indoor1', 1, 'aktif', '2026-10-07 05:38:42', '2026-10-20 07:04:59'),
-(2, 'Outdoor Area - Lantai 1', 1, 'outdoor', 'Area outdoor di lantai 1 dengan suasana terbuka dan santai, cocok untuk menikmati kopi dan makanan bersama teman maupun keluarga.', 'uploads/gallery/area-outdoor1', 2, 'aktif', '2026-10-07 05:38:42', '2026-10-20 07:03:16'),
-(3, 'Outdoor Area - Lantai 2', 2, 'outdoor', 'Area outdoor di lantai 2 yang menawarkan suasana terbuka dan nyaman untuk bersantai.', 'uploads/gallery/area-outdoor1', 3, 'aktif', '2026-10-07 05:38:42', '2026-10-20 07:03:31');
+INSERT INTO `area` (`id`, `nama_area`, `foto`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Indoor tertutup lantai 1', 'uploads/area/indoor-tertutup-lantai1.png', 1, 'aktif', '2026-10-07 05:38:42', '2026-11-08 11:59:43'),
+(2, 'Indoor depan kasir', 'uploads/area/indoor-depan-kasir.png', 2, 'aktif', '2026-10-07 05:38:42', '2026-11-08 12:00:34'),
+(3, 'Outdoor lantai 1', 'uploads/area/outdoor-lantai1.png', 3, 'aktif', '2026-10-07 05:38:42', '2026-11-08 12:01:18'),
+(4, 'Outdoor lantai 2', 'uploads/area/outdoor-lantai2.png', 4, 'aktif', '2026-11-08 12:03:06', '2026-11-08 12:03:06');
 
 -- --------------------------------------------------------
 
@@ -120,9 +119,9 @@ CREATE TABLE `carousel` (
 --
 
 INSERT INTO `carousel` (`id`, `id_event`, `urutan`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '2026-10-07 04:38:35', '2026-11-06 05:03:12'),
-(2, 2, 2, '2026-10-07 05:16:04', '2026-11-06 05:03:21'),
-(3, 3, 3, '2026-10-07 05:16:04', '2026-11-06 05:03:29');
+(1, 1, 1, '2026-10-07 04:38:35', '2026-11-08 17:27:14'),
+(2, 2, 2, '2026-10-07 05:16:04', '2026-11-08 17:27:23'),
+(3, 3, 3, '2026-10-07 05:16:04', '2026-11-08 17:27:33');
 
 -- --------------------------------------------------------
 
@@ -158,31 +157,6 @@ INSERT INTO `event` (`id`, `nama`, `slug`, `deskripsi`, `foto`, `tanggal`, `wakt
 (7, 'Lorem ipsum', 'lorem-ipsum7', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event7.png', '2023-06-08', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 10:02:09', '2026-11-06 10:08:52'),
 (8, 'Lorem ipsum', 'lorem-ipsum8', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/event8.png', '2022-11-28', '19:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 10:03:30', '2026-11-06 10:09:55'),
 (9, 'Live Music', 'live-music', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 'uploads/event/live-music.png', '2026-01-01', '19:00:00', 'Acala Cafe & Eatery', 'nonaktif', '2026-11-06 10:03:30', '2026-11-06 10:14:18');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `faq`
---
-
-CREATE TABLE `faq` (
-  `id` int NOT NULL,
-  `pertanyaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jawaban` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `urutan` int NOT NULL DEFAULT '0',
-  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `faq`
---
-
-INSERT INTO `faq` (`id`, `pertanyaan`, `jawaban`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Apa itu Cafe Acala?', 'Cafe Acala adalah tempat untuk menikmati kopi, makanan, dan berbagai kegiatan seperti workshop, open mic, serta live music dalam suasana yang nyaman dan hangat.', 1, 'aktif', '2026-10-07 05:17:04', '2026-10-07 05:17:04'),
-(2, 'Apakah saya bisa melakukan reservasi?', 'Ya. Reservasi dapat dilakukan melalui kontak WhatsApp yang tersedia pada website. Silakan cantumkan tanggal, waktu, dan jumlah orang saat melakukan reservasi.', 2, 'aktif', '2026-10-07 05:17:04', '2026-10-07 05:17:04'),
-(3, 'Apakah Cafe Acala mengadakan event?', 'Ya. Cafe Acala mengadakan berbagai event seperti Coffee Workshop, Open Mic, dan Live Music. Informasi event dapat dilihat pada halaman Event.', 3, 'aktif', '2026-10-07 05:17:04', '2026-10-07 05:17:04');
 
 -- --------------------------------------------------------
 
@@ -387,6 +361,39 @@ INSERT INTO `operating_hours` (`id`, `cafe_id`, `hari`, `urutan`, `is_closed`, `
 (6, 1, 'Saturday', 6, 0, '09:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09'),
 (7, 1, 'Sunday', 7, 0, '09:00:00', '22:00:00', '2026-10-07 05:36:09', '2026-10-07 05:36:09');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reservation_rule`
+--
+
+CREATE TABLE `reservation_rule` (
+  `id` int NOT NULL,
+  `id_area` int DEFAULT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `urutan` int NOT NULL DEFAULT '0',
+  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `reservation_rule`
+--
+
+INSERT INTO `reservation_rule` (`id`, `id_area`, `judul`, `isi`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'Waktu Kedatangan', 'Pelanggan diwajibkan datang minimal 10 menit sebelum waktu reservasi yang telah ditentukan.', 1, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(2, NULL, 'Perubahan Jumlah Pengunjung', 'Apabila terdapat perubahan jumlah pengunjung, pelanggan diharapkan menginformasikannya kepada pihak Café Acala melalui WhatsApp.', 2, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(3, 1, 'Kapasitas Indoor Tertutup Lantai 1', 'Kapasitas maksimal untuk area Indoor tertutup lantai 1 adalah 15 orang.', 3, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(4, 2, 'Kapasitas Indoor Depan Kasir', 'Kapasitas maksimal untuk area Indoor depan kasir adalah 10 orang.', 4, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(5, 4, 'Kapasitas Outdoor Lantai 2', 'Kapasitas maksimal untuk area Outdoor lantai 2 adalah 12 orang.', 5, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(6, 3, 'Kapasitas Outdoor Lantai 1', 'Kapasitas maksimal untuk area Outdoor lantai 1 adalah 20 orang.', 6, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(7, NULL, 'Pembatalan Reservasi', 'Apabila pelanggan tidak dapat menghadiri reservasi yang telah diajukan, pelanggan diharapkan segera menginformasikan pembatalan kepada pihak Café Acala melalui WhatsApp.', 7, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(8, NULL, 'Perubahan Jadwal Reservasi', 'Apabila pelanggan ingin mengubah tanggal atau waktu reservasi, pelanggan diharapkan menginformasikannya kepada pihak Café Acala melalui WhatsApp sebelum jadwal reservasi. Perubahan akan disesuaikan dengan ketersediaan area.', 8, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(9, NULL, 'Dekorasi dan Acara Khusus', 'Pelanggan yang ingin membawa dekorasi, kue, atau mengadakan acara khusus diharapkan menginformasikannya terlebih dahulu kepada pihak Café Acala melalui WhatsApp.', 9, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42'),
+(10, NULL, 'Toleransi Keterlambatan', 'Apabila pelanggan belum hadir hingga 15 menit setelah jam yang telah disepakati dan tidak ada kabar, maka reservasi dianggap batal dan area dapat digunakan oleh pelanggan lain.', 10, 'aktif', '2026-11-08 13:22:42', '2026-11-08 13:22:42');
+
 --
 -- Indexes for dumped tables
 --
@@ -425,12 +432,6 @@ ALTER TABLE `event`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
--- Indexes for table `faq`
---
-ALTER TABLE `faq`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `gallery`
 --
 ALTER TABLE `gallery`
@@ -459,6 +460,13 @@ ALTER TABLE `operating_hours`
   ADD KEY `fk_operating_hours_cafe` (`cafe_id`);
 
 --
+-- Indexes for table `reservation_rule`
+--
+ALTER TABLE `reservation_rule`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_reservation_rule_area` (`id_area`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -472,7 +480,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `area`
 --
 ALTER TABLE `area`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cafe`
@@ -491,12 +499,6 @@ ALTER TABLE `carousel`
 --
 ALTER TABLE `event`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `faq`
---
-ALTER TABLE `faq`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `gallery`
@@ -523,6 +525,12 @@ ALTER TABLE `operating_hours`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `reservation_rule`
+--
+ALTER TABLE `reservation_rule`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -543,6 +551,12 @@ ALTER TABLE `menu`
 --
 ALTER TABLE `operating_hours`
   ADD CONSTRAINT `fk_operating_hours_cafe` FOREIGN KEY (`cafe_id`) REFERENCES `cafe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `reservation_rule`
+--
+ALTER TABLE `reservation_rule`
+  ADD CONSTRAINT `fk_reservation_rule_area` FOREIGN KEY (`id_area`) REFERENCES `area` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
