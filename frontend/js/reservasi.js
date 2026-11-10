@@ -1,21 +1,13 @@
 /**
  * Logika Halaman Reservasi Café Ácala & Eatery
- * Sesuai Spesifikasi Card 12.2.1 (Data Area, 1 Baris = 1 Area = 1 Foto, textContent aman, Error 500)
  */
 
 const NOMOR_WA_CAFE = '6281234567890'; 
 
-let jamOperasionalData = {
-  0: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-  1: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-  2: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-  3: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-  4: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-  5: { buka: "13:00", tutup: "23:00", tutupStatus: false },
-  6: { buka: "13:00", tutup: "23:00", tutupStatus: false }
-};
-
+let jamOperasionalData = {}; 
 let areaListGlobal = [];
+let aturanListGlobal = [];
+let indeksFotoAktif = 0;
 let pendingWhatsAppUrl = '';
 let pendingMessageText = '';
 
@@ -23,10 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
   InisialisasiFloatingWA();
   MuatDataAreaReservasi();
   MuatDataJamOperasional();
+  MuatDataAturanReservasi();
   SetMinTanggalHariIni();
 
   const inputTanggal = document.getElementById('tanggal');
-  inputTanggal.addEventListener('change', HandlePerubahanTanggal);
+  if (inputTanggal) {
+    inputTanggal.addEventListener('change', HandlePerubahanTanggal);
+  }
+
+  const formEl = document.getElementById('formReservasiAcala');
+  if (formEl) {
+    formEl.addEventListener('submit', HandleSubmitReservasi);
+  }
 });
 
 function InisialisasiFloatingWA() {
@@ -38,12 +38,14 @@ function InisialisasiFloatingWA() {
 
 function SetMinTanggalHariIni() {
   const inputTanggal = document.getElementById('tanggal');
-  const todayStr = new Date().toISOString().split('T')[0];
-  inputTanggal.min = todayStr;
+  if (inputTanggal) {
+    const todayStr = new Date().toISOString().split('T')[0];
+    inputTanggal.min = todayStr;
+  }
 }
 
 /**
- * Mengambil Data Area dari API (Card 12.2.1)
+ * Mengambil Data Area & Menampilkan Card Slider Interaktif
  */
 async function MuatDataAreaReservasi() {
   const skeleton = document.getElementById('areaSkeleton');
@@ -51,93 +53,260 @@ async function MuatDataAreaReservasi() {
   const selectArea = document.getElementById('areaSelect');
 
   try {
-    const response = await fetch('/api/area');
+    const response = await fetchData("/area");
     
-    if (!response.ok) {
-      throw new Error('Data area reservasi gagal dimuat');
+    let dataArea = [];
+    if (Array.isArray(response)) {
+      dataArea = response;
+    } else if (response && Array.isArray(response.data)) {
+      dataArea = response.data;
+    } else if (response && typeof response === 'object') {
+      dataArea = Object.values(response).find(val => Array.isArray(val)) || [];
     }
 
-    const result = await response.json();
-    
-    if (result && Array.isArray(result.data) && result.data.length === 0) {
-      skeleton.style.display = 'none';
-      container.innerHTML = '<p class="text-center text-muted">Belum ada area reservasi.</p>';
-      container.style.display = 'block';
-      selectArea.innerHTML = '<option value="">-- Belum ada area --</option>';
-      selectArea.disabled = true;
+    if (skeleton) skeleton.style.display = 'none';
+
+    if (!dataArea || dataArea.length === 0) {
+      if (container) {
+        container.innerHTML = '<p class="text-center text-muted w-100">Belum ada area reservasi.</p>';
+        container.style.display = 'flex';
+      }
+      if (selectArea) {
+        selectArea.innerHTML = '<option value="">-- Belum ada area --</option>';
+        selectArea.disabled = true;
+      }
       return;
     }
 
-    const dataArea = result.data || result; 
     areaListGlobal = dataArea;
+    indeksFotoAktif = 0;
     
-    skeleton.style.display = 'none';
-    container.style.display = 'flex';
+    if (container) {
+      container.style.display = 'block';
+      renderCardGaleriSlider(container);
+    }
 
-    // Render Kartu Area (1 Foto per Area)
-    container.innerHTML = dataArea.map(area => {
-      let fotoMarkup = area.foto 
-        ? `<img src="${area.foto}" alt="Area Reservasi" class="foto-utama" onerror="this.outerHTML='<div class=\"foto-placeholder\">Foto area tidak tersedia</div>'">`
-        : `<div class="foto-placeholder">Foto area tidak tersedia</div>`;
-
-      return `
-        <article class="res-card light">
-          <div class="res-card-grid">
-            <div class="res-card-media">
-              ${fotoMarkup}
-            </div>
-            <div class="res-card-info">
-              <h2 class="nama-area-teks"></h2>
-              <div class="subtitle">AREA RESERVASI CAFÉ ÁCALA</div>
-              <button type="button" class="btn-pilih-reservasi" onclick="PilihAreaDariCard('${area.id}')">PILIH AREA INI</button>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join('');
-
-    // Keamanan Tampilan: Menerapkan textContent untuk nama area agar aman dari injeksi
-    const judulCardElements = container.querySelectorAll('.nama-area-teks');
-    dataArea.forEach((area, index) => {
-      if (judulCardElements[index]) {
-        judulCardElements[index].textContent = area.nama;
-      }
-    });
-
-    // Render Dropdown Form
-    selectArea.innerHTML = '<option value="">-- Pilih Area Reservasi --</option>' + 
-      dataArea.map(a => `<option value="${a.nama}">${a.nama}</option>`).join('');
-    selectArea.disabled = false;
+    if (selectArea) {
+      selectArea.innerHTML = '<option value="">-- Pilih Area Reservasi --</option>' + 
+        dataArea.map(a => `<option value="${esc(a.nama)}">${esc(a.nama)}</option>`).join('');
+      selectArea.disabled = false;
+    }
 
   } catch (error) {
-    console.error(error);
-    skeleton.style.display = 'none';
-    container.innerHTML = `
-      <div class="p-4 text-center text-danger bg-light rounded-4">
-        <p class="fw-bold mb-1">Gagal memuat data area reservasi.</p>
-        <small class="text-muted">Terjadi kesalahan pada server. Silakan muat ulang halaman.</small>
+    console.error("Gagal memuat area:", error);
+    if (skeleton) skeleton.style.display = 'none';
+    if (container) {
+      container.innerHTML = `
+        <div class="p-4 text-center text-danger bg-light rounded-4 w-100">
+          <p class="fw-bold mb-1">Gagal memuat data area reservasi.</p>
+        </div>
+      `;
+      container.style.display = 'flex';
+    }
+  }
+}
+
+function renderCardGaleriSlider(containerEl) {
+  const area = areaListGlobal[indeksFotoAktif];
+  if (!area) return;
+
+  let fotoMarkup = area.foto 
+    ? `<img src="${urlGambar(area.foto)}" alt="${esc(area.nama)}" class="foto-utama" onclick="bukaModalFotoBesar(${indeksFotoAktif})" title="Klik untuk memperbesar foto">`
+    : `<div class="foto-placeholder" style="width:100%; height:100%; cursor:pointer;" onclick="bukaModalFotoBesar(${indeksFotoAktif})">Foto area tidak tersedia</div>`;
+
+  containerEl.innerHTML = `
+    <article class="res-card light p-3 shadow-sm" style="height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#EFEFEF; border-radius:16px;">
+      
+      <div>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <h3 class="nama-area-teks mb-0" style="color:#2d5f2e; font-weight:700; font-size:18px;">${esc(area.nama)}</h3>
+          <span style="font-size:10.5px; font-weight:600; letter-spacing:1px; color:#4A5568; background:#E2E8F0; padding:2px 8px; border-radius:20px;">${indeksFotoAktif + 1} / ${areaListGlobal.length}</span>
+        </div>
+        <div class="subtitle mb-2" style="font-size:10px; font-weight:600; letter-spacing:1.5px; color:#718096; text-transform:uppercase;">AREA RESERVASI CAFÉ ÁCALA</div>
       </div>
-    `;
-    container.style.display = 'block';
-    selectArea.innerHTML = '<option value="">-- Gagal Memuat Area --</option>';
-    selectArea.disabled = true;
+
+      <div class="position-relative d-flex align-items-center justify-content-center my-1">
+        <button type="button" class="btn btn-dark position-absolute start-0 z-3 px-2 py-1 fs-6 fw-bold shadow" onclick="geserCardGaleri(-1)">❮</button>
+        
+        <div class="res-card-media-slider">
+          ${fotoMarkup}
+        </div>
+
+        <button type="button" class="btn btn-dark position-absolute end-0 z-3 px-2 py-1 fs-6 fw-bold shadow" onclick="geserCardGaleri(1)">❯</button>
+      </div>
+
+      <div class="mt-2 text-center">
+        <button type="button" class="btn-pilih-reservasi w-100 py-2" onclick="PilihAreaDariCard('${area.id}')" style="font-size:12px;">PILIH AREA INI</button>
+      </div>
+
+    </article>
+  `;
+}
+
+function geserCardGaleri(arah) {
+  indeksFotoAktif += arah;
+  if (indeksFotoAktif < 0) {
+    indeksFotoAktif = areaListGlobal.length - 1; 
+  } else if (indeksFotoAktif >= areaListGlobal.length) {
+    indeksFotoAktif = 0; 
+  }
+  const container = document.getElementById('dynamicAreaCards');
+  if (container) {
+    renderCardGaleriSlider(container);
+  }
+}
+
+/**
+ * Logika Pop-up Foto Besar & Navigasi (Next / Prev)
+ */
+function bukaModalFotoBesar(index) {
+  indeksFotoAktif = index;
+  updateKontenModalFoto();
+  const modal = document.getElementById('modalFotoBesar');
+  if (modal) modal.classList.add('aktif');
+}
+
+function tutupModalFotoBesar() {
+  const modal = document.getElementById('modalFotoBesar');
+  if (modal) modal.classList.remove('aktif');
+}
+
+function geserFotoModal(arah) {
+  indeksFotoAktif += arah;
+  if (indeksFotoAktif < 0) {
+    indeksFotoAktif = areaListGlobal.length - 1; 
+  } else if (indeksFotoAktif >= areaListGlobal.length) {
+    indeksFotoAktif = 0; 
+  }
+  updateKontenModalFoto();
+  
+  const container = document.getElementById('dynamicAreaCards');
+  if (container) {
+    renderCardGaleriSlider(container);
+  }
+}
+
+function updateKontenModalFoto() {
+  const area = areaListGlobal[indeksFotoAktif];
+  if (!area) return;
+
+  const titleEl = document.getElementById('modalFotoTitle');
+  const imgEl = document.getElementById('modalFotoImg');
+  const placeholderEl = document.getElementById('modalFotoPlaceholder');
+
+  if (titleEl) {
+    titleEl.textContent = `${area.nama} (${indeksFotoAktif + 1} dari ${areaListGlobal.length})`;
+  }
+
+  if (area.foto) {
+    imgEl.src = urlGambar(area.foto);
+    imgEl.style.display = 'block';
+    if (placeholderEl) placeholderEl.style.display = 'none';
+  } else {
+    imgEl.style.display = 'none';
+    if (placeholderEl) {
+      placeholderEl.style.display = 'flex';
+      placeholderEl.textContent = `Foto ${area.nama} tidak tersedia`;
+    }
   }
 }
 
 async function MuatDataJamOperasional() {
   try {
-    // Opsional fetch jam operasional backend jika tersedia
+    const res = await fetchData("/operating-hours");
+    if (res && Array.isArray(res)) {
+      res.forEach((item, idx) => {
+        jamOperasionalData[idx] = {
+          buka: item.jam_buka ? item.jam_buka.substring(0, 5) : "13:00",
+          tutup: item.jam_tutup ? item.jam_tutup.substring(0, 5) : "22:00",
+          tutupStatus: item.is_closed
+        };
+      });
+    }
   } catch (e) {
-    console.warn("Menggunakan data jam operasional default.");
+    jamOperasionalData = {
+      0: { buka: "13:00", tutup: "22:00", tutupStatus: false },
+      1: { buka: "13:00", tutup: "22:00", tutupStatus: false },
+      2: { buka: "13:00", tutup: "22:00", tutupStatus: false },
+      3: { buka: "13:00", tutup: "22:00", tutupStatus: false },
+      4: { buka: "13:00", tutup: "22:00", tutupStatus: false },
+      5: { buka: "13:00", tutup: "23:00", tutupStatus: false },
+      6: { buka: "13:00", tutup: "23:00", tutupStatus: false }
+    };
   }
+}
+
+async function MuatDataAturanReservasi() {
+  const previewContainer = document.getElementById('rulesPreviewContainer');
+  const modalBody = document.getElementById('modalAturanBody');
+
+  try {
+    const res = await fetchData("/reservation-rule?limit=4");
+    let rules = [];
+    if (Array.isArray(res)) {
+      rules = res;
+    } else if (res && Array.isArray(res.data)) {
+      rules = res.data;
+    }
+
+    if (!rules || rules.length === 0) {
+      if (previewContainer) previewContainer.innerHTML = '<p class="text-muted">Belum ada aturan reservasi.</p>';
+      return;
+    }
+
+    aturanListGlobal = rules;
+
+    if (previewContainer) {
+      previewContainer.innerHTML = rules.map((r, i) => `
+        <div class="mb-2 rules-item-list">
+          <span class="fw-bold" style="color: #2d5f2e; font-size: 13px;">${i + 1}. ${esc(r.judul)}</span>
+          <p class="mb-1 text-dark" style="font-size: 11.5px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; opacity: 0.85;">${esc(r.isi)}</p>
+        </div>
+      `).join('');
+    }
+
+    if (modalBody) {
+      const fullRes = await fetchData("/reservation-rule");
+      let allRules = rules;
+      if (Array.isArray(fullRes)) {
+        allRules = fullRes;
+      } else if (fullRes && Array.isArray(fullRes.data)) {
+        allRules = fullRes.data;
+      }
+
+      modalBody.innerHTML = allRules.map((r, i) => `
+        <div class="mb-3">
+          <h5 class="text-warning fw-bold" style="font-size: 15px;">${i + 1}. ${esc(r.judul)}</h5>
+          <p class="mb-0 text-white-50" style="font-size: 13.5px; font-weight: 500;">${esc(r.isi)}</p>
+        </div>
+      `).join('');
+    }
+
+  } catch (err) {
+    console.error("Gagal memuat aturan reservasi:", err);
+    if (previewContainer) {
+      previewContainer.innerHTML = '<p class="text-danger small">Gagal memuat ringkasan aturan.</p>';
+    }
+  }
+}
+
+function bukaModalAturan() {
+  const modal = document.getElementById('modalAturan');
+  if (modal) modal.classList.add('aktif');
+}
+
+function tutupModalAturan() {
+  const modal = document.getElementById('modalAturan');
+  if (modal) modal.classList.remove('aktif');
 }
 
 function PilihAreaDariCard(idArea) {
   const areaDitemukan = areaListGlobal.find(a => a.id == idArea);
   if (areaDitemukan) {
     const selectArea = document.getElementById('areaSelect');
-    selectArea.value = areaDitemukan.nama;
-    document.querySelector('.form-reservasi-section').scrollIntoView({ behavior: 'smooth' });
+    if (selectArea) selectArea.value = areaDitemukan.nama;
+    const formSection = document.querySelector('.form-reservasi-section');
+    if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
@@ -149,7 +318,7 @@ function HandlePerubahanTanggal(e) {
   if (!tglVal) {
     selectJam.innerHTML = '<option value="">-- Pilih tanggal terlebih dahulu --</option>';
     selectJam.disabled = true;
-    infoHari.innerText = '';
+    if (infoHari) infoHari.innerText = '';
     return;
   }
 
@@ -158,27 +327,27 @@ function HandlePerubahanTanggal(e) {
   const opsiHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
   const namaHari = opsiHari[hariIndex];
 
-  infoHari.innerText = `Hari: ${namaHari}`;
+  if (infoHari) infoHari.innerText = `Hari: ${namaHari}`;
 
-  const jadwalHariIni = jamOperasionalData[hariIndex];
+  const jadwalHariIni = jamOperasionalData[hariIndex] || { buka: "13:00", tutup: "22:00", tutupStatus: false };
 
-  if (jadwalHariIni && jadwalHariIni.tutupStatus) {
+  if (jadwalHariIni.tutupStatus) {
     selectJam.innerHTML = `<option value="">Kafe TUTUP pada hari ${namaHari}</option>`;
     selectJam.disabled = true;
-    infoHari.innerHTML += ` <span class="text-danger fw-bold">(Hari Tutup)</span>`;
+    if (infoHari) infoHari.innerHTML += ` <span class="text-danger fw-bold">(Hari Tutup)</span>`;
     return;
   }
 
   selectJam.disabled = false;
   let jamOptionsHtml = '<option value="">-- Pilih Jam Kedatangan --</option>';
 
-  let jamBuka = 13;
-  let jamTutup = 21;
+  let jamBukaNum = parseInt(jadwalHariIni.buka.split(':')[0], 10);
+  let jamTutupNum = parseInt(jadwalHariIni.tutup.split(':')[0], 10);
 
   const isToday = tglVal === new Date().toISOString().split('T')[0];
   const currentHour = new Date().getHours();
 
-  for (let h = jamBuka; h <= jamTutup; h++) {
+  for (let h = jamBukaNum; h <= jamTutupNum; h++) {
     let waktuStr = `${h < 10 ? '0' + h : h}:00 WIB`;
     if (isToday && h <= currentHour) continue;
     jamOptionsHtml += `<option value="${waktuStr}">${waktuStr}</option>`;
@@ -191,7 +360,7 @@ function HandlePerubahanTanggal(e) {
   }
 }
 
-document.getElementById('formReservasiAcala').addEventListener('submit', function(event) {
+function HandleSubmitReservasi(event) {
   event.preventDefault();
 
   const nama = document.getElementById('nama').value.trim();
@@ -257,7 +426,7 @@ document.getElementById('formReservasiAcala').addEventListener('submit', functio
   if (!isValid) return;
 
   SimpanDanTampilkanKonfirmasi({ nama, whatsapp, tanggal, jam, jumlah: jmlNum, area, catatan });
-});
+}
 
 function TampilkanErrorField(fieldId, pesan) {
   const el = document.getElementById(fieldId);
@@ -278,12 +447,15 @@ function ClearErrors() {
 }
 
 function TampilkanPeringatan(pesan) {
-  document.getElementById('pesanPeringatan').innerText = pesan;
-  document.getElementById('modalPeringatan').classList.add('aktif');
+  const el = document.getElementById('pesanPeringatan');
+  if (el) el.innerText = pesan;
+  const modal = document.getElementById('modalPeringatan');
+  if (modal) modal.classList.add('aktif');
 }
 
 function tutupModalPeringatan() {
-  document.getElementById('modalPeringatan').classList.remove('aktif');
+  const modal = document.getElementById('modalPeringatan');
+  if (modal) modal.classList.remove('aktif');
 }
 
 function SimpanDanTampilkanKonfirmasi(data) {
@@ -304,13 +476,18 @@ Mohon dapat dikonfirmasi ketersediaan tempatnya. Terima kasih!`;
 
   pendingWhatsAppUrl = `https://wa.me/${NOMOR_WA_CAFE}?text=` + encodeURIComponent(pendingMessageText);
 
-  document.getElementById('loadingBarContainer').style.display = 'none';
-  document.getElementById('konfirmasiButtonWrapper').style.display = 'flex';
-  document.getElementById('modalKonfirmasi').classList.add('aktif');
+  const loadingContainer = document.getElementById('loadingBarContainer');
+  const btnWrapper = document.getElementById('konfirmasiButtonWrapper');
+  if (loadingContainer) loadingContainer.style.display = 'none';
+  if (btnWrapper) btnWrapper.style.display = 'flex';
+
+  const modal = document.getElementById('modalKonfirmasi');
+  if (modal) modal.classList.add('aktif');
 }
 
 function tutupModalKonfirmasi() {
-  document.getElementById('modalKonfirmasi').classList.remove('aktif');
+  const modal = document.getElementById('modalKonfirmasi');
+  if (modal) modal.classList.remove('aktif');
 }
 
 function prosesKonfirmasiOK() {
@@ -318,14 +495,14 @@ function prosesKonfirmasiOK() {
   const progressBar = document.getElementById('progressBarFill');
   const btnWrapper = document.getElementById('konfirmasiButtonWrapper');
 
-  btnWrapper.style.display = 'none';
-  loadingContainer.style.display = 'block';
-  progressBar.style.width = '0%';
+  if (btnWrapper) btnWrapper.style.display = 'none';
+  if (loadingContainer) loadingContainer.style.display = 'block';
+  if (progressBar) progressBar.style.width = '0%';
 
   let width = 0;
   const interval = setInterval(() => {
     width += 10;
-    progressBar.style.width = width + '%';
+    if (progressBar) progressBar.style.width = width + '%';
     if (width >= 100) {
       clearInterval(interval);
       setTimeout(() => {
@@ -340,14 +517,18 @@ function BukaWhatsAppAtauFallback(urlWA, pesanTeks) {
   const newWindow = window.open(urlWA, '_blank');
 
   if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-    document.getElementById('fallbackTextarea').value = pesanTeks;
-    document.getElementById('linkManualWA').href = urlWA;
-    document.getElementById('modalFallbackWA').classList.add('aktif');
+    const textarea = document.getElementById('fallbackTextarea');
+    const linkManual = document.getElementById('linkManualWA');
+    if (textarea) textarea.value = pesanTeks;
+    if (linkManual) linkManual.href = urlWA;
+    const fallbackModal = document.getElementById('modalFallbackWA');
+    if (fallbackModal) fallbackModal.classList.add('aktif');
   }
 }
 
 function salinPesanFallback() {
   const textarea = document.getElementById('fallbackTextarea');
+  if (!textarea) return;
   textarea.select();
   textarea.setSelectionRange(0, 99999);
   navigator.clipboard.writeText(textarea.value).then(() => {
@@ -358,5 +539,19 @@ function salinPesanFallback() {
 }
 
 function tutupModalFallback() {
-  document.getElementById('modalFallbackWA').classList.remove('aktif');
+  const modal = document.getElementById('modalFallbackWA');
+  if (modal) modal.classList.remove('aktif');
+}
+
+function urlGambar(path) {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  const BASE_ASSET = "../backend/"; 
+  return path.startsWith("uploads/") ? BASE_ASSET + path : path;
+}
+
+function esc(str) {
+  return str ? String(str) : '';
 }

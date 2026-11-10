@@ -17,7 +17,7 @@
 </head>
 <body class="reservasi-page">
 
-  <!-- Navbar (Otomatis dimuat oleh layout.js) -->
+  <!-- Navbar -->
   <header id="navbar" class="nav-acala"></header>
 
   <!-- Konten Utama Reservasi -->
@@ -27,109 +27,152 @@
       <p>Syarat & Ketentuan Reservasi Area Café Ácala & Eatery</p>
     </section>
 
-    <!-- Bagian Galeri & Daftar Area (Sesuai Card 12.2.1) -->
-    <div class="reservasi-wrapper" id="areaContainerWrapper">
-      <!-- Skeleton Loading untuk Area -->
-      <div id="areaSkeleton" class="res-card light skeleton-loading">
-        <div class="res-card-grid">
-          <div class="skeleton-box" style="height: 270px; border-radius: 14px;"></div>
-          <div class="d-flex flex-column gap-3 justify-content-center">
-            <div class="skeleton-box" style="width: 60%; height: 30px;"></div>
-            <div class="skeleton-box" style="width: 40%; height: 20px;"></div>
-            <div class="skeleton-box" style="width: 100%; height: 80px;"></div>
+    <!-- Bagian Atas: Aturan di Kiri (Proporsional), Slider Foto di Kanan -->
+    <div class="reservasi-top-grid">
+      
+      <!-- 1. Ringkasan Aturan Reservasi (Kiri) -->
+      <div class="rules-card-preview">
+        <div>
+          <h3 style="color: #2d5f2e; font-size: 17px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.5px;">Ketentuan Singkat Reservasi</h3>
+          <div id="rulesPreviewContainer" class="rules-preview-clean">
+            <p class="text-muted skeleton-box" style="height: 16px; width: 90%; margin-bottom: 8px;"></p>
+            <p class="text-muted skeleton-box" style="height: 16px; width: 75%; margin-bottom: 8px;"></p>
+            <p class="text-muted skeleton-box" style="height: 16px; width: 60%;"></p>
           </div>
         </div>
+        <button type="button" class="btn btn-sm btn-outline-success mt-2 fw-bold align-self-start" onclick="bukaModalAturan()" style="border-radius: 6px; padding: 6px 14px; font-size: 12.5px;">Selengkapnya →</button>
       </div>
-      <!-- Konten Card Area akan dimuat dinamis via JS -->
-      <div id="dynamicAreaCards" style="display: none; display: flex; flex-direction: column; gap: 35px;"></div>
+
+      <!-- 2. Slider Foto Area (Kanan) -->
+      <div id="areaContainerWrapper">
+        <div id="areaSkeleton" class="res-card light skeleton-loading p-4" style="height: 100%; min-height: 280px; border-radius: 16px;">
+          <div class="skeleton-box" style="height: 180px; border-radius: 12px; margin-bottom: 12px;"></div>
+          <div class="skeleton-box" style="width: 50%; height: 20px;"></div>
+        </div>
+        <div id="dynamicAreaCards"></div>
+      </div>
+
     </div>
 
-    <!-- Bagian Form Pengajuan Reservasi -->
+    <!-- Form Pengajuan Reservasi (Grid 2 Kolom) -->
     <section class="form-reservasi-section">
       <div class="form-reservasi-card">
-        <h3 class="text-center mb-1" style="color: #2d5f2e; font-weight: 700; letter-spacing: 2px;">FORMULIR PENGAJUAN RESERVASI</h3>
-        <p class="text-center text-muted mb-4" style="font-size: 13.5px;">Silakan lengkapi data di bawah ini untuk pemesanan meja.</p>
+        <h3 class="text-center mb-1" style="color: #2d5f2e; font-weight: 700; letter-spacing: 1.5px;">FORMULIR RESERVASI</h3>
+        <p class="text-center text-muted mb-4" style="font-size: 13.5px;">Lengkapi data di bawah ini untuk konfirmasi ketersediaan meja.</p>
 
         <form id="formReservasiAcala" novalidate>
-          
-          <!-- 1. Nama Lengkap -->
-          <div class="form-group mb-3">
-            <label for="nama" class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
-            <input type="text" id="nama" class="form-control-acala" placeholder="Masukkan nama lengkap Anda">
-            <div class="invalid-feedback-custom" id="error-nama"></div>
-          </div>
+          <div class="form-grid-layout">
+            
+            <!-- 1. Nama Lengkap -->
+            <div class="form-group">
+              <label for="nama" class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+              <input type="text" id="nama" class="form-control-acala" placeholder="Nama lengkap Anda">
+              <div class="invalid-feedback-custom" id="error-nama"></div>
+            </div>
 
-          <!-- 2. Nomor WhatsApp -->
-          <div class="form-group mb-3">
-            <label for="whatsapp" class="form-label fw-semibold">Nomor WhatsApp <span class="text-danger">*</span></label>
-            <input type="tel" id="whatsapp" class="form-control-acala" placeholder="Contoh: 081234567890 / +6281234567890">
-            <div class="invalid-feedback-custom" id="error-whatsapp"></div>
-          </div>
+            <!-- 2. Nomor WhatsApp -->
+            <div class="form-group">
+              <label for="whatsapp" class="form-label fw-semibold">Nomor WhatsApp <span class="text-danger">*</span></label>
+              <input type="tel" id="whatsapp" class="form-control-acala" placeholder="Contoh: 081234567890">
+              <div class="invalid-feedback-custom" id="error-whatsapp"></div>
+            </div>
 
-          <!-- 3. Tanggal Reservasi -->
-          <div class="form-group mb-3">
-            <label for="tanggal" class="form-label fw-semibold">Tanggal Kunjungan <span class="text-danger">*</span></label>
-            <input type="date" id="tanggal" class="form-control-acala">
-            <small id="infoHari" class="form-text text-muted d-block mt-1"></small>
-            <div class="invalid-feedback-custom" id="error-tanggal"></div>
-          </div>
+            <!-- 3. Tanggal Reservasi -->
+            <div class="form-group">
+              <label for="tanggal" class="form-label fw-semibold">Tanggal Kunjungan <span class="text-danger">*</span></label>
+              <input type="date" id="tanggal" class="form-control-acala">
+              <small id="infoHari" class="form-text text-muted d-block mt-1" style="font-size: 11px;"></small>
+              <div class="invalid-feedback-custom" id="error-tanggal"></div>
+            </div>
 
-          <!-- 4. Waktu Reservasi -->
-          <div class="form-group mb-3">
-            <label for="jam" class="form-label fw-semibold">Waktu / Jam Kedatangan <span class="text-danger">*</span></label>
-            <select id="jam" class="form-control-acala" disabled>
-              <option value="">-- Pilih tanggal terlebih dahulu --</option>
-            </select>
-            <small id="infoJamOperasional" class="form-text text-muted d-block mt-1">Pilihan waktu menyesuaikan jam operasional kafe.</small>
-            <div class="invalid-feedback-custom" id="error-jam"></div>
-          </div>
+            <!-- 4. Jam Kedatangan -->
+            <div class="form-group">
+              <label for="jam" class="form-label fw-semibold">Waktu / Jam Kedatangan <span class="text-danger">*</span></label>
+              <select id="jam" class="form-control-acala" disabled>
+                <option value="">-- Pilih tanggal dahulu --</option>
+              </select>
+              <div class="invalid-feedback-custom" id="error-jam"></div>
+            </div>
 
-          <!-- 5. Jumlah Pengunjung -->
-          <div class="form-group mb-3">
-            <label for="jumlah" class="form-label fw-semibold">Jumlah Pengunjung (Orang) <span class="text-danger">*</span></label>
-            <input type="number" id="jumlah" class="form-control-acala" min="1" value="2" placeholder="Minimal 1 orang">
-            <div class="invalid-feedback-custom" id="error-jumlah"></div>
-          </div>
+            <!-- 5. Area Reservasi -->
+            <div class="form-group">
+              <label for="areaSelect" class="form-label fw-semibold">Area Reservasi <span class="text-danger">*</span></label>
+              <select id="areaSelect" class="form-control-acala" disabled>
+                <option value="">Memuat data area...</option>
+              </select>
+              <div class="invalid-feedback-custom" id="error-area"></div>
+            </div>
 
-          <!-- 6. Area Reservasi (Dropdown) -->
-          <div class="form-group mb-3">
-            <label for="areaSelect" class="form-label fw-semibold">Pilihan Area Reservasi <span class="text-danger">*</span></label>
-            <select id="areaSelect" class="form-control-acala" disabled>
-              <option value="">Memuat data area...</option>
-            </select>
-            <div class="invalid-feedback-custom" id="error-area"></div>
-          </div>
+            <!-- 6. Jumlah Pengunjung -->
+            <div class="form-group">
+              <label for="jumlah" class="form-label fw-semibold">Jumlah Pengunjung <span class="text-danger">*</span></label>
+              <input type="number" id="jumlah" class="form-control-acala" min="1" value="2" placeholder="Min. 1 orang">
+              <div class="invalid-feedback-custom" id="error-jumlah"></div>
+            </div>
 
-          <!-- 7. Catatan (Opsional) -->
-          <div class="form-group mb-4">
-            <label for="catatan" class="form-label fw-semibold">Catatan Khusus (Opsional)</label>
-            <textarea id="catatan" class="form-control-acala" rows="2" placeholder="Misal: Butuh dekat colokan, kursi bayi, dll."></textarea>
-          </div>
+            <!-- 7. Catatan Khusus (Full Width) -->
+            <div class="form-group form-grid-full mb-2">
+              <label for="catatan" class="form-label fw-semibold">Catatan Khusus (Opsional)</label>
+              <textarea id="catatan" class="form-control-acala" rows="2" placeholder="Misal: Dekat stopkontak, baby chair, dll."></textarea>
+            </div>
 
-          <button type="submit" id="btnKirimReservasi" class="btn-submit-reservasi">KIRIM RESERVASI</button>
+            <!-- Button Submit (Full Width) -->
+            <div class="form-grid-full mt-2">
+              <button type="submit" id="btnKirimReservasi" class="btn-submit-reservasi">KIRIM RESERVASI VIA WHATSAPP</button>
+            </div>
+
+          </div>
         </form>
       </div>
     </section>
 
   </main>
 
-  <!-- POP-UP PERINGATAN (Form Kosong / Belum Valid) -->
+  <!-- Pop-Up Modals Aturan Lengkap -->
+  <div class="modal-reservasi-overlay" id="modalAturan">
+    <div class="modal-reservasi-container" style="max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
+      <h3 class="modal-header-title text-warning mb-3">Syarat & Ketentuan Reservasi</h3>
+      <div id="modalAturanBody" class="modal-scrollable-content text-white pe-2" style="overflow-y: auto; max-height: 55vh; text-align: left; font-size: 13.5px; line-height: 1.6;"></div>
+      <button type="button" class="btn btn-warning fw-bold py-2 mt-3 text-success" onclick="tutupModalAturan()" style="border-radius: 8px;">TUTUP</button>
+    </div>
+  </div>
+
+  <!-- MODAL POP-UP FOTO BESAR (DENGAN TOMBOL AKSI RAPI) -->
+  <div class="modal-reservasi-overlay" id="modalFotoBesar">
+    <div class="modal-reservasi-container text-center" style="max-width: 680px; background: #2F4F3E; border: 1px solid rgba(255, 231, 123, 0.3);">
+      <h3 id="modalFotoTitle" class="modal-header-title text-warning mb-3">Nama Area</h3>
+      <div class="position-relative d-flex align-items-center justify-content-center">
+        <!-- Tombol Prev Pop-up -->
+        <button type="button" class="btn btn-dark position-absolute start-0 z-3 px-3 py-2 fs-5 fw-bold shadow" onclick="geserFotoModal(-1)" style="border-radius: 50%; background: rgba(0,0,0,0.65); border: none; color: #FFE77B; margin-left: 10px;">❮</button>
+        
+        <div style="width: 100%; height: 360px; display: flex; align-items: center; justify-content: center; background: #1A2E24; border-radius: 12px; overflow: hidden;">
+          <img id="modalFotoImg" src="" alt="Foto Area Besar" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
+          <div id="modalFotoPlaceholder" class="foto-placeholder" style="display: none; width: 100%; height: 100%;">Foto area tidak tersedia</div>
+        </div>
+
+        <!-- Tombol Next Pop-up -->
+        <button type="button" class="btn btn-dark position-absolute end-0 z-3 px-3 py-2 fs-5 fw-bold shadow" onclick="geserFotoModal(1)" style="border-radius: 50%; background: rgba(0,0,0,0.65); border: none; color: #FFE77B; margin-right: 10px;">❯</button>
+      </div>
+
+      <!-- Tombol Kembali/Tutup Estetik -->
+      <button type="button" class="btn-tutup-modal-foto mt-3" onclick="tutupModalFotoBesar()">KEMBALI KE HALAMAN RESERVASI</button>
+    </div>
+  </div>
+
   <div class="modal-reservasi-overlay" id="modalPeringatan">
     <div class="modal-reservasi-container text-center">
-      <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+      <div style="font-size: 36px; margin-bottom: 8px;">⚠️</div>
       <h3 class="modal-header-title text-warning">Perhatian</h3>
-      <p id="pesanPeringatan" class="my-3 text-white" style="font-size: 14px;"></p>
+      <p id="pesanPeringatan" class="my-3 text-white" style="font-size: 13.5px;"></p>
       <button class="btn-submit-reservasi mt-2" onclick="tutupModalPeringatan()">MENGERTI</button>
     </div>
   </div>
 
-  <!-- POP-UP KONFIRMASI DENGAN TOMBOL OK & LOADING BAR -->
   <div class="modal-reservasi-overlay" id="modalKonfirmasi">
     <div class="modal-reservasi-container text-center">
       <h3 class="modal-header-title">KONFIRMASI RESERVASI</h3>
-      <p class="my-3 text-white" style="font-size: 13.5px;">Apakah data reservasi yang Anda masukkan sudah benar? Silakan tekan OK untuk melanjutkan ke WhatsApp.</p>
+      <p class="my-3 text-white" style="font-size: 13.5px;">Apakah data reservasi Anda sudah benar?</p>
       
-      <!-- Loading Bar Container (Muncul setelah klik OK) -->
       <div id="loadingBarContainer" style="display: none;" class="my-3">
         <div class="progress" style="height: 8px; background-color: rgba(255,255,255,0.2);">
           <div id="progressBarFill" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 0%"></div>
@@ -144,14 +187,13 @@
     </div>
   </div>
 
-  <!-- POP-UP FALLBACK JIKA WHATSAPP TIDAK TERBUKA -->
   <div class="modal-reservasi-overlay" id="modalFallbackWA">
     <div class="modal-reservasi-container">
       <h3 class="modal-header-title text-warning">WhatsApp Gagal Terbuka</h3>
-      <p class="my-2 text-white" style="font-size: 13px;">Browser Anda memblokir jendela otomatis WhatsApp. Jangan khawatir, Anda dapat menyalin teks di bawah ini atau mencoba tautan manual:</p>
+      <p class="my-2 text-white" style="font-size: 13px;">Silakan salin teks di bawah ini atau tekan tombol WhatsApp Manual:</p>
       
       <div class="mb-3">
-        <textarea id="fallbackTextarea" class="form-control-acala" rows="5" readonly style="font-size: 12px; background: #fff;"></textarea>
+        <textarea id="fallbackTextarea" class="form-control-acala" rows="4" readonly style="font-size: 12px; background: #fff;"></textarea>
       </div>
       
       <div class="d-flex flex-column gap-2">
@@ -162,17 +204,34 @@
     </div>
   </div>
 
-  <!-- FLOATING WHATSAPP BUTTON -->
-  <a href="#" id="floating-wa-btn" class="floating-wa" target="_blank" rel="noopener noreferrer" title="Chat Admin via WhatsApp">
-    <svg viewBox="0 0 24 24">
-      <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.763.459 3.487 1.332 5.003l-1.416 5.176 5.297-1.389c1.47.802 3.13 1.224 4.773 1.225h.004c5.505 0 9.988-4.478 9.989-9.985 0-2.667-1.037-5.174-2.925-7.062-1.887-1.886-4.394-2.924-7.064-2.924zm5.82 14.161c-.246.691-1.424 1.326-1.956 1.398-.532.072-1.226.103-3.514-.84-2.928-1.206-4.81-4.183-4.957-4.378-.146-.195-1.196-1.592-1.196-3.037 0-1.445.757-2.156 1.025-2.45.268-.293.585-.366.78-.366.195 0 .39.002.56.01.182.008.428-.069.67.512.246.585.83 2.025.903 2.172.073.146.122.317.024.512-.097.195-.146.317-.292.488-.146.171-.307.361-.439.485-.146.137-.298.286-.128.578.17.293.757 1.248 1.624 2.019 1.116.993 2.057 1.3 2.35 1.446.293.146.463.122.634-.073.171-.195.731-.853.926-1.146.195-.293.39-.244.658-.146.268.097 1.706.805 2.001.951.293.146.488.219.56.341.072.122.072.707-.174 1.398z"/>
-    </svg>
-  </a>
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div class="footer-container">
+      <div class="footer-col footer-brand-col">
+        <a href="index.html">
+          <img src="assets/logo_acala.png" alt="Logo Café Ácala" class="footer-logo-img" loading="lazy">
+        </a>
+      </div>
+      <div class="footer-col footer-nav-col">
+        <h3>GET TO KNOW US</h3>
+        <ul class="footer-links">
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="event.html">Event</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="reservasi.html">Reservation</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-connect-col">
+        <h3>CONNECT WITH US</h3>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2021-2026 Cafe Acala & Eatery</p>
+    </div>
+  </footer>
 
-  <!-- Footer (Otomatis dimuat oleh layout.js) -->
-  <footer class="footer-section"></footer>
-
-  <!-- Script Pendukung -->
+  <!-- Scripts -->
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/reservasi.js"></script>
