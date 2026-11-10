@@ -479,7 +479,7 @@ async function tampilkanHero() {
     }).join("");
   }
 
-  const DURASI = 2000;
+  const DURASI = 4000;
   const kurangiGerak = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function pindah(ke) {

@@ -4,7 +4,7 @@
 //
 // GET /api/event.php   (tanpa parameter id)
 // Card 11.1 - Daftar semua event untuk halaman Event. Publik, tanpa login.
-// Data: id (sama dengan id di API carousel), nama, foto, deskripsi, status event.
+// Data: id (sama dengan id di API carousel), nama, foto, deskripsi, tanggal, waktu, lokasi, status event.
 // Status event dihitung dari tanggal event, bukan dari kolom `status` di tabel (itu aktif/nonaktif).
 
 require_once __DIR__ . '/../config/response.php';
@@ -27,7 +27,7 @@ function kirim_daftar_event(): void
 
     try {
         $stmt = db()->query(
-            'SELECT id, nama, foto, deskripsi, tanggal
+            'SELECT id, nama, foto, deskripsi, tanggal, waktu, lokasi
                FROM event
               WHERE status = \'aktif\''
         );
@@ -63,6 +63,9 @@ function kirim_daftar_event(): void
                 'nama'      => $r['nama'],
                 'foto'      => $r['foto'],       // path relatif, contoh: uploads/event/open-mic.png
                 'deskripsi' => $r['deskripsi'],  // deskripsi utuh, tidak dipotong
+                'tanggal'   => $r['tanggal'],    // YYYY-MM-DD, bisa null
+                'waktu'     => $r['waktu'],      // HH:MM:SS, bisa null
+                'lokasi'    => $r['lokasi'],     // bisa null
                 'status'    => $k === 0 ? STATUS_EVENT_AKAN : ($k === 1 ? STATUS_EVENT_SELESAI : null),
             ];
         }, $rows);
