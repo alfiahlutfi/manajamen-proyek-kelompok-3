@@ -20,3 +20,6 @@ function db(): PDO
 
     return $pdo;
 }
+
+// Global variable $pdo untuk endpoint lama/lain yang langsung memanggil $pdo
+$pdo = db();
