@@ -3,40 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Reservasi meja di Café Ácala & Eatery.">
-  <title>Reservasi - Café Acala</title>
+  <meta name="description" content="Reservasi meja di Café Ácala & Eatery. Nikmati kopi pilihan dan suasana nyaman.">
+  <title>Reservation - Café Acala</title>
 
   <link rel="icon" href="assets/logo_acala.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reservasi.css">
 </head>
-<body>
+<body class="reservasi-page">
 
-  <!-- Navbar -->
+  <!-- Navbar Global (otomatis diisi oleh layout.js) -->
   <header id="navbar" class="nav-acala"></header>
 
-  <!-- Konten Utama (Kosong & Berjarak Proporsional dari Footer) -->
-  <main style="min-height: 60vh;">
-    <!-- Container untuk form/konten reservasi kamu nanti -->
-    <div id="reservasi-container"></div>
+  <!-- Konten Utama Reservasi -->
+  <main class="reservasi-main-content">
+    
+    <!-- 1. Hero Section Presisi Sesuai Desain UI/UX -->
+    <section class="hero-polaroid-container" aria-label="Hero Reservasi">
+      <!-- Retakan Dinding Presisi Sesuai Referensi -->
+      <div class="crack-wall-item crack-1" aria-hidden="true"></div>
+      <div class="crack-wall-item crack-2" aria-hidden="true"></div>
+      <div class="crack-wall-item crack-3" aria-hidden="true"></div>
+
+      <!-- Wrapper Polaroid & Elemen Lingkaran Jingga -->
+      <div class="hero-artboard-wrapper">
+        <div class="orange-blob-hero" aria-hidden="true"></div>
+
+        <!-- Polaroid Kiri Atas (Miring Kiri -7.42deg) -->
+        <div class="polaroid-frame hero-polaroid-1">
+          <div class="polaroid-img-crop">
+            <img src="assets/area-Indoor.png" alt="Acala Indoor Area" class="polaroid-img-inner" loading="eager">
+          </div>
+        </div>
+
+        <!-- Polaroid Kanan Bawah (Miring Kanan 8.65deg) -->
+        <div class="polaroid-frame hero-polaroid-2">
+          <div class="polaroid-img-crop">
+            <img src="assets/area-Outdoor.png" alt="Acala Outdoor Area" class="polaroid-img-inner" loading="eager">
+          </div>
+        </div>
+      </div>
+
+      <!-- Teks Kanan Hero -->
+      <div class="hero-content-right">
+        <h1 class="hero-title-main">
+          <span class="text-line-1">RESERVE</span>
+          <span class="text-line-2">YOUR TABLE</span>
+        </h1>
+        <p class="hero-desc-sub">Pick a spot, save your seat, and let us take care of the coffee.</p>
+      </div>
+    </section>
+
+    <!-- 2. Section Area Reservasi (Galeri Polaroid Scrapbook Overlap) -->
+    <section class="reservation-area-section" id="areaReservasiSection">
+      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
+        <h2 class="section-title mb-0">AREA RESERVASI</h2>
+      </div>
+
+      <!-- Pesan Error Area (Jika Gagal Dimuat dari API) -->
+      <div id="areaErrorAlert" class="area-error-alert" style="display: none;" role="alert">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="error-badge-icon">⚠️</span>
+            <span class="fw-semibold text-danger">Gagal memuat data area reservasi dari server. Silakan periksa koneksi Anda.</span>
+          </div>
+          <button type="button" class="btn-retry-action" onclick="MuatDataAreaReservasi()">Coba Muat Ulang</button>
+        </div>
+      </div>
+
+      <!-- Skeleton Area Reservasi (Ditampilkan saat data sedang dimuat) -->
+      <div id="areaSkeletonContainer" class="polaroid-gallery-container skeleton-container" style="display: none;" aria-hidden="true">
+        <div class="polaroid-card p-1 skeleton-card">
+          <div class="tape"></div>
+          <div class="polaroid-img-wrap skeleton-box"></div>
+          <div class="skeleton-text-line"></div>
+        </div>
+        <div class="polaroid-card p-2 skeleton-card">
+          <div class="tape"></div>
+          <div class="polaroid-img-wrap skeleton-box"></div>
+          <div class="skeleton-text-line"></div>
+        </div>
+        <div class="polaroid-card p-3 skeleton-card">
+          <div class="tape"></div>
+          <div class="polaroid-img-wrap skeleton-box"></div>
+          <div class="skeleton-text-line"></div>
+        </div>
+        <div class="polaroid-card p-4 skeleton-card">
+          <div class="tape"></div>
+          <div class="polaroid-img-wrap skeleton-box"></div>
+          <div class="skeleton-text-line"></div>
+        </div>
+      </div>
+
+      <!-- Galeri Polaroid Scrapbook Dinamis dari Data Area -->
+      <div class="polaroid-gallery-container" id="areaGalleryContainer">
+        <!-- Lingkaran Dekoratif Background -->
+        <div class="yellow-blob-bg" aria-hidden="true"></div>
+        <div class="brown-dot-bg" aria-hidden="true"></div>
+
+        <!-- Kontainer Kartu Polaroid Dinamis -->
+        <div id="dynamicAreaCards">
+          <!-- Item kartu akan dimuat otomatis oleh reservasi.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Bagian Bawah: Aturan Reservasi di Kiri & Form Hijau di Kanan -->
+    <section class="bottom-form-rules-grid">
+      
+      <!-- Kotak Aturan Reservasi (Kiri - Background Krem) -->
+      <div class="rules-box-acala" id="cardAturanReservasi">
+        <div class="rules-box-header d-flex align-items-center justify-content-between mb-3">
+          <h3 class="rules-box-title mb-0">ATURAN RESERVASI</h3>
+          <!-- Tombol Close (✕) di Pojok Kanan Atas saat mode Selengkapnya aktif (Persis Gambar Kiri) -->
+          <button type="button" class="btn-close-rules-toggle" id="btnCloseRules" onclick="ciutkanAturan()" aria-label="Tutup aturan lengkap" style="display: none;">✕</button>
+        </div>
+        
+        <div id="rulesPreviewContainer" class="rules-list-preview">
+          <!-- Item aturan dinamis: 3 butir saat ringkas, 7 butir saat selengkapnya -->
+        </div>
+
+        <!-- Tombol Selengkapnya di Kanan Bawah (Tampil saat mode ringkas, hilang saat mode selengkapnya) -->
+        <div class="rules-btn-wrapper" id="rulesBtnWrapper">
+          <button type="button" class="btn-selengkapnya-outline" onclick="ekspansiAturan()">Selengkapnya</button>
+        </div>
+      </div>
+
+      <!-- Formulir Reservasi (Kanan - Tema Hijau Tua Sesuai Desain) -->
+      <div class="form-green-box-acala">
+        <h3 class="form-green-heading">FORM RESERVASI</h3>
+
+        <form id="formReservasiAcala" novalidate>
+          <!-- Nama Pemesan / Lengkap -->
+          <div class="mb-3">
+            <label for="nama" class="form-label-green">Nama Pemesan*</label>
+            <input type="text" id="nama" name="nama_lengkap" class="form-input-green" placeholder="Masukkan nama anda" autocomplete="name">
+            <div class="invalid-feedback-custom" id="error-nama"></div>
+          </div>
+
+          <!-- Nomor Telepon / WhatsApp -->
+          <div class="mb-3">
+            <label for="whatsapp" class="form-label-green">Nomor Telepon*</label>
+            <input type="tel" id="whatsapp" name="nomor_whatsapp" class="form-input-green" placeholder="Contoh: 08123456789" autocomplete="tel">
+            <div class="invalid-feedback-custom" id="error-whatsapp"></div>
+          </div>
+
+          <!-- Baris Tanggal Kunjungan & Jam Kedatangan (Side-by-side) -->
+          <div class="row mb-3 gx-2">
+            <div class="col-6">
+              <label for="tanggal" class="form-label-green">Tanggal Kunjungan*</label>
+              <input type="date" id="tanggal" name="tanggal_reservasi" class="form-input-green">
+              <!-- Nama hari di bawah tanggal -->
+              <div id="namaHariDisplay" class="nama-hari-badge">Pilih tanggal reservasi</div>
+              <div class="invalid-feedback-custom" id="error-tanggal"></div>
+            </div>
+
+            <div class="col-6">
+              <label for="jam" class="form-label-green">Jam Kedatangan*</label>
+              <select id="jam" name="waktu_reservasi" class="form-input-green" disabled>
+                <option value="">Pilih Jam</option>
+              </select>
+              <div class="invalid-feedback-custom" id="error-jam"></div>
+            </div>
+          </div>
+
+          <!-- Area Reservasi (Dropdown Dinamis) -->
+          <div class="mb-3">
+            <label for="areaSelect" class="form-label-green">Area Reservasi*</label>
+            <select id="areaSelect" name="area_reservasi" class="form-input-green" disabled>
+              <option value="">Pilih Area</option>
+            </select>
+            <div class="invalid-feedback-custom" id="error-area"></div>
+          </div>
+
+          <!-- Jumlah Tamu (Orang) -->
+          <div class="mb-3">
+            <label for="jumlah" class="form-label-green">Jumlah Tamu (Orang)*</label>
+            <input type="number" id="jumlah" name="jumlah_pengunjung" class="form-input-green" min="1" placeholder="Contoh: 2/Dua">
+            <div class="invalid-feedback-custom" id="error-jumlah"></div>
+          </div>
+
+          <!-- Catatan Khusus (opsional) -->
+          <div class="mb-4">
+            <label for="catatan" class="form-label-green">Catatan Khusus (opsional)</label>
+            <textarea id="catatan" name="catatan" class="form-input-green" rows="2" placeholder="Masukkan catatan tambahan..."></textarea>
+          </div>
+
+          <!-- Tombol Kirim / Submit -->
+          <div class="text-center">
+            <button type="submit" id="btnSubmitReservasi" class="btn-submit-yellow-acala">SUBMIT</button>
+          </div>
+        </form>
+
+        <!-- Area Pesan Fallback Jika WhatsApp Tidak Terbuka Otomatis -->
+        <div id="waFallbackContainer" class="wa-fallback-card mt-4" style="display: none;">
+          <div class="d-flex align-items-center mb-2">
+            <span class="me-2 fs-5">💬</span>
+            <h5 class="fw-bold mb-0 text-warning" style="font-size: 13.5px;">WhatsApp Belum Terbuka Otomatis?</h5>
+          </div>
+          <p class="text-white-50 mb-2" style="font-size: 11.5px; line-height: 1.5;">
+            Jika WhatsApp tidak terbuka otomatis di browser Anda, silakan klik tombol di bawah ini atau salin format pesan yang sudah disiapkan:
+          </p>
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <a id="btnBukaWALangsung" href="#" target="_blank" rel="noopener noreferrer" class="btn-wa-action btn-wa-open">
+              Buka WhatsApp Sekarang
+            </a>
+            <button type="button" id="btnSalinPesanWA" class="btn-wa-action btn-wa-copy" onclick="salinPesanWA()">
+              📋 Salin Pesan
+            </button>
+          </div>
+          <div class="wa-message-preview" id="waMessagePreviewText"></div>
+          <div id="copyAlertSuccess" class="copy-alert-badge" style="display: none;">✓ Pesan berhasil disalin ke clipboard!</div>
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
-<!-- FOOTER -->
+  <!-- ========================================================
+       MODAL 1: POP-UP PERINGATAN FORM KOSONG
+       Persis sesuai referensi media_1794309519743_55806478.png
+       ======================================================== -->
+  <div class="modal-acala-backdrop" id="modalFormKosong" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="titleFormKosong">
+    <div class="modal-card-cream text-center">
+      <!-- Bulatan Ikon Kuning Tanda Seru -->
+      <div class="icon-warning-circle" aria-hidden="true">!</div>
+      <h3 class="modal-title-serif" id="titleFormKosong">Form belum diisi</h3>
+      <p class="modal-desc-sub">Silakan isi form reservasi terlebih dahulu.</p>
+      <button type="button" class="btn-modal-rust" onclick="tutupModalFormKosong()">Tutup</button>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: POP-UP KONFIRMASI WHATSAPP DENGAN LOADING BAR
+       Persis sesuai referensi media_1794309519895_6118664c.png
+       ======================================================== -->
+  <div class="modal-acala-backdrop" id="modalKonfirmasiWA" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="titleKonfirmasiWA">
+    <div class="modal-card-cream text-center">
+      <h3 class="modal-title-serif mb-3" id="titleKonfirmasiWA">Reservasi via WhatsApp</h3>
+      <p class="modal-desc-sub mb-4">
+        Reservasi dilakukan melalui WhatsApp.<br>
+        Pengajuan baru terkirim setelah Anda menekan kirim di WhatsApp.<br>
+        Mohon tunggu konfirmasi dari Café Acala.
+      </p>
+
+      <!-- Tombol OK Awal -->
+      <div id="konfirmasiBtnWrap">
+        <button type="button" class="btn-modal-green" id="btnKonfirmasiOK" onclick="handleKonfirmasiOK()">OK</button>
+      </div>
+
+      <!-- Loading Bar Setelah Menekan OK -->
+      <div id="konfirmasiLoadingWrap" style="display: none;" class="mt-3">
+        <p class="loading-bar-label mb-2" id="loadingBarText">Menghubungkan ke WhatsApp...</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="waProgressBar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 3: POP-UP FOTO AREA BESAR (LIGHTBOX CARD 12.4.3)
+       Persis sesuai referensi media_1794309405271_08ae00ee.jpg
+       ======================================================== -->
+  <div class="modal-photo-lightbox" id="modalFotoBesar" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption" onclick="tutupModalFotoBesar()">
+    <div class="lightbox-content-box" onclick="event.stopPropagation()">
+      <!-- Tombol Close Merah Bulat di Pojok Kanan Atas -->
+      <button type="button" class="btn-close-lightbox-red" onclick="tutupModalFotoBesar()" aria-label="Tutup Tampilan Foto">✕</button>
+
+      <!-- Tombol Navigasi Kiri (Prev) -->
+      <button type="button" class="btn-lightbox-nav prev" onclick="geserFotoModal(-1)" aria-label="Foto Sebelumnya">‹</button>
+
+      <!-- Frame Gambar Besar -->
+      <div class="lightbox-img-frame">
+        <img id="lightboxImg" src="" alt="Area Reservasi Café Acala" style="display: none;">
+        <div id="lightboxPlaceholder" class="lightbox-placeholder-box" style="display: none;">
+          <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span class="mt-2 fw-semibold">Foto area tidak tersedia</span>
+        </div>
+      </div>
+
+      <!-- Tombol Navigasi Kanan (Next) -->
+      <button type="button" class="btn-lightbox-nav next" onclick="geserFotoModal(1)" aria-label="Foto Selanjutnya">›</button>
+
+      <!-- Caption Nama Area -->
+      <div class="lightbox-caption" id="lightboxCaption">Nama Area</div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 4: POP-UP ATURAN LENGKAP (CARD 12.3.3)
+       ======================================================== -->
+  <div class="modal-acala-backdrop" id="modalAturan" style="display: none;" role="dialog" aria-modal="true" onclick="tutupModalAturan()">
+    <div class="modal-card-cream" onclick="event.stopPropagation()" style="max-width: 580px; max-height: 85vh; display: flex; flex-direction: column;">
+      <h3 class="modal-title-serif mb-3 text-center">Syarat & Ketentuan Reservasi</h3>
+      <div id="modalAturanBody" class="rules-scrollable-content pe-2" style="overflow-y: auto; max-height: 55vh; font-size: 13.5px; line-height: 1.6;">
+        <!-- Aturan akan diisi dinamis dari API / fallback -->
+      </div>
+      <div class="text-center mt-3 pt-2 border-top">
+        <button type="button" class="btn-modal-green py-2 px-5" onclick="tutupModalAturan()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Global (Otomatis terhubung dengan layout.js) -->
   <footer class="footer-section">
     <div class="footer-container">
-
-      <!-- Kolom 1: Logo -->
       <div class="footer-col footer-brand-col">
         <a href="index.html" aria-label="Café Ácala - Beranda">
           <img src="assets/logo_acala.png" alt="Logo Café Ácala" class="footer-logo-img" loading="lazy">
         </a>
       </div>
-
-      <!-- Kolom 2: Get to Know Us -->
       <div class="footer-col footer-nav-col">
         <h3>GET TO KNOW US</h3>
         <ul class="footer-links">
@@ -47,35 +331,16 @@
           <li><a href="faq.html">FAQ</a></li>
         </ul>
       </div>
-
-      <!-- Kolom 3: Connect With Us (ikon, tautan dinamis dari database) -->
       <div class="footer-col footer-connect-col">
         <h3>CONNECT WITH US</h3>
-        <div class="footer-socials">
-          <a id="footer-instagram" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.3" y="1.3" width="21.4" height="21.4" rx="6"/><circle cx="11.6" cy="12.2" r="4.6"/><circle cx="18.2" cy="5.7" r="1.5" fill="currentColor" stroke="none"/></svg>
-          </a>
-          <a id="footer-email" href="#" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.9" width="21" height="16.2" rx="2.2"/><path d="M2.6 5.6L12 12.9l9.4-7.3"/></svg>
-          </a>
-          <a id="footer-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.6" fill="none" stroke="currentColor" stroke-width="0.8"/><circle cx="12" cy="12" r="9.9" fill="currentColor"/><g transform="translate(5.7 5.7) scale(0.52)"><path fill="#fff" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g></svg>
-          </a>
-          <a id="footer-tiktok" href="#" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.1" y="1.1" width="21.8" height="21.8" rx="5.4"/><g fill="currentColor" stroke="none" transform="translate(12 12) scale(1.153) translate(-12 -12)"><path fill-rule="evenodd" d="M8.51 14.26a2.57 2.57 0 1 0 5.14 0a2.57 2.57 0 1 0-5.14 0zM12.05 13.95a.85.85 0 1 1-1.7 0a.85.85 0 1 1 1.7 0z"/><path d="M12.12 6.2h1.53c.2 1.4 1.15 2.3 2.35 2.5c-.7.7-1.45.95-2.35 1v5H12.12z"/></g></svg>
-          </a>
-        </div>
       </div>
-
     </div>
-
-    <!-- Copyright -->
     <div class="footer-bottom">
       <p>© 2021-2026 Cafe Acala &amp; Eatery</p>
     </div>
   </footer>
 
-  <!-- Script Pendukung -->
+  <!-- Scripts -->
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/reservasi.js"></script>

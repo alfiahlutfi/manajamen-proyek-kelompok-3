@@ -13,7 +13,8 @@ const API_MAP = {
     "/operating-hours": "operating_hours",
     "/lokasi": "location",
     "/reservasi": "reservation",
-    "/contact": "contact"
+    "/contact": "contact",
+    "/reservation-rule": "reservation_rule"
 
 };
 
