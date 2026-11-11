@@ -1,32 +1,105 @@
 /**
+ * ====================================================================
  * Logika Halaman Reservasi Café Ácala & Eatery
+ * Story FE: Galeri Area, Form Validasi, Jam Operasional,
+ *           Pop-up Peringatan & Konfirmasi WhatsApp
+ * ====================================================================
  */
+"use strict";
 
-const NOMOR_WA_CAFE = '6281234567890'; 
+// Nomor WhatsApp Resmi Café Ácala
+const NOMOR_WA_CAFE = '6281234567890';
 
-let jamOperasionalData = {}; 
+// Data Cadangan / Prototipe Sesuai Figma & Desain UI/UX
+const DEFAULT_AREAS = [
+  { id: 1, nama: "Indoor Depan Kasir Lantai 1", foto: "assets/area-Indoor.png" },
+  { id: 2, nama: "Indoor Tertutup Lantai 1", foto: "assets/area-Indoor-VIP.png" },
+  { id: 3, nama: "Outdoor Lantai 1", foto: "assets/area-Outdoor.png" },
+  { id: 4, nama: "Outdoor Lantai 2", foto: "assets/area-Outdoor-Lantai-2.png" }
+];
+
+const DEFAULT_JAM_OPERASIONAL = {
+  0: { hari: "Minggu", buka: "10:00", tutup: "22:00", is_closed: 0 },
+  1: { hari: "Senin", buka: "10:00", tutup: "22:00", is_closed: 0 },
+  2: { hari: "Selasa", buka: "10:00", tutup: "22:00", is_closed: 0 },
+  3: { hari: "Rabu", buka: "10:00", tutup: "22:00", is_closed: 0 },
+  4: { hari: "Kamis", buka: "10:00", tutup: "22:00", is_closed: 0 },
+  5: { hari: "Jumat", buka: "10:00", tutup: "23:00", is_closed: 0 },
+  6: { hari: "Sabtu", buka: "10:00", tutup: "23:00", is_closed: 0 }
+};
+
+const DEFAULT_ATURAN = [
+  {
+    id: 1,
+    judul: "Pesan lebih awal",
+    isi: "Minimal 2 jam sebelum kedatangan, maksimal 30 hari sebelumnya."
+  },
+  {
+    id: 2,
+    judul: "Toleransi 15 menit",
+    isi: "Apabila terdapat perubahan jumlah pengunjung, pelanggan diharapkan menginformasikannya kepada pihak Cafe Acala melalui WhatsApp."
+  },
+  {
+    id: 3,
+    judul: "Jumlah orang",
+    isi: "Kapasitas maksimal untuk setiap area adalah 15 orang untuk Private Room, 10 orang untuk area Indoor depan kasir, 12 orang untuk area Outdoor Lantai 2, dan 20 orang untuk area Outdoor Lantai 1."
+  },
+  {
+    id: 4,
+    judul: "Deposit",
+    isi: "Apabila pelanggan tidak dapat menghadiri reservasi yang telah disepakati, pelanggan diperbolehkan melakukan konfirmasi pengunduran jadwal satu kali melalui WhatsApp."
+  },
+  {
+    id: 5,
+    judul: "Durasi duduk",
+    isi: "Apabila pelanggan ingin mengubah tanggal dan waktu reservasi, pelanggan diharapkan menginformasikannya kepada pihak Café Acala melalui WhatsApp setidaknya 24 jam sebelum waktu reservasi awal, disesuaikan dengan ketersediaan meja."
+  },
+  {
+    id: 6,
+    judul: "Perubahan & pembatalan",
+    isi: "Pelanggan yang ingin melakukan cancel reservasi, uang tidak dapat dikembalikan namun dapat dijadwalkan ulang 1 kali dalam kurun waktu 1 bulan."
+  },
+  {
+    id: 7,
+    judul: "Perubahan & pembatalan",
+    isi: "Apabila pelanggan belum hadir hingga 15 menit setelah jam yang telah disepakati dan tidak ada konfirmasi atau pesan belum dibalas pihak Acala, maka reservasi dianggap batal."
+  }
+];
+
+// State Global
 let areaListGlobal = [];
+let jamOperasionalData = {};
 let aturanListGlobal = [];
+let isAturanExpanded = false;
 let indeksFotoAktif = 0;
 let pendingWhatsAppUrl = '';
 let pendingMessageText = '';
+let isAreaLoadFailed = false;
+let isJamLoadFailed = false;
 
+// Format Hari dalam Bahasa Indonesia
+const NAMA_HARI_INDONESIA = [
+  "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"
+];
+
+const NAMA_BULAN_INDONESIA = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+
+/* ====================================================================
+   INISIALISASI HALAMAN
+   ==================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   InisialisasiFloatingWA();
+  SetMinMaxTanggal();
+  PasangEventForm();
+  PasangNavigasiKeyboard();
+
+  // Muat data dari API atau fallback
   MuatDataAreaReservasi();
   MuatDataJamOperasional();
   MuatDataAturanReservasi();
-  SetMinTanggalHariIni();
-
-  const inputTanggal = document.getElementById('tanggal');
-  if (inputTanggal) {
-    inputTanggal.addEventListener('change', HandlePerubahanTanggal);
-  }
-
-  const formEl = document.getElementById('formReservasiAcala');
-  if (formEl) {
-    formEl.addEventListener('submit', HandleSubmitReservasi);
-  }
 });
 
 function InisialisasiFloatingWA() {
@@ -36,398 +109,762 @@ function InisialisasiFloatingWA() {
   }
 }
 
-function SetMinTanggalHariIni() {
+/**
+ * Atur batas tanggal: tidak boleh sebelum hari ini dan maksimal 30 hari ke depan
+ */
+function SetMinMaxTanggal() {
   const inputTanggal = document.getElementById('tanggal');
-  if (inputTanggal) {
-    const todayStr = new Date().toISOString().split('T')[0];
-    inputTanggal.min = todayStr;
-  }
+  if (!inputTanggal) return;
+
+  const today = new Date();
+  const todayStr = formatYYYYMMDD(today);
+  inputTanggal.min = todayStr;
+
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 30);
+  inputTanggal.max = formatYYYYMMDD(maxDate);
+}
+
+function formatYYYYMMDD(d) {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 /**
- * Mengambil Data Area & Menampilkan Card Slider Interaktif
+ * Pasang Event Listener Form & Input Real-time
  */
-async function MuatDataAreaReservasi() {
-  const skeleton = document.getElementById('areaSkeleton');
+function PasangEventForm() {
+  const formEl = document.getElementById('formReservasiAcala');
+  if (formEl) {
+    formEl.addEventListener('submit', HandleSubmitReservasi);
+  }
+
+  const inputTanggal = document.getElementById('tanggal');
+  if (inputTanggal) {
+    inputTanggal.addEventListener('change', HandlePerubahanTanggal);
+  }
+
+  // Bersihkan pesan error saat pengguna mulai mengetik / memilih
+  ['nama', 'whatsapp', 'tanggal', 'jam', 'areaSelect', 'jumlah'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => BersihkanErrorField(id));
+      el.addEventListener('change', () => BersihkanErrorField(id));
+    }
+  });
+}
+
+function PasangNavigasiKeyboard() {
+  document.addEventListener('keydown', (e) => {
+    const modalFoto = document.getElementById('modalFotoBesar');
+    if (modalFoto && modalFoto.style.display !== 'none') {
+      if (e.key === 'Escape') tutupModalFotoBesar();
+      else if (e.key === 'ArrowLeft') geserFotoModal(-1);
+      else if (e.key === 'ArrowRight') geserFotoModal(1);
+    }
+
+    const modalKosong = document.getElementById('modalFormKosong');
+    if (modalKosong && modalKosong.style.display !== 'none' && e.key === 'Escape') {
+      tutupModalFormKosong();
+    }
+
+    const modalKonfirmasi = document.getElementById('modalKonfirmasiWA');
+    if (modalKonfirmasi && modalKonfirmasi.style.display !== 'none' && e.key === 'Escape') {
+      tutupModalKonfirmasiWA();
+    }
+
+    const modalAturan = document.getElementById('modalAturan');
+    if (modalAturan && modalAturan.style.display !== 'none' && e.key === 'Escape') {
+      tutupModalAturan();
+    }
+  });
+}
+
+/* ====================================================================
+   CARD 12.2.1: MUAT DATA AREA RESERVASI & GALERI POLAROID
+   ==================================================================== */
+async function MuatDataAreaReservasi(forceError = false) {
+  const skeleton = document.getElementById('areaSkeletonContainer');
+  const errorAlert = document.getElementById('areaErrorAlert');
+  const gallery = document.getElementById('areaGalleryContainer');
   const container = document.getElementById('dynamicAreaCards');
   const selectArea = document.getElementById('areaSelect');
+  const btnSubmit = document.getElementById('btnSubmitReservasi');
+
+  // Reset state ke loading (tampilkan skeleton)
+  if (skeleton) skeleton.style.display = 'block';
+  if (errorAlert) errorAlert.style.display = 'none';
+  if (gallery) gallery.style.display = 'none';
+
+  // Periksa apakah ada simulasi error via parameter URL (contoh: ?error=area)
+  const urlParams = new URLSearchParams(window.location.search);
+  const simulasiGagal = forceError || urlParams.get('error') === 'area';
 
   try {
-    const response = await fetchData("/area");
-    
-    let dataArea = [];
-    if (Array.isArray(response)) {
-      dataArea = response;
-    } else if (response && Array.isArray(response.data)) {
-      dataArea = response.data;
-    } else if (response && typeof response === 'object') {
-      dataArea = Object.values(response).find(val => Array.isArray(val)) || [];
+    // Delay minimum 400ms agar skeleton terlihat mulus sesuai standar UX
+    await new Promise((r) => setTimeout(r, 450));
+
+    if (simulasiGagal) {
+      throw new Error("Simulasi kegagalan memuat area reservasi");
     }
 
-    if (skeleton) skeleton.style.display = 'none';
+    let dataArea = null;
+    try {
+      const response = await fetchData("/area");
+      if (Array.isArray(response)) {
+        dataArea = response;
+      } else if (response && Array.isArray(response.data)) {
+        dataArea = response.data;
+      } else if (response && typeof response === 'object') {
+        dataArea = Object.values(response).find(val => Array.isArray(val)) || null;
+      }
+    } catch (e) {
+      console.warn("Backend /area tidak dapat diakses secara langsung:", e);
+    }
 
+    // Jika API belum tersedia atau kosong pada lingkungan lokal, gunakan aset prototipe Figma
     if (!dataArea || dataArea.length === 0) {
-      if (container) {
-        container.innerHTML = '<p class="text-center text-muted w-100">Belum ada area reservasi.</p>';
-        container.style.display = 'flex';
-      }
-      if (selectArea) {
-        selectArea.innerHTML = '<option value="">-- Belum ada area --</option>';
-        selectArea.disabled = true;
-      }
-      return;
+      dataArea = DEFAULT_AREAS;
     }
 
+    isAreaLoadFailed = false;
     areaListGlobal = dataArea;
-    indeksFotoAktif = 0;
-    
+
+    // Sembunyikan skeleton dan tampilkan galeri scrapbook
+    if (skeleton) skeleton.style.display = 'none';
+    if (gallery) gallery.style.display = 'block';
+
+    // Render kartu polaroid scrapbook (4 kartu atau dinamis)
     if (container) {
-      container.style.display = 'block';
-      renderCardGaleriSlider(container);
+      const classesPosisi = ['p-1', 'p-2', 'p-3', 'p-4'];
+      container.innerHTML = dataArea.map((area, index) => {
+        const kelasPosisi = classesPosisi[index % classesPosisi.length];
+        const fotoSrc = urlGambar(area.foto || area.gambar);
+        const namaArea = esc(area.nama || `Area ${index + 1}`);
+
+        // Cek simulasi foto hilang via parameter ?error=photo
+        const fotoHilang = urlParams.get('error') === 'photo' || !fotoSrc;
+
+        return `
+          <div class="polaroid-card ${kelasPosisi}" onclick="bukaModalFotoBesar(${index})" tabindex="0" role="button" aria-label="Buka foto ${namaArea}">
+            <div class="tape" aria-hidden="true"></div>
+            <div class="polaroid-img-wrap">
+              ${fotoHilang ? `
+                <div class="polaroid-placeholder-wrap">
+                  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span>Foto tidak tersedia</span>
+                </div>
+              ` : `
+                <img src="${fotoSrc}" alt="${namaArea}" onerror="tanganiErrorFotoPolaroid(this, '${namaArea}')" loading="lazy">
+              `}
+            </div>
+            <p class="polaroid-caption">${formatCaptionNama(namaArea)}</p>
+          </div>
+        `;
+      }).join('');
     }
 
+    // Isi pilihan dropdown Area Reservasi
     if (selectArea) {
-      selectArea.innerHTML = '<option value="">-- Pilih Area Reservasi --</option>' + 
+      selectArea.innerHTML = '<option value="">Pilih Area</option>' + 
         dataArea.map(a => `<option value="${esc(a.nama)}">${esc(a.nama)}</option>`).join('');
       selectArea.disabled = false;
     }
 
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+    }
+
   } catch (error) {
-    console.error("Gagal memuat area:", error);
-    if (skeleton) skeleton.style.display = 'none';
-    if (container) {
-      container.innerHTML = `
-        <div class="p-4 text-center text-danger bg-light rounded-4 w-100">
-          <p class="fw-bold mb-1">Gagal memuat data area reservasi.</p>
-        </div>
-      `;
-      container.style.display = 'flex';
+    console.error("Gagal memuat area reservasi:", error);
+    isAreaLoadFailed = true;
+
+    // Sesuai Checklist: Tampilkan pesan error dan skeleton tetap terlihat, nonaktifkan dropdown & form submit
+    if (skeleton) skeleton.style.display = 'block';
+    if (gallery) gallery.style.display = 'none';
+    if (errorAlert) errorAlert.style.display = 'block';
+
+    if (selectArea) {
+      selectArea.innerHTML = '<option value="">Gagal memuat data area</option>';
+      selectArea.disabled = true;
+    }
+
+    TampilkanErrorField('areaSelect', 'Gagal memuat area dari server. Form tidak dapat dikirim.');
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
     }
   }
 }
 
-function renderCardGaleriSlider(containerEl) {
-  const area = areaListGlobal[indeksFotoAktif];
-  if (!area) return;
-
-  let fotoMarkup = area.foto 
-    ? `<img src="${urlGambar(area.foto)}" alt="${esc(area.nama)}" class="foto-utama" onclick="bukaModalFotoBesar(${indeksFotoAktif})" title="Klik untuk memperbesar foto">`
-    : `<div class="foto-placeholder" style="width:100%; height:100%; cursor:pointer;" onclick="bukaModalFotoBesar(${indeksFotoAktif})">Foto area tidak tersedia</div>`;
-
-  containerEl.innerHTML = `
-    <article class="res-card light p-3 shadow-sm" style="height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#EFEFEF; border-radius:16px;">
-      
-      <div>
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <h3 class="nama-area-teks mb-0" style="color:#2d5f2e; font-weight:700; font-size:18px;">${esc(area.nama)}</h3>
-          <span style="font-size:10.5px; font-weight:600; letter-spacing:1px; color:#4A5568; background:#E2E8F0; padding:2px 8px; border-radius:20px;">${indeksFotoAktif + 1} / ${areaListGlobal.length}</span>
-        </div>
-        <div class="subtitle mb-2" style="font-size:10px; font-weight:600; letter-spacing:1.5px; color:#718096; text-transform:uppercase;">AREA RESERVASI CAFÉ ÁCALA</div>
-      </div>
-
-      <div class="position-relative d-flex align-items-center justify-content-center my-1">
-        <button type="button" class="btn btn-dark position-absolute start-0 z-3 px-2 py-1 fs-6 fw-bold shadow" onclick="geserCardGaleri(-1)">❮</button>
-        
-        <div class="res-card-media-slider">
-          ${fotoMarkup}
-        </div>
-
-        <button type="button" class="btn btn-dark position-absolute end-0 z-3 px-2 py-1 fs-6 fw-bold shadow" onclick="geserCardGaleri(1)">❯</button>
-      </div>
-
-      <div class="mt-2 text-center">
-        <button type="button" class="btn-pilih-reservasi w-100 py-2" onclick="PilihAreaDariCard('${area.id}')" style="font-size:12px;">PILIH AREA INI</button>
-      </div>
-
-    </article>
+/**
+ * Tangani jika foto area gagal memuat (404/broken) tanpa menghilangkan informasi kartu
+ */
+function tanganiErrorFotoPolaroid(imgEl, namaArea) {
+  const wrap = imgEl.parentElement;
+  if (!wrap) return;
+  imgEl.style.display = 'none';
+  wrap.innerHTML = `
+    <div class="polaroid-placeholder-wrap">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span>Foto tidak tersedia</span>
+    </div>
   `;
 }
 
-function geserCardGaleri(arah) {
-  indeksFotoAktif += arah;
-  if (indeksFotoAktif < 0) {
-    indeksFotoAktif = areaListGlobal.length - 1; 
-  } else if (indeksFotoAktif >= areaListGlobal.length) {
-    indeksFotoAktif = 0; 
+function formatCaptionNama(nama) {
+  if (!nama) return '';
+  // Potong pada kata "Lantai" agar baris rapi seperti desain referensi
+  if (nama.includes("Lantai") && !nama.includes("<br>")) {
+    return nama.replace("Lantai", "<br>Lantai");
   }
-  const container = document.getElementById('dynamicAreaCards');
-  if (container) {
-    renderCardGaleriSlider(container);
+  return nama;
+}
+
+/* ====================================================================
+   CARD 12.2.3: MUAT DATA JAM OPERASIONAL
+   ==================================================================== */
+async function MuatDataJamOperasional(forceError = false) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const simulasiGagal = forceError || urlParams.get('error') === 'jam';
+
+  try {
+    if (simulasiGagal) {
+      throw new Error("Simulasi kegagalan memuat jam operasional");
+    }
+
+    const res = await fetchData("/operating-hours");
+    if (res && Array.isArray(res) && res.length > 0) {
+      res.forEach((item, idx) => {
+        const dayIdx = item.day !== undefined ? Number(item.day) : idx;
+        jamOperasionalData[dayIdx] = {
+          hari: item.hari || NAMA_HARI_INDONESIA[dayIdx],
+          buka: item.jam_buka ? item.jam_buka.substring(0, 5) : "10:00",
+          tutup: item.jam_tutup ? item.jam_tutup.substring(0, 5) : "22:00",
+          is_closed: item.is_closed ? 1 : 0
+        };
+      });
+    } else {
+      jamOperasionalData = { ...DEFAULT_JAM_OPERASIONAL };
+    }
+    isJamLoadFailed = false;
+
+  } catch (e) {
+    console.error("Gagal memuat jam operasional:", e);
+    // Jika ada simulasi atau error sesungguhnya
+    if (simulasiGagal) {
+      isJamLoadFailed = true;
+      jamOperasionalData = {};
+      const selectJam = document.getElementById('jam');
+      if (selectJam) {
+        selectJam.innerHTML = '<option value="">Gagal memuat jam</option>';
+        selectJam.disabled = true;
+      }
+      TampilkanErrorField('jam', 'Gagal memuat data jam operasional.');
+      const btnSubmit = document.getElementById('btnSubmitReservasi');
+      if (btnSubmit) btnSubmit.disabled = true;
+    } else {
+      // Fallback jam operasional normal
+      jamOperasionalData = { ...DEFAULT_JAM_OPERASIONAL };
+      isJamLoadFailed = false;
+    }
+  }
+}
+
+/* ====================================================================
+   CARD 12.3.3: MUAT DATA ATURAN RESERVASI & INTERAKSI SELENGKAPNYA
+   - Mode Ringkas: Menampilkan 3 aturan pertama + Tombol "Selengkapnya" di kanan bawah
+   - Mode Selengkapnya: Menampilkan 7 aturan lengkap + Tombol Close (✕) di kanan atas
+   ==================================================================== */
+async function MuatDataAturanReservasi() {
+  const modalBody = document.getElementById('modalAturanBody');
+
+  let rules = null;
+  try {
+    const res = await fetchData("/reservation-rule");
+    if (Array.isArray(res)) rules = res;
+    else if (res && Array.isArray(res.data)) rules = res.data;
+  } catch (err) {
+    console.warn("Backend /reservation-rule tidak tersedia, menggunakan fallback:", err);
+  }
+
+  if (!rules || rules.length === 0) {
+    rules = DEFAULT_ATURAN;
+  }
+
+  aturanListGlobal = rules;
+  renderAturan();
+
+  // Render modal aturan lengkap (Card 12.3.3 jika dipanggil terpisah)
+  if (modalBody) {
+    modalBody.innerHTML = rules.map((r, i) => `
+      <div class="mb-3 pb-2 border-bottom border-light-subtle">
+        <h5 class="fw-bold mb-1" style="color: #1F2E22;">${i + 1}. ${esc(r.judul)}</h5>
+        <p class="text-secondary mb-0">${esc(r.isi)}</p>
+      </div>
+    `).join('');
   }
 }
 
 /**
- * Logika Pop-up Foto Besar & Navigasi (Next / Prev)
+ * Render aturan di dalam card Aturan Reservasi
+ * @param {boolean} expanded - true untuk mode 7 aturan, false untuk mode ringkas 3 aturan
  */
+function renderAturan() {
+  const container = document.getElementById('rulesPreviewContainer');
+  const btnClose = document.getElementById('btnCloseRules');
+  const btnWrapper = document.getElementById('rulesBtnWrapper');
+  const cardAturan = document.getElementById('cardAturanReservasi');
+
+  if (!container) return;
+
+  const rulesToShow = isAturanExpanded ? aturanListGlobal : aturanListGlobal.slice(0, 3);
+
+  container.innerHTML = rulesToShow.map((r, i) => `
+    <div class="rules-item-row">
+      <div class="rules-badge-num">${i + 1}</div>
+      <div class="rules-content-body">
+        <div class="rules-item-heading">${esc(r.judul)}</div>
+        <p class="rules-item-text">${esc(r.isi)}</p>
+      </div>
+    </div>
+  `).join('');
+
+  if (isAturanExpanded) {
+    if (btnClose) btnClose.style.display = 'block';
+    if (btnWrapper) btnWrapper.style.display = 'none';
+    if (cardAturan) cardAturan.classList.add('expanded');
+  } else {
+    if (btnClose) btnClose.style.display = 'none';
+    if (btnWrapper) btnWrapper.style.display = 'flex';
+    if (cardAturan) cardAturan.classList.remove('expanded');
+  }
+}
+
+/**
+ * Dipanggil saat tombol "Selengkapnya" diklik (Tampilan beralih seperti gambar sebelah kiri)
+ */
+function ekspansiAturan() {
+  isAturanExpanded = true;
+  renderAturan();
+}
+
+/**
+ * Dipanggil saat tombol ✕ di pojok kanan atas diklik (Tampilan kembali seperti gambar sebelah kanan)
+ */
+function ciutkanAturan() {
+  isAturanExpanded = false;
+  renderAturan();
+}
+
+function bukaModalAturan() {
+  const modal = document.getElementById('modalAturan');
+  if (modal) modal.style.display = 'flex';
+}
+
+function tutupModalAturan() {
+  const modal = document.getElementById('modalAturan');
+  if (modal) modal.style.display = 'none';
+}
+
+/* ====================================================================
+   LOGIKA PERUBAHAN TANGGAL & PENYUSUNAN WAKTU KUNJUNGAN
+   - Nama hari di bawah tanggal
+   - Jam menyesuaikan jam operasional
+   - Menangani hari ini (filter jam lewat & minimal 2 jam sebelumnya)
+   - Menangani hari libur / kafe tutup
+   ==================================================================== */
+function HandlePerubahanTanggal(e) {
+  const tglVal = e.target.value;
+  const selectJam = document.getElementById('jam');
+  const namaHariDisplay = document.getElementById('namaHariDisplay');
+  const btnSubmit = document.getElementById('btnSubmitReservasi');
+
+  BersihkanErrorField('tanggal');
+  BersihkanErrorField('jam');
+
+  if (!tglVal) {
+    if (namaHariDisplay) namaHariDisplay.innerText = 'Pilih tanggal reservasi';
+    if (selectJam) {
+      selectJam.innerHTML = '<option value="">Pilih Jam</option>';
+      selectJam.disabled = true;
+    }
+    return;
+  }
+
+  // Konversi tanggal yang dipilih
+  const dateObj = new Date(tglVal + 'T00:00:00');
+  const hariIndex = dateObj.getDay(); // 0 = Minggu, 1 = Senin, ...
+  const namaHari = NAMA_HARI_INDONESIA[hariIndex];
+  const tgl = dateObj.getDate();
+  const namaBulan = NAMA_BULAN_INDONESIA[dateObj.getMonth()];
+  const tahun = dateObj.getFullYear();
+
+  // Tampilkan Nama Hari di Bawah Tanggal (Persis Kebutuhan Cerita)
+  if (namaHariDisplay) {
+    namaHariDisplay.innerText = `${namaHari}, ${tgl} ${namaBulan} ${tahun}`;
+  }
+
+  if (!selectJam) return;
+
+  // Cek apakah data jam operasional gagal dimuat
+  if (isJamLoadFailed) {
+    selectJam.innerHTML = '<option value="">Gagal memuat jam</option>';
+    selectJam.disabled = true;
+    TampilkanErrorField('jam', 'Gagal memuat data jam operasional.');
+    if (btnSubmit) btnSubmit.disabled = true;
+    return;
+  }
+
+  // Ambil jadwal operasional hari tersebut
+  const jadwalHariIni = jamOperasionalData[hariIndex] || DEFAULT_JAM_OPERASIONAL[hariIndex] || { buka: "10:00", tutup: "22:00", is_closed: 0 };
+
+  // Kondisi: Kafe Tutup pada hari tersebut
+  if (jadwalHariIni.is_closed || jadwalHariIni.tutupStatus) {
+    selectJam.innerHTML = `<option value="">Kafe Tutup</option>`;
+    selectJam.disabled = true;
+    TampilkanErrorField('jam', `Kafe tutup pada hari ${namaHari}. Silakan pilih tanggal lain.`);
+    return;
+  }
+
+  // Jam buka dan tutup
+  const jamBukaNum = parseInt(jadwalHariIni.buka.split(':')[0], 10);
+  const jamTutupNum = parseInt(jadwalHariIni.tutup.split(':')[0], 10);
+
+  // Cek apakah tanggal yang dipilih adalah HARI INI
+  const now = new Date();
+  const todayStr = formatYYYYMMDD(now);
+  const isHariIni = (tglVal === todayStr);
+
+  // Sesuai aturan: "Pesan lebih awal: Minimal 2 jam sebelum kedatangan"
+  const nowHour = now.getHours();
+  const nowMinute = now.getMinutes();
+  const batasMinimalJam = nowHour + 2 + (nowMinute > 0 ? 1 : 0);
+
+  let daftarWaktuTersedia = [];
+  for (let h = jamBukaNum; h <= jamTutupNum; h++) {
+    // Jika hari ini, hanya masukkan waktu yang belum lewat dan memenuhi batas minimal 2 jam
+    if (isHariIni && h < batasMinimalJam) {
+      continue;
+    }
+    const jamFormat = `${String(h).padStart(2, '0')}:00 WIB`;
+    daftarWaktuTersedia.push(jamFormat);
+  }
+
+  if (daftarWaktuTersedia.length === 0) {
+    selectJam.innerHTML = `<option value="">Tidak ada waktu tersedia hari ini</option>`;
+    selectJam.disabled = true;
+    TampilkanErrorField('jam', 'Reservasi hari ini harus minimal 2 jam sebelumnya. Jam operasional hari ini sudah lewat.');
+    return;
+  }
+
+  // Aktifkan pilihan jam
+  selectJam.disabled = false;
+  selectJam.innerHTML = '<option value="">Pilih Jam</option>' + 
+    daftarWaktuTersedia.map(w => `<option value="${w}">${w}</option>`).join('');
+}
+
+/* ====================================================================
+   VALIDASI FORM FRONT-END & PENANGANAN PENGIRIMAN
+   ==================================================================== */
+async function HandleSubmitReservasi(event) {
+  event.preventDefault();
+
+  const nama = document.getElementById('nama')?.value.trim() || '';
+  const whatsapp = document.getElementById('whatsapp')?.value.trim() || '';
+  const tanggal = document.getElementById('tanggal')?.value || '';
+  const jam = document.getElementById('jam')?.value || '';
+  const area = document.getElementById('areaSelect')?.value || '';
+  const jumlahVal = document.getElementById('jumlah')?.value.trim() || '';
+  const catatan = document.getElementById('catatan')?.value.trim() || '';
+  const btnSubmit = document.getElementById('btnSubmitReservasi');
+
+  // Bersihkan semua error visual
+  BersihkanSemuaError();
+
+  // 1. KONDISI: Seluruh field kosong -> Tampilkan pop-up peringatan tanpa membuka WhatsApp
+  const seluruhFieldKosong = !nama && !whatsapp && !tanggal && !jam && !area && (!jumlahVal || jumlahVal === '');
+  if (seluruhFieldKosong) {
+    bukaModalFormKosong();
+    return;
+  }
+
+  // 2. KONDISI: Sebagian field belum terisi atau tidak valid
+  let isValid = true;
+  let firstInvalidEl = null;
+
+  // Validasi Nama: wajib, minimal 2 karakter
+  if (!nama) {
+    TampilkanErrorField('nama', 'Nama pemesan wajib diisi.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('nama');
+  } else if (nama.length < 2) {
+    TampilkanErrorField('nama', 'Nama pemesan minimal 2 karakter.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('nama');
+  }
+
+  // Validasi Nomor WhatsApp: format nomor Indonesia (diawali 08 / 628 / +628, 10-15 digit)
+  const regexWAIndo = /^(?:\+62|62|0)8[1-9][0-9]{7,11}$/;
+  if (!whatsapp) {
+    TampilkanErrorField('whatsapp', 'Nomor telepon / WhatsApp wajib diisi.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('whatsapp');
+  } else if (!regexWAIndo.test(whatsapp.replace(/[\s-]/g, ''))) {
+    TampilkanErrorField('whatsapp', 'Format nomor WhatsApp tidak valid (contoh: 08123456789).');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('whatsapp');
+  }
+
+  // Validasi Tanggal: wajib, tidak sebelum hari ini, maksimal 30 hari ke depan
+  const todayStr = formatYYYYMMDD(new Date());
+  if (!tanggal) {
+    TampilkanErrorField('tanggal', 'Tanggal kunjungan wajib dipilih.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('tanggal');
+  } else if (tanggal < todayStr) {
+    TampilkanErrorField('tanggal', 'Tanggal tidak boleh sebelum hari ini.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('tanggal');
+  }
+
+  // Validasi Waktu: wajib dipilih
+  if (!jam) {
+    TampilkanErrorField('jam', 'Jam kedatangan wajib dipilih.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('jam');
+  } else if (jam === 'Kafe Tutup') {
+    TampilkanErrorField('jam', 'Kafe tutup pada hari yang dipilih.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('jam');
+  }
+
+  // Validasi Area: wajib dipilih
+  if (isAreaLoadFailed) {
+    TampilkanErrorField('areaSelect', 'Area reservasi gagal dimuat. Form tidak dapat dikirim.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('areaSelect');
+  } else if (!area) {
+    TampilkanErrorField('areaSelect', 'Area reservasi wajib dipilih.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('areaSelect');
+  }
+
+  // Validasi Jumlah Pengunjung: bilangan bulat minimal 1
+  const jumlahNum = parseInt(jumlahVal, 10);
+  if (!jumlahVal || isNaN(jumlahNum) || jumlahNum < 1 || String(jumlahNum) !== jumlahVal) {
+    TampilkanErrorField('jumlah', 'Jumlah pengunjung harus berupa bilangan bulat minimal 1.');
+    isValid = false;
+    firstInvalidEl = firstInvalidEl || document.getElementById('jumlah');
+  }
+
+  if (!isValid) {
+    if (firstInvalidEl) {
+      firstInvalidEl.focus();
+      firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return;
+  }
+
+  // 3. KONDISI: Data lengkap dan valid
+  // Tampilkan loading sekitar 2 detik pada tombol "SUBMIT" dan nonaktifkan agar tidak ditekan berulang
+  if (btnSubmit) {
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>MEMPROSES...`;
+  }
+
+  // Siapkan data pesan WhatsApp
+  const dateObj = new Date(tanggal + 'T00:00:00');
+  const namaHari = NAMA_HARI_INDONESIA[dateObj.getDay()];
+  const tglFormatted = `${namaHari}, ${dateObj.getDate()} ${NAMA_BULAN_INDONESIA[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+
+  pendingMessageText = `Halo Admin Café Ácala & Eatery, saya ingin mengajukan reservasi meja dengan rincian:
+
+• Nama Pemesan: ${nama}
+• Nomor WhatsApp: ${whatsapp}
+• Hari & Tanggal: ${tglFormatted}
+• Jam Kedatangan: ${jam}
+• Area Reservasi: ${area}
+• Jumlah Tamu: ${jumlahNum} Orang
+• Catatan Khusus: ${catatan || '-'}`;
+
+  pendingWhatsAppUrl = `https://wa.me/${NOMOR_WA_CAFE}?text=` + encodeURIComponent(pendingMessageText);
+
+  // Jeda loading 2 detik sebelum pop-up konfirmasi muncul
+  setTimeout(() => {
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = `SUBMIT`;
+    }
+    // Tampilkan Pop-Up Konfirmasi dengan tombol "OK"
+    bukaModalKonfirmasiWA();
+  }, 2000);
+}
+
+/* ====================================================================
+   POP-UP KONFIRMASI WHATSAPP & LOADING BAR SETELAH "OK"
+   ==================================================================== */
+function bukaModalKonfirmasiWA() {
+  const modal = document.getElementById('modalKonfirmasiWA');
+  const btnWrap = document.getElementById('konfirmasiBtnWrap');
+  const loadingWrap = document.getElementById('konfirmasiLoadingWrap');
+  const progressBar = document.getElementById('waProgressBar');
+
+  if (btnWrap) btnWrap.style.display = 'block';
+  if (loadingWrap) loadingWrap.style.display = 'none';
+  if (progressBar) progressBar.style.width = '0%';
+
+  if (modal) modal.style.display = 'flex';
+}
+
+function tutupModalKonfirmasiWA() {
+  const modal = document.getElementById('modalKonfirmasiWA');
+  if (modal) modal.style.display = 'none';
+}
+
+/**
+ * Pelanggan menekan OK pada pop-up konfirmasi:
+ * Tampilkan loading bar, lalu buka WhatsApp dengan pesan terisi, pertahankan isian form
+ */
+function handleKonfirmasiOK() {
+  const btnWrap = document.getElementById('konfirmasiBtnWrap');
+  const loadingWrap = document.getElementById('konfirmasiLoadingWrap');
+  const progressBar = document.getElementById('waProgressBar');
+
+  // Sembunyikan tombol OK dan tampilkan loading bar
+  if (btnWrap) btnWrap.style.display = 'none';
+  if (loadingWrap) loadingWrap.style.display = 'block';
+
+  // Animasi loading bar berjalan ke 100%
+  setTimeout(() => {
+    if (progressBar) progressBar.style.width = '100%';
+  }, 50);
+
+  // Setelah loading bar selesai (sekitar 1.2 detik), buka WhatsApp
+  setTimeout(() => {
+    tutupModalKonfirmasiWA();
+
+    // Buka tautan WhatsApp di tab baru tanpa API BE
+    const waWindow = window.open(pendingWhatsAppUrl, '_blank');
+
+    // Tampilkan Card Fallback di bawah form (jika WhatsApp diblokir popup blocker atau tidak terbuka)
+    TampilkanWAFallback(pendingWhatsAppUrl, pendingMessageText);
+
+    // Isian form TETAP ADA / tidak di-reset sesuai spesifikasi
+  }, 1300);
+}
+
+/**
+ * Tampilkan Fallback jika WhatsApp tidak terbuka otomatis
+ */
+function TampilkanWAFallback(waUrl, messageText) {
+  const container = document.getElementById('waFallbackContainer');
+  const btnDirect = document.getElementById('btnBukaWALangsung');
+  const previewText = document.getElementById('waMessagePreviewText');
+
+  if (container) container.style.display = 'block';
+  if (btnDirect) btnDirect.href = waUrl;
+  if (previewText) previewText.textContent = messageText;
+
+  // Scroll halus ke arah container fallback
+  container?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function salinPesanWA() {
+  if (!pendingMessageText) return;
+
+  navigator.clipboard.writeText(pendingMessageText).then(() => {
+    const badge = document.getElementById('copyAlertSuccess');
+    if (badge) {
+      badge.style.display = 'block';
+      setTimeout(() => { badge.style.display = 'none'; }, 3000);
+    }
+  }).catch(() => {
+    alert("Silakan salin teks pesan secara manual.");
+  });
+}
+
+/* ====================================================================
+   POP-UP PERINGATAN FORM KOSONG (media_1794309519743_55806478.png)
+   ==================================================================== */
+function bukaModalFormKosong() {
+  const modal = document.getElementById('modalFormKosong');
+  if (modal) modal.style.display = 'flex';
+}
+
+function tutupModalFormKosong() {
+  const modal = document.getElementById('modalFormKosong');
+  if (modal) modal.style.display = 'none';
+
+  // Arahkan kursor ke input pertama
+  const inputNama = document.getElementById('nama');
+  if (inputNama) inputNama.focus();
+}
+
+/* ====================================================================
+   CARD 12.4.3: POP-UP FOTO AREA BESAR (LIGHTBOX)
+   media_1794309405271_08ae00ee.jpg
+   ==================================================================== */
 function bukaModalFotoBesar(index) {
   indeksFotoAktif = index;
   updateKontenModalFoto();
   const modal = document.getElementById('modalFotoBesar');
-  if (modal) modal.classList.add('aktif');
+  if (modal) modal.style.display = 'flex';
 }
 
 function tutupModalFotoBesar() {
   const modal = document.getElementById('modalFotoBesar');
-  if (modal) modal.classList.remove('aktif');
+  if (modal) modal.style.display = 'none';
 }
 
 function geserFotoModal(arah) {
+  if (!areaListGlobal || areaListGlobal.length === 0) return;
   indeksFotoAktif += arah;
   if (indeksFotoAktif < 0) {
-    indeksFotoAktif = areaListGlobal.length - 1; 
+    indeksFotoAktif = areaListGlobal.length - 1;
   } else if (indeksFotoAktif >= areaListGlobal.length) {
-    indeksFotoAktif = 0; 
+    indeksFotoAktif = 0;
   }
   updateKontenModalFoto();
-  
-  const container = document.getElementById('dynamicAreaCards');
-  if (container) {
-    renderCardGaleriSlider(container);
-  }
 }
 
 function updateKontenModalFoto() {
   const area = areaListGlobal[indeksFotoAktif];
   if (!area) return;
 
-  const titleEl = document.getElementById('modalFotoTitle');
-  const imgEl = document.getElementById('modalFotoImg');
-  const placeholderEl = document.getElementById('modalFotoPlaceholder');
+  const captionEl = document.getElementById('lightboxCaption');
+  const imgEl = document.getElementById('lightboxImg');
+  const placeholderEl = document.getElementById('lightboxPlaceholder');
 
-  if (titleEl) {
-    titleEl.textContent = `${area.nama} (${indeksFotoAktif + 1} dari ${areaListGlobal.length})`;
+  const namaArea = area.nama || `Area ${indeksFotoAktif + 1}`;
+  if (captionEl) {
+    captionEl.textContent = `${namaArea} (${indeksFotoAktif + 1} dari ${areaListGlobal.length})`;
   }
 
-  if (area.foto) {
-    imgEl.src = urlGambar(area.foto);
+  const fotoSrc = urlGambar(area.foto || area.gambar);
+  const urlParams = new URLSearchParams(window.location.search);
+  const simulasiFotoHilang = urlParams.get('error') === 'photo';
+
+  if (fotoSrc && !simulasiFotoHilang) {
+    imgEl.src = fotoSrc;
+    imgEl.alt = namaArea;
     imgEl.style.display = 'block';
     if (placeholderEl) placeholderEl.style.display = 'none';
+
+    imgEl.onerror = () => {
+      imgEl.style.display = 'none';
+      if (placeholderEl) placeholderEl.style.display = 'flex';
+    };
   } else {
     imgEl.style.display = 'none';
-    if (placeholderEl) {
-      placeholderEl.style.display = 'flex';
-      placeholderEl.textContent = `Foto ${area.nama} tidak tersedia`;
-    }
+    if (placeholderEl) placeholderEl.style.display = 'flex';
   }
 }
 
-async function MuatDataJamOperasional() {
-  try {
-    const res = await fetchData("/operating-hours");
-    if (res && Array.isArray(res)) {
-      res.forEach((item, idx) => {
-        jamOperasionalData[idx] = {
-          buka: item.jam_buka ? item.jam_buka.substring(0, 5) : "13:00",
-          tutup: item.jam_tutup ? item.jam_tutup.substring(0, 5) : "22:00",
-          tutupStatus: item.is_closed
-        };
-      });
-    }
-  } catch (e) {
-    jamOperasionalData = {
-      0: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-      1: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-      2: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-      3: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-      4: { buka: "13:00", tutup: "22:00", tutupStatus: false },
-      5: { buka: "13:00", tutup: "23:00", tutupStatus: false },
-      6: { buka: "13:00", tutup: "23:00", tutupStatus: false }
-    };
-  }
-}
-
-async function MuatDataAturanReservasi() {
-  const previewContainer = document.getElementById('rulesPreviewContainer');
-  const modalBody = document.getElementById('modalAturanBody');
-
-  try {
-    const res = await fetchData("/reservation-rule?limit=4");
-    let rules = [];
-    if (Array.isArray(res)) {
-      rules = res;
-    } else if (res && Array.isArray(res.data)) {
-      rules = res.data;
-    }
-
-    if (!rules || rules.length === 0) {
-      if (previewContainer) previewContainer.innerHTML = '<p class="text-muted">Belum ada aturan reservasi.</p>';
-      return;
-    }
-
-    aturanListGlobal = rules;
-
-    if (previewContainer) {
-      previewContainer.innerHTML = rules.map((r, i) => `
-        <div class="mb-2 rules-item-list">
-          <span class="fw-bold" style="color: #2d5f2e; font-size: 13px;">${i + 1}. ${esc(r.judul)}</span>
-          <p class="mb-1 text-dark" style="font-size: 11.5px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; opacity: 0.85;">${esc(r.isi)}</p>
-        </div>
-      `).join('');
-    }
-
-    if (modalBody) {
-      const fullRes = await fetchData("/reservation-rule");
-      let allRules = rules;
-      if (Array.isArray(fullRes)) {
-        allRules = fullRes;
-      } else if (fullRes && Array.isArray(fullRes.data)) {
-        allRules = fullRes.data;
-      }
-
-      modalBody.innerHTML = allRules.map((r, i) => `
-        <div class="mb-3">
-          <h5 class="text-warning fw-bold" style="font-size: 15px;">${i + 1}. ${esc(r.judul)}</h5>
-          <p class="mb-0 text-white-50" style="font-size: 13.5px; font-weight: 500;">${esc(r.isi)}</p>
-        </div>
-      `).join('');
-    }
-
-  } catch (err) {
-    console.error("Gagal memuat aturan reservasi:", err);
-    if (previewContainer) {
-      previewContainer.innerHTML = '<p class="text-danger small">Gagal memuat ringkasan aturan.</p>';
-    }
-  }
-}
-
-function bukaModalAturan() {
-  const modal = document.getElementById('modalAturan');
-  if (modal) modal.classList.add('aktif');
-}
-
-function tutupModalAturan() {
-  const modal = document.getElementById('modalAturan');
-  if (modal) modal.classList.remove('aktif');
-}
-
-function PilihAreaDariCard(idArea) {
-  const areaDitemukan = areaListGlobal.find(a => a.id == idArea);
-  if (areaDitemukan) {
-    const selectArea = document.getElementById('areaSelect');
-    if (selectArea) selectArea.value = areaDitemukan.nama;
-    const formSection = document.querySelector('.form-reservasi-section');
-    if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-function HandlePerubahanTanggal(e) {
-  const tglVal = e.target.value;
-  const selectJam = document.getElementById('jam');
-  const infoHari = document.getElementById('infoHari');
-
-  if (!tglVal) {
-    selectJam.innerHTML = '<option value="">-- Pilih tanggal terlebih dahulu --</option>';
-    selectJam.disabled = true;
-    if (infoHari) infoHari.innerText = '';
-    return;
-  }
-
-  const dateObj = new Date(tglVal + 'T00:00:00');
-  const hariIndex = dateObj.getDay(); 
-  const opsiHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-  const namaHari = opsiHari[hariIndex];
-
-  if (infoHari) infoHari.innerText = `Hari: ${namaHari}`;
-
-  const jadwalHariIni = jamOperasionalData[hariIndex] || { buka: "13:00", tutup: "22:00", tutupStatus: false };
-
-  if (jadwalHariIni.tutupStatus) {
-    selectJam.innerHTML = `<option value="">Kafe TUTUP pada hari ${namaHari}</option>`;
-    selectJam.disabled = true;
-    if (infoHari) infoHari.innerHTML += ` <span class="text-danger fw-bold">(Hari Tutup)</span>`;
-    return;
-  }
-
-  selectJam.disabled = false;
-  let jamOptionsHtml = '<option value="">-- Pilih Jam Kedatangan --</option>';
-
-  let jamBukaNum = parseInt(jadwalHariIni.buka.split(':')[0], 10);
-  let jamTutupNum = parseInt(jadwalHariIni.tutup.split(':')[0], 10);
-
-  const isToday = tglVal === new Date().toISOString().split('T')[0];
-  const currentHour = new Date().getHours();
-
-  for (let h = jamBukaNum; h <= jamTutupNum; h++) {
-    let waktuStr = `${h < 10 ? '0' + h : h}:00 WIB`;
-    if (isToday && h <= currentHour) continue;
-    jamOptionsHtml += `<option value="${waktuStr}">${waktuStr}</option>`;
-  }
-
-  selectJam.innerHTML = jamOptionsHtml;
-  if (selectJam.options.length <= 1) {
-    selectJam.innerHTML = '<option value="">Maaf, jam operasional hari ini sudah berakhir</option>';
-    selectJam.disabled = true;
-  }
-}
-
-function HandleSubmitReservasi(event) {
-  event.preventDefault();
-
-  const nama = document.getElementById('nama').value.trim();
-  const whatsapp = document.getElementById('whatsapp').value.trim();
-  const tanggal = document.getElementById('tanggal').value;
-  const jam = document.getElementById('jam').value;
-  const jumlah = document.getElementById('jumlah').value.trim();
-  const area = document.getElementById('areaSelect').value;
-  const catatan = document.getElementById('catatan').value.trim();
-
-  ClearErrors();
-
-  if (!nama && !whatsapp && !tanggal && !jam && !area) {
-    TampilkanPeringatan("Formulir masih kosong. Silakan lengkapi data reservasi Anda terlebih dahulu.");
-    return;
-  }
-
-  let isValid = true;
-
-  if (!nama) {
-    TampilkanErrorField('nama', 'Nama lengkap wajib diisi.');
-    isValid = false;
-  }
-
-  const waRegex = /^(\+62|62|0)[0-9]{9,12}$/;
-  if (!whatsapp) {
-    TampilkanErrorField('whatsapp', 'Nomor WhatsApp wajib diisi.');
-    isValid = false;
-  } else if (!waRegex.test(whatsapp.replace(/[\s-]/g, ''))) {
-    TampilkanErrorField('whatsapp', 'Format nomor WhatsApp tidak valid (contoh: 081234567890).');
-    isValid = false;
-  }
-
-  if (!tanggal) {
-    TampilkanErrorField('tanggal', 'Tanggal kunjungan wajib dipilih.');
-    isValid = false;
-  } else {
-    const tglInput = new Date(tanggal + 'T00:00:00');
-    const tglHariIni = new Date();
-    tglHariIni.setHours(0,0,0,0);
-    if (tglInput < tglHariIni) {
-      TampilkanErrorField('tanggal', 'Tanggal reservasi tidak boleh sebelum hari ini.');
-      isValid = false;
-    }
-  }
-
-  if (!jam) {
-    TampilkanErrorField('jam', 'Waktu/jam kedatangan wajib dipilih.');
-    isValid = false;
-  }
-
-  const jmlNum = parseInt(jumlah, 10);
-  if (!jumlah || isNaN(jmlNum) || jmlNum < 1) {
-    TampilkanErrorField('jumlah', 'Jumlah pengunjung minimal 1 orang.');
-    isValid = false;
-  }
-
-  if (!area) {
-    TampilkanErrorField('areaSelect', 'Silakan pilih area reservasi.');
-    isValid = false;
-  }
-
-  if (!isValid) return;
-
-  SimpanDanTampilkanKonfirmasi({ nama, whatsapp, tanggal, jam, jumlah: jmlNum, area, catatan });
-}
-
+/* ====================================================================
+   UTILITAS ERROR & TAMPILAN
+   ==================================================================== */
 function TampilkanErrorField(fieldId, pesan) {
   const el = document.getElementById(fieldId);
   const errEl = document.getElementById('error-' + fieldId);
@@ -438,120 +875,50 @@ function TampilkanErrorField(fieldId, pesan) {
   }
 }
 
-function ClearErrors() {
-  document.querySelectorAll('.form-control-acala').forEach(el => el.classList.remove('is-invalid'));
-  document.querySelectorAll('.invalid-feedback-custom').forEach(el => {
-    el.innerText = '';
-    el.classList.remove('aktif');
-  });
-}
-
-function TampilkanPeringatan(pesan) {
-  const el = document.getElementById('pesanPeringatan');
-  if (el) el.innerText = pesan;
-  const modal = document.getElementById('modalPeringatan');
-  if (modal) modal.classList.add('aktif');
-}
-
-function tutupModalPeringatan() {
-  const modal = document.getElementById('modalPeringatan');
-  if (modal) modal.classList.remove('aktif');
-}
-
-function SimpanDanTampilkanKonfirmasi(data) {
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const tglFormatted = new Date(data.tanggal + 'T00:00:00').toLocaleDateString('id-ID', options);
-
-  pendingMessageText = `Halo Admin Café Ácala & Eatery, saya ingin melakukan reservasi meja dengan rincian berikut:
-
-📌 *Area Meja:* ${data.area}
-👤 *Nama Pemesan:* ${data.nama}
-📞 *No. WhatsApp:* ${data.whatsapp}
-📅 *Tanggal Kunjungan:* ${tglFormatted}
-⏰ *Jam Kedatangan:* ${data.jam}
-👥 *Jumlah Tamu:* ${data.jumlah} Orang
-📝 *Catatan Khusus:* ${data.catatan || '-'}
-
-Mohon dapat dikonfirmasi ketersediaan tempatnya. Terima kasih!`;
-
-  pendingWhatsAppUrl = `https://wa.me/${NOMOR_WA_CAFE}?text=` + encodeURIComponent(pendingMessageText);
-
-  const loadingContainer = document.getElementById('loadingBarContainer');
-  const btnWrapper = document.getElementById('konfirmasiButtonWrapper');
-  if (loadingContainer) loadingContainer.style.display = 'none';
-  if (btnWrapper) btnWrapper.style.display = 'flex';
-
-  const modal = document.getElementById('modalKonfirmasi');
-  if (modal) modal.classList.add('aktif');
-}
-
-function tutupModalKonfirmasi() {
-  const modal = document.getElementById('modalKonfirmasi');
-  if (modal) modal.classList.remove('aktif');
-}
-
-function prosesKonfirmasiOK() {
-  const loadingContainer = document.getElementById('loadingBarContainer');
-  const progressBar = document.getElementById('progressBarFill');
-  const btnWrapper = document.getElementById('konfirmasiButtonWrapper');
-
-  if (btnWrapper) btnWrapper.style.display = 'none';
-  if (loadingContainer) loadingContainer.style.display = 'block';
-  if (progressBar) progressBar.style.width = '0%';
-
-  let width = 0;
-  const interval = setInterval(() => {
-    width += 10;
-    if (progressBar) progressBar.style.width = width + '%';
-    if (width >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        tutupModalKonfirmasi();
-        BukaWhatsAppAtauFallback(pendingWhatsAppUrl, pendingMessageText);
-      }, 300);
-    }
-  }, 180);
-}
-
-function BukaWhatsAppAtauFallback(urlWA, pesanTeks) {
-  const newWindow = window.open(urlWA, '_blank');
-
-  if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-    const textarea = document.getElementById('fallbackTextarea');
-    const linkManual = document.getElementById('linkManualWA');
-    if (textarea) textarea.value = pesanTeks;
-    if (linkManual) linkManual.href = urlWA;
-    const fallbackModal = document.getElementById('modalFallbackWA');
-    if (fallbackModal) fallbackModal.classList.add('aktif');
+function BersihkanErrorField(fieldId) {
+  const el = document.getElementById(fieldId);
+  const errEl = document.getElementById('error-' + fieldId);
+  if (el) el.classList.remove('is-invalid');
+  if (errEl) {
+    errEl.innerText = '';
+    errEl.classList.remove('aktif');
   }
 }
 
-function salinPesanFallback() {
-  const textarea = document.getElementById('fallbackTextarea');
-  if (!textarea) return;
-  textarea.select();
-  textarea.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(textarea.value).then(() => {
-    alert('Pesan berhasil disalin! Silakan tempel (paste) ke chat WhatsApp Café Ácala.');
-  }).catch(() => {
-    alert('Gagal menyalin teks secara otomatis.');
-  });
-}
-
-function tutupModalFallback() {
-  const modal = document.getElementById('modalFallbackWA');
-  if (modal) modal.classList.remove('aktif');
+function BersihkanSemuaError() {
+  ['nama', 'whatsapp', 'tanggal', 'jam', 'areaSelect', 'jumlah'].forEach(BersihkanErrorField);
 }
 
 function urlGambar(path) {
   if (!path) return '';
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path;
-  }
-  const BASE_ASSET = "../backend/"; 
-  return path.startsWith("uploads/") ? BASE_ASSET + path : path;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return path.startsWith("uploads/") ? "../backend/" + path : path;
 }
 
 function esc(str) {
-  return str ? String(str) : '';
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
+
+/* ====================================================================
+   FUNGSI BANTUAN PENGUJIAN SQA (Bisa diakses dari Console Browser)
+   ==================================================================== */
+window.testErrorArea = function(enable = true) {
+  MuatDataAreaReservasi(enable);
+};
+
+window.testErrorJam = function(enable = true) {
+  MuatDataJamOperasional(enable);
+  HandlePerubahanTanggal({ target: document.getElementById('tanggal') });
+};
+
+window.bukaModalFormKosong = bukaModalFormKosong;
+window.bukaModalKonfirmasiWA = bukaModalKonfirmasiWA;
+window.bukaModalFotoBesar = bukaModalFotoBesar;
+window.bukaModalAturan = bukaModalAturan;
+window.ekspansiAturan = ekspansiAturan;
+window.ciutkanAturan = ciutkanAturan;

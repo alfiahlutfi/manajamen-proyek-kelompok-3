@@ -1,284 +1,733 @@
 /* ======================================================
-   TEMA KHUSUS PAGE RESERVASI CAFÉ ÁCALA (GRAY WALL & REFINED)
+   TEMA HALAMAN RESERVASI CAFÉ ÁCALA
+   Akurasi detail visual persis sesuai desain UI/UX & Prototipe
    ====================================================== */
 
 body.reservasi-page {
   font-family: "Montserrat", sans-serif;
-  background: var(--latar-tembok, url("../assets/gray.png")) center/cover no-repeat, #D9D9D9;
+  background-image: url("../assets/gray.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #D7D5CF;
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  color: #2d5f2e;
+  color: #2D4229;
 }
 
-/* Header & Hero Section */
-.reservasi-hero {
-  text-align: center;
-  padding: 45px 20px 20px;
-}
-
-.reservasi-hero h1 {
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 700;
-  color: #2d5f2e;
-  letter-spacing: 4px;
-  margin-bottom: 6px;
-}
-
-.reservasi-hero p {
-  font-size: 14px;
-  color: #4A5568;
-  letter-spacing: 2px;
-}
-
-/* Layout 2 Kolom Atas (Aturan di Kiri, Slider Foto di Kanan) */
-.reservasi-top-grid {
-  max-width: 1100px;
-  margin: 0 auto 30px;
-  padding: 0 20px;
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: 25px;
-  align-items: stretch;
-}
-
-/* Kotak Aturan di Kiri (Tinggi otomatis menyesuaikan isi, tanpa ruang kosong berlebih) */
-.rules-card-preview {
-  background: #EFEFEF !important;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 22px 24px !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: auto !important;
-}
-
-.rules-preview-clean {
-  margin-bottom: 6px;
-}
-
-.rules-item-list {
-  border-bottom: 1px solid rgba(45, 95, 46, 0.1);
-  padding-bottom: 5px;
-  margin-bottom: 6px !important;
-}
-
-.rules-item-list:last-child {
-  border-bottom: none;
-  margin-bottom: 0 !important;
-}
-
-/* Base Card Style Slider */
-.res-card {
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.res-card.light {
-  background-color: #EFEFEF;
-  color: #2d5f2e;
-}
-
-/* Wadah Foto Slider Utama */
-.res-card-media-slider {
-  width: 100%;
-  height: 220px;
-  border-radius: 12px;
-  overflow: hidden;
+/* ======================================================
+   1. HERO SECTION (PERSIS FIGMA)
+   ====================================================== */
+.hero-polaroid-container {
   position: relative;
-  background-color: #d1d8d2;
+  width: 100%;
+  max-width: 1320px;
+  min-height: 640px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: transparent;
 }
 
-.res-card-media-slider img.foto-utama {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
+/* Retakan Dinding */
+.crack-wall-item {
+  position: absolute;
+  background-image: url('../assets/image.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+  transform-origin: center center;
+}
+
+.crack-1 {
+  top: 320px;
+  left: -10px;
+  width: 150px;
+  height: 250px;
+  background-position: left bottom;
+  transform: rotate(-140deg);
+}
+
+.crack-2 {
+  top: 450px;
+  left: 490px;
+  width: 240px;
+  height: 220px;
+  background-position: center bottom;
+  transform: rotate(-20deg);
+}
+
+.crack-3 {
+  top: 20px;
+  right: 10px;
+  width: 320px;
+  height: 280px;
+  background-position: right top;
+  transform: rotate(-45deg);
+}
+
+/* Wrapper Artboard Polaroid Hero */
+.hero-artboard-wrapper {
+  position: relative;
+  width: 600px;
+  height: 560px;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Lingkaran Jingga di Belakang Polaroid */
+.orange-blob-hero {
+  position: absolute;
+  width: 310px;
+  height: 380px;
+  top: 90px;
+  left: 210px;
+  background-color: #EEB037;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Base Frame Polaroid Hero */
+.polaroid-frame {
+  position: absolute;
+  background: #FFFFFF;
+  border-radius: 6px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease;
 }
 
-.res-card-media-slider img.foto-utama:hover {
-  transform: scale(1.03);
+.polaroid-frame.hero-polaroid-1 {
+  padding: 18px 18px 90px 18px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+  width: 320px;
+  height: 420px;
+  top: 25px;
+  left: 45px;
+  transform: rotate(-7.42deg);
+  transform-origin: center center;
+  z-index: 2;
 }
 
-.foto-placeholder {
+.polaroid-frame.hero-polaroid-2 {
+  padding: 16px 16px 65px 16px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+  width: 310px;
+  height: 345px;
+  top: 190px;
+  left: 200px;
+  transform: rotate(8.65deg);
+  transform-origin: center center;
+  z-index: 3;
+}
+
+.polaroid-img-crop {
   width: 100%;
-  height: 220px;
+  height: 100%;
+  overflow: hidden;
+  background: #1A281E;
+  border-radius: 4px;
+  position: relative;
+}
+
+.polaroid-img-inner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Teks Hero Kanan */
+.hero-content-right {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  padding-left: 40px;
+  margin-top: -60px;
+}
+
+.hero-title-main {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(38px, 4.6vw, 84px);
+  line-height: 1.05;
+  letter-spacing: 0em;
+  text-transform: uppercase;
+  color: #1A281E;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-title-main .text-line-1 {
+  display: block;
+}
+
+.hero-title-main .text-line-2 {
+  display: block;
+  margin-top: 6px;
+  transform: translateX(40px);
+}
+
+.hero-desc-sub {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: clamp(14px, 1.35vw, 19px);
+  line-height: 1.4;
+  color: #3E4A3F;
+  margin: 0;
+  max-width: 520px;
+}
+
+/* ======================================================
+   2. AREA RESERVASI - GALERI POLAROID SCRAPBOOK
+   ====================================================== */
+.reservation-area-section {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto 90px;
+  padding: 0 24px;
+}
+
+.section-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1A281E;
+  margin-bottom: 24px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* Container Scrapbook Polaroid */
+.polaroid-gallery-container {
+  position: relative;
+  width: 100%;
+  height: 530px;
+  margin: 0 auto;
+}
+
+/* Lingkaran Dekoratif Scrapbook */
+.yellow-blob-bg {
+  position: absolute;
+  top: 130px;
+  left: 360px;
+  width: 250px;
+  height: 250px;
+  background-color: #D4A373;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.brown-dot-bg {
+  position: absolute;
+  bottom: -15px;
+  right: 25px;
+  width: 45px;
+  height: 45px;
+  background-color: #8C532B;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Kartu Polaroid Scrapbook */
+.polaroid-card {
+  position: absolute;
+  background: #FFFFFF;
+  padding: 14px 14px 22px 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  width: 275px;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, z-index 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.polaroid-card:hover {
+  transform: scale(1.06) rotate(0deg) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+  z-index: 25 !important;
+}
+
+/* Selotip / Lakban Kuning */
+.polaroid-card .tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75px;
+  height: 22px;
+  background-color: #E9C46A;
+  opacity: 0.92;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+}
+
+/* Pembungkus Foto Polaroid */
+.polaroid-img-wrap {
+  width: 100%;
+  height: 310px;
+  overflow: hidden;
+  background-color: #1A281E;
+  border-radius: 2px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #d1d8d2;
-  color: #4a5568;
+}
+
+.polaroid-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder saat Foto Tidak Tersedia */
+.polaroid-placeholder-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #2F3E34;
+  color: #E2E8F0;
+  padding: 16px;
+  text-align: center;
+}
+
+.polaroid-placeholder-wrap svg {
+  stroke: #E9C46A;
+  margin-bottom: 10px;
+}
+
+.polaroid-placeholder-wrap span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #D1D5DB;
+}
+
+/* Caption Polaroid: Nama Area Saja */
+.polaroid-caption {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #1A281E;
+  text-align: center;
+  margin-top: 14px;
+  margin-bottom: 0;
+  line-height: 1.35;
+}
+
+/* Penempatan Presisi Masing-Masing Kartu (Scrapbook Overlap) */
+.polaroid-card.p-1 {
+  left: 10px;
+  top: 10px;
+  transform: rotate(-5deg);
+  z-index: 3;
+}
+
+.polaroid-card.p-2 {
+  left: 245px;
+  top: 75px;
+  transform: rotate(3.5deg);
+  z-index: 5;
+}
+
+.polaroid-card.p-3 {
+  left: 490px;
+  top: 20px;
+  transform: rotate(-3deg);
+  z-index: 4;
+}
+
+.polaroid-card.p-4 {
+  left: 725px;
+  top: 60px;
+  transform: rotate(4deg);
+  z-index: 2;
+}
+
+/* Pesan Error & Skeleton Area Reservasi */
+.area-error-alert {
+  background-color: #FFF5F5;
+  border: 1px solid #FEB2B2;
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.08);
+}
+
+.btn-retry-action {
+  background-color: #C53030;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
   font-size: 13px;
   font-weight: 600;
-  text-align: center;
-  padding: 15px;
-  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-/* Posisi Panah Slider agar Presisi di Tengah Foto */
-.res-card .position-relative button.position-absolute {
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 10;
-  width: 36px;
-  height: 36px;
+.btn-retry-action:hover {
+  background-color: #9B2C2C;
+}
+
+/* Skeleton Loading State */
+@keyframes shimmerPulse {
+  0% { opacity: 0.55; }
+  50% { opacity: 0.95; }
+  100% { opacity: 0.55; }
+}
+
+.skeleton-box {
+  background: linear-gradient(90deg, #374E3F 0%, #4B6B56 50%, #374E3F 100%);
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-text-line {
+  width: 70%;
+  height: 18px;
+  margin: 14px auto 0;
+  border-radius: 4px;
+  background: #CBD5E1;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+/* ======================================================
+   3. BOTTOM GRID: ATURAN RESERVASI & FORM RESERVASI
+   ====================================================== */
+.bottom-form-rules-grid {
+  max-width: 1140px;
+  margin: 0 auto 90px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 36px;
+  align-items: start;
+}
+
+/* Kotak Aturan Reservasi Kiri (Krem) */
+.rules-box-acala {
+  background: #F4F1EA;
+  border-radius: 18px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.07);
+  padding: 32px 30px;
+  border: 1px solid #E5DFD3;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.rules-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-close-rules-toggle {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A281E;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.btn-close-rules-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: scale(1.15);
+}
+
+.rules-box-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #1F2E22;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.rules-list-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rules-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.rules-badge-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #1F2E22;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 !important;
-  font-size: 14px !important;
-  background: rgba(45, 95, 46, 0.85) !important;
-  color: #FFE77B !important;
-  border: 1px solid rgba(255, 231, 123, 0.4) !important;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
-  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
-.res-card .position-relative button.position-absolute:hover {
-  background: rgba(45, 95, 46, 1) !important;
-  transform: translateY(-50%) scale(1.08) !important;
+.rules-content-body {
+  flex: 1;
 }
 
-/* Tombol Pilih Area */
-.btn-pilih-reservasi {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 12.5px;
+.rules-item-heading {
+  font-size: 13.5px;
   font-weight: 700;
-  letter-spacing: 1.2px;
+  color: #1A281E;
+  margin-bottom: 3px;
+}
+
+.rules-item-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #556054;
+  margin: 0;
+}
+
+.rules-btn-wrapper {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-selengkapnya-outline {
+  background: transparent;
+  border: 1.5px solid #1A281E;
+  color: #1A281E;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all 0.2s ease;
   cursor: pointer;
-  border: none;
-  transition: all 0.25s ease;
-  background-color: #2d5f2e;
-  color: #FFE77B;
+}
+
+.btn-selengkapnya-outline:hover {
+  background: #1A281E;
+  color: #FFFFFF;
+}
+
+/* Formulir Reservasi Kanan (Hijau Tua Sesuai Desain) */
+.form-green-box-acala {
+  background-color: #284433;
+  border-radius: 20px;
+  padding: 34px 32px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+  color: #FFFFFF;
+}
+
+.form-green-heading {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #F4C430;
+  letter-spacing: 1.5px;
+  margin-bottom: 24px;
   text-align: center;
 }
 
-.btn-pilih-reservasi:hover {
-  background-color: #224823;
-  transform: translateY(-1px);
+.form-label-green {
+  font-size: 12px;
+  font-weight: 600;
+  color: #E2E8F0;
+  margin-bottom: 6px;
+  display: block;
 }
 
-/* Tombol Tutup Estetik di Bawah Pop-Up Foto Besar */
-.btn-tutup-modal-foto {
+.form-input-green {
   width: 100%;
-  padding: 12px;
-  background-color: #FFE77B;
-  color: #1A2E24;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.btn-tutup-modal-foto:hover {
-  background-color: #FFF099;
-  transform: translateY(-1px);
-}
-
-/* Form Section Container */
-.form-reservasi-section {
-  max-width: 800px;
-  margin: 0 auto 70px;
-  padding: 0 20px;
-}
-
-.form-reservasi-card {
-  background-color: #EFEFEF;
-  border-radius: 20px;
-  padding: 38px 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  color: #2d5f2e;
-}
-
-/* Grid Layout 2 Kolom untuk Form Field */
-.form-grid-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 20px;
-}
-
-.form-grid-full {
-  grid-column: span 2;
-}
-
-.form-control-acala {
-  width: 100%;
-  padding: 11px 15px;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: 1.5px solid #ced4da;
+  padding: 10px 14px;
+  background-color: #FFFFFF;
+  border: 1.5px solid transparent;
   border-radius: 8px;
   font-family: "Montserrat", sans-serif;
-  font-size: 13.5px;
-  color: #2D4229;
+  font-size: 13px;
+  color: #1F2E22;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-control-acala:focus {
-  border-color: #2d5f2e;
-  box-shadow: 0 0 0 3px rgba(45, 95, 46, 0.15);
+.form-input-green:focus {
+  border-color: #F4C430;
+  box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.28);
 }
 
-.form-control-acala.is-invalid {
-  border-color: #dc3545 !important;
-  background-color: #fff8f8;
+.form-input-green:disabled {
+  background-color: #E5E7EB;
+  color: #6B7280;
+  cursor: not-allowed;
+}
+
+select.form-input-green {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231F2E22' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px 14px;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* Nama Hari di Bawah Tanggal */
+.nama-hari-badge {
+  font-size: 11.5px;
+  color: #FFE77B;
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Validasi Merah */
+.form-input-green.is-invalid {
+  border-color: #FF5A5A !important;
+  background-color: #FFF5F5;
+  box-shadow: 0 0 0 2px rgba(255, 90, 90, 0.25) !important;
 }
 
 .invalid-feedback-custom {
-  width: 100%;
+  font-size: 11.5px;
+  color: #FF8080;
   margin-top: 4px;
-  font-size: 12px;
-  color: #dc3545;
-  font-weight: 500;
   display: none;
+  font-weight: 500;
+  line-height: 1.35;
 }
 
 .invalid-feedback-custom.aktif {
   display: block;
 }
 
-/* Tombol Kirim Reservasi */
-.btn-submit-reservasi {
-  width: 100%;
-  padding: 13px;
-  background-color: #2d5f2e;
-  color: #FFE77B;
+/* Tombol Submit Kuning */
+.btn-submit-yellow-acala {
+  display: inline-block;
+  min-width: 180px;
+  padding: 11px 36px;
+  background-color: #F4C430;
+  color: #1F2E22;
   border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  border-radius: 6px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
+  margin-top: 8px;
 }
 
-.btn-submit-reservasi:hover {
-  background-color: #224823;
+.btn-submit-yellow-acala:hover:not(:disabled) {
+  background-color: #E5B520;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(244, 196, 48, 0.35);
 }
 
-/* Modals Overlay & Container */
-.modal-reservasi-overlay {
+.btn-submit-yellow-acala:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Fallback Card WhatsApp */
+.wa-fallback-card {
+  background: rgba(15, 30, 22, 0.65);
+  border: 1px solid rgba(244, 196, 48, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.btn-wa-action {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-wa-open {
+  background-color: #25D366;
+  color: #FFFFFF;
+}
+
+.btn-wa-open:hover {
+  background-color: #1EBE5D;
+  color: #FFFFFF;
+}
+
+.btn-wa-copy {
+  background-color: #4A5568;
+  color: #FFFFFF;
+}
+
+.btn-wa-copy:hover {
+  background-color: #2D3748;
+}
+
+.wa-message-preview {
+  background: #111E16;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #E2E8F0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 140px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copy-alert-badge {
+  font-size: 11px;
+  color: #68D391;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* ======================================================
+   4. MODALS & POP-UPS
+   ====================================================== */
+
+/* Backdrop Umum */
+.modal-acala-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(6px);
-  display: none;
+  backdrop-filter: blur(5px);
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 99999;
@@ -286,70 +735,330 @@ body.reservasi-page {
   box-sizing: border-box;
 }
 
-.modal-reservasi-overlay.aktif {
-  display: flex;
-  animation: masuk 0.3s ease;
-}
-
-.modal-reservasi-container {
+/* Card Modal Krem Persis Desain UI/UX */
+.modal-card-cream {
   position: relative;
   width: 100%;
-  max-width: 480px;
-  background-color: #2d5f2e;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  color: #FFFFFF;
+  max-width: 440px;
+  background-color: #F6F4EB;
+  border-radius: 24px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+  color: #1A281E;
 }
 
-.modal-header-title {
-  font-size: 20px;
+/* Ikon Tanda Seru Bulat Kuning (media_1794309519743_55806478.png) */
+.icon-warning-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: #EEB037;
+  color: #1A281E;
+  font-size: 32px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  user-select: none;
+}
+
+/* Judul Serif */
+.modal-title-serif {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 26px;
   font-weight: 700;
-  color: #FFE77B;
-  letter-spacing: 1.5px;
+  color: #1A281E;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+/* Deskripsi Modal */
+.modal-desc-sub {
+  font-size: 14.5px;
+  color: #4A5568;
+  line-height: 1.55;
+  margin-bottom: 28px;
+}
+
+/* Tombol Tutup Rust / Cokelat Kemerahan (media_1794309519743_55806478.png) */
+.btn-modal-rust {
+  background-color: #964B30;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 30px;
+  padding: 11px 60px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.btn-modal-rust:hover {
+  background-color: #7E3E26;
+  transform: translateY(-1px);
+}
+
+/* Tombol OK Hijau Gelap (media_1794309519895_6118664c.png) */
+.btn-modal-green {
+  background-color: #1F3626;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 68px;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.btn-modal-green:hover {
+  background-color: #15251A;
+  transform: translateY(-1px);
+}
+
+/* Loading Bar Setelah OK */
+.loading-bar-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2D4229;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #E2DDD5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background-color: #1F3626;
+  border-radius: 8px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ======================================================
+   5. LIGHTBOX MODAL FOTO AREA BESAR (media_1794309405271_08ae00ee.jpg)
+   ====================================================== */
+.modal-photo-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.lightbox-content-box {
+  position: relative;
+  max-width: 860px;
+  width: 94%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tombol Close Merah Bulat di Pojok Kanan Atas */
+.btn-close-lightbox-red {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #B92B27;
+  color: #FFFFFF;
+  border: 2.5px solid #FFFFFF;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  z-index: 30;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-close-lightbox-red:hover {
+  background-color: #991F1C;
+  transform: scale(1.08);
+}
+
+/* Navigasi Kiri / Kanan Bulat */
+.btn-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.82);
+  color: #1A281E;
+  border: none;
+  font-size: 28px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 20;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.btn-lightbox-nav.prev {
+  left: -24px;
+}
+
+.btn-lightbox-nav.next {
+  right: -24px;
+}
+
+.btn-lightbox-nav:hover {
+  background-color: #FFFFFF;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-img-frame {
+  width: 100%;
+  max-height: 72vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0E1712;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-img-frame img {
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  display: block;
+}
+
+.lightbox-placeholder-box {
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #9CA3AF;
+}
+
+.lightbox-caption {
+  margin-top: 16px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #F4C430;
+  letter-spacing: 0.8px;
   text-align: center;
+}
+
+/* Aturan Modal Scrollable */
+.rules-scrollable-content h5 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1F2E22;
   margin-bottom: 4px;
 }
 
-/* Skeleton Loading */
-.skeleton-loading {
-  background: #e0e0e0;
-  animation: pulse 1.5s infinite;
-  border-radius: 16px;
+.rules-scrollable-content p {
+  font-size: 12.5px;
+  color: #556054;
+  margin-bottom: 14px;
 }
 
-.skeleton-box {
-  background: #d0d0d0;
-  border-radius: 6px;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes masuk {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .reservasi-top-grid {
+/* ======================================================
+   6. RESPONSIVE DESIGN
+   ====================================================== */
+@media (max-width: 1024px) {
+  .hero-polaroid-container {
+    flex-direction: column;
+    min-height: auto;
+    padding: 30px 20px;
+  }
+  .hero-artboard-wrapper {
+    transform: scale(0.85);
+    margin-bottom: -30px;
+  }
+  .hero-content-right {
+    padding-left: 0;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .hero-title-main .text-line-2 {
+    transform: translateX(0);
+  }
+  .bottom-form-rules-grid {
     grid-template-columns: 1fr;
+    gap: 30px;
   }
 }
 
-@media (max-width: 768px) {
-  .form-grid-layout {
-    grid-template-columns: 1fr;
+@media (max-width: 992px) {
+  .polaroid-gallery-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding-top: 10px;
   }
-  .form-grid-full {
-    grid-column: span 1;
+
+  .yellow-blob-bg,
+  .brown-dot-bg {
+    display: none;
   }
-  .form-reservasi-card {
-    padding: 25px 20px;
+
+  .polaroid-card {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: rotate(0deg) !important;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .btn-lightbox-nav.prev {
+    left: 8px;
+  }
+  .btn-lightbox-nav.next {
+    right: 8px;
+  }
+  .btn-close-lightbox-red {
+    top: -12px;
+    right: -12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-artboard-wrapper {
+    transform: scale(0.68);
+    width: 100%;
+    height: 400px;
+    margin-bottom: -20px;
+  }
+  .form-green-box-acala,
+  .rules-box-acala {
+    padding: 24px 18px;
+  }
+  .btn-submit-yellow-acala {
+    width: 100%;
   }
 }
