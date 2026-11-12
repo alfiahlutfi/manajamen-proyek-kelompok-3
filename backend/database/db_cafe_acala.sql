@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 08, 2026 at 05:30 PM
+-- Generation Time: Nov 11, 2026 at 10:38 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -41,7 +41,8 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `username`, `password_hash`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '$2y$10$M8kUR4T23xii7GoUxSHAPuKzRmziwj.z.Gw/bpuxnG5TYtrAQR2xq', 'aktif', '2026-10-07 04:18:13', '2026-10-07 04:18:13');
+(1, 'admin', '$2y$10$M8kUR4T23xii7GoUxSHAPuKzRmziwj.z.Gw/bpuxnG5TYtrAQR2xq', 'aktif', '2026-10-07 04:18:13', '2026-10-07 04:18:13'),
+(2, 'admin_nonaktif', '$2y$10$gMAFtqASCRc8uvlCiZHcuexICvbzrXtA9BWRq94fD4Xb8cTKij5uW', 'nonaktif', '2026-11-11 16:57:55', '2026-11-11 22:24:42');
 
 -- --------------------------------------------------------
 
@@ -474,7 +475,7 @@ ALTER TABLE `reservation_rule`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `area`
