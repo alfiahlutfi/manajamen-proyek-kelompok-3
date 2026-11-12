@@ -374,8 +374,9 @@ async function MuatDataJamOperasional(forceError = false) {
 
 /* ====================================================================
    CARD 12.3.3: MUAT DATA ATURAN RESERVASI & INTERAKSI SELENGKAPNYA
-   - Mode Ringkas: Menampilkan 3 aturan pertama + Tombol "Selengkapnya" di kanan bawah
-   - Mode Selengkapnya: Menampilkan 7 aturan lengkap + Tombol Close (✕) di kanan atas
+   - Mode Ringkas: 3 aturan pertama + tombol "Selengkapnya"
+   - Mode Selengkapnya: 7 aturan + tombol "Tampilkan lebih sedikit"
+   - Klik tombol yang sama untuk bolak-balik
    ==================================================================== */
 async function MuatDataAturanReservasi() {
   const modalBody = document.getElementById('modalAturanBody');
@@ -409,11 +410,11 @@ async function MuatDataAturanReservasi() {
 
 /**
  * Render aturan di dalam card Aturan Reservasi
- * @param {boolean} expanded - true untuk mode 7 aturan, false untuk mode ringkas 3 aturan
+ * (3 aturan saat ringkas, semua aturan saat expanded)
  */
 function renderAturan() {
   const container = document.getElementById('rulesPreviewContainer');
-  const btnClose = document.getElementById('btnCloseRules');
+  const btnToggle = document.getElementById('btnToggleAturan');
   const btnWrapper = document.getElementById('rulesBtnWrapper');
   const cardAturan = document.getElementById('cardAturanReservasi');
 
@@ -431,31 +432,27 @@ function renderAturan() {
     </div>
   `).join('');
 
-  if (isAturanExpanded) {
-    if (btnClose) btnClose.style.display = 'block';
-    if (btnWrapper) btnWrapper.style.display = 'none';
-    if (cardAturan) cardAturan.classList.add('expanded');
-  } else {
-    if (btnClose) btnClose.style.display = 'none';
-    if (btnWrapper) btnWrapper.style.display = 'flex';
-    if (cardAturan) cardAturan.classList.remove('expanded');
+  // Tombol bawah SELALU tampil; hanya teksnya yang berganti
+  if (btnWrapper) btnWrapper.style.display = 'flex';
+  if (btnToggle) {
+    btnToggle.textContent = isAturanExpanded ? 'Tampilkan lebih sedikit' : 'Selengkapnya';
+    btnToggle.setAttribute('aria-expanded', String(isAturanExpanded));
   }
+  if (cardAturan) cardAturan.classList.toggle('expanded', isAturanExpanded);
 }
 
 /**
- * Dipanggil saat tombol "Selengkapnya" diklik (Tampilan beralih seperti gambar sebelah kiri)
+ * Tombol bawah: buka <-> tutup
  */
-function ekspansiAturan() {
-  isAturanExpanded = true;
+function toggleAturan() {
+  isAturanExpanded = !isAturanExpanded;
   renderAturan();
-}
 
-/**
- * Dipanggil saat tombol ✕ di pojok kanan atas diklik (Tampilan kembali seperti gambar sebelah kanan)
- */
-function ciutkanAturan() {
-  isAturanExpanded = false;
-  renderAturan();
+  // Saat kembali ke ringkas, posisikan layar ke kartu aturan agar tidak loncat
+  if (!isAturanExpanded) {
+    const card = document.getElementById('cardAturanReservasi');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 function bukaModalAturan() {
@@ -501,7 +498,7 @@ function HandlePerubahanTanggal(e) {
   const namaBulan = NAMA_BULAN_INDONESIA[dateObj.getMonth()];
   const tahun = dateObj.getFullYear();
 
-  // Tampilkan Nama Hari di Bawah Tanggal (Persis Kebutuhan Cerita)
+  // Tampilkan Nama Hari di Bawah Tanggal
   if (namaHariDisplay) {
     namaHariDisplay.innerText = `${namaHari}, ${tgl} ${namaBulan} ${tahun}`;
   }
@@ -786,7 +783,7 @@ function salinPesanWA() {
 }
 
 /* ====================================================================
-   POP-UP PERINGATAN FORM KOSONG (media_1794309519743_55806478.png)
+   POP-UP PERINGATAN FORM KOSONG
    ==================================================================== */
 function bukaModalFormKosong() {
   const modal = document.getElementById('modalFormKosong');
@@ -804,7 +801,6 @@ function tutupModalFormKosong() {
 
 /* ====================================================================
    CARD 12.4.3: POP-UP FOTO AREA BESAR (LIGHTBOX)
-   media_1794309405271_08ae00ee.jpg
    ==================================================================== */
 function bukaModalFotoBesar(index) {
   indeksFotoAktif = index;
@@ -920,5 +916,4 @@ window.bukaModalFormKosong = bukaModalFormKosong;
 window.bukaModalKonfirmasiWA = bukaModalKonfirmasiWA;
 window.bukaModalFotoBesar = bukaModalFotoBesar;
 window.bukaModalAturan = bukaModalAturan;
-window.ekspansiAturan = ekspansiAturan;
-window.ciutkanAturan = ciutkanAturan;
+window.toggleAturan = toggleAturan;

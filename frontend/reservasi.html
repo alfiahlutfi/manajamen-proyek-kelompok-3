@@ -37,14 +37,14 @@
         <!-- Polaroid Kiri Atas (Miring Kiri -7.42deg) -->
         <div class="polaroid-frame hero-polaroid-1">
           <div class="polaroid-img-crop">
-            <img src="assets/area-Indoor.png" alt="Acala Indoor Area" class="polaroid-img-inner" loading="eager">
+            <img src="assets/acala-outdoor.png" alt="Teras outdoor Acala dengan pemandangan hijau" class="polaroid-img-inner" loading="eager">
           </div>
         </div>
 
         <!-- Polaroid Kanan Bawah (Miring Kanan 8.65deg) -->
         <div class="polaroid-frame hero-polaroid-2">
           <div class="polaroid-img-crop">
-            <img src="assets/area-Outdoor.png" alt="Acala Outdoor Area" class="polaroid-img-inner" loading="eager">
+            <img src="assets/acala-vibes.png" alt="Suasana sore Acala di antara pohon dan pakis" class="polaroid-img-inner" loading="eager">
           </div>
         </div>
       </div>
@@ -120,17 +120,15 @@
       <div class="rules-box-acala" id="cardAturanReservasi">
         <div class="rules-box-header d-flex align-items-center justify-content-between mb-3">
           <h3 class="rules-box-title mb-0">ATURAN RESERVASI</h3>
-          <!-- Tombol Close (✕) di Pojok Kanan Atas saat mode Selengkapnya aktif (Persis Gambar Kiri) -->
-          <button type="button" class="btn-close-rules-toggle" id="btnCloseRules" onclick="ciutkanAturan()" aria-label="Tutup aturan lengkap" style="display: none;">✕</button>
         </div>
         
         <div id="rulesPreviewContainer" class="rules-list-preview">
           <!-- Item aturan dinamis: 3 butir saat ringkas, 7 butir saat selengkapnya -->
         </div>
 
-        <!-- Tombol Selengkapnya di Kanan Bawah (Tampil saat mode ringkas, hilang saat mode selengkapnya) -->
+        <!-- Tombol di Kanan Bawah: "Selengkapnya" <-> "Tampilkan lebih sedikit" -->
         <div class="rules-btn-wrapper" id="rulesBtnWrapper">
-          <button type="button" class="btn-selengkapnya-outline" onclick="ekspansiAturan()">Selengkapnya</button>
+          <button type="button" class="btn-selengkapnya-outline" id="btnToggleAturan" onclick="toggleAturan()" aria-expanded="false">Selengkapnya</button>
         </div>
       </div>
 
@@ -227,13 +225,9 @@
 
   </main>
 
-  <!-- ========================================================
-       MODAL 1: POP-UP PERINGATAN FORM KOSONG
-       Persis sesuai referensi media_1794309519743_55806478.png
-       ======================================================== -->
+  <!-- MODAL 1: POP-UP PERINGATAN FORM KOSONG -->
   <div class="modal-acala-backdrop" id="modalFormKosong" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="titleFormKosong">
     <div class="modal-card-cream text-center">
-      <!-- Bulatan Ikon Kuning Tanda Seru -->
       <div class="icon-warning-circle" aria-hidden="true">!</div>
       <h3 class="modal-title-serif" id="titleFormKosong">Form belum diisi</h3>
       <p class="modal-desc-sub">Silakan isi form reservasi terlebih dahulu.</p>
@@ -241,10 +235,7 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL 2: POP-UP KONFIRMASI WHATSAPP DENGAN LOADING BAR
-       Persis sesuai referensi media_1794309519895_6118664c.png
-       ======================================================== -->
+  <!-- MODAL 2: POP-UP KONFIRMASI WHATSAPP DENGAN LOADING BAR -->
   <div class="modal-acala-backdrop" id="modalKonfirmasiWA" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="titleKonfirmasiWA">
     <div class="modal-card-cream text-center">
       <h3 class="modal-title-serif mb-3" id="titleKonfirmasiWA">Reservasi via WhatsApp</h3>
@@ -254,12 +245,10 @@
         Mohon tunggu konfirmasi dari Café Acala.
       </p>
 
-      <!-- Tombol OK Awal -->
       <div id="konfirmasiBtnWrap">
         <button type="button" class="btn-modal-green" id="btnKonfirmasiOK" onclick="handleKonfirmasiOK()">OK</button>
       </div>
 
-      <!-- Loading Bar Setelah Menekan OK -->
       <div id="konfirmasiLoadingWrap" style="display: none;" class="mt-3">
         <p class="loading-bar-label mb-2" id="loadingBarText">Menghubungkan ke WhatsApp...</p>
         <div class="progress-bar-container">
@@ -269,19 +258,13 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL 3: POP-UP FOTO AREA BESAR (LIGHTBOX CARD 12.4.3)
-       Persis sesuai referensi media_1794309405271_08ae00ee.jpg
-       ======================================================== -->
+  <!-- MODAL 3: POP-UP FOTO AREA BESAR (LIGHTBOX CARD 12.4.3) -->
   <div class="modal-photo-lightbox" id="modalFotoBesar" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption" onclick="tutupModalFotoBesar()">
     <div class="lightbox-content-box" onclick="event.stopPropagation()">
-      <!-- Tombol Close Merah Bulat di Pojok Kanan Atas -->
       <button type="button" class="btn-close-lightbox-red" onclick="tutupModalFotoBesar()" aria-label="Tutup Tampilan Foto">✕</button>
 
-      <!-- Tombol Navigasi Kiri (Prev) -->
       <button type="button" class="btn-lightbox-nav prev" onclick="geserFotoModal(-1)" aria-label="Foto Sebelumnya">‹</button>
 
-      <!-- Frame Gambar Besar -->
       <div class="lightbox-img-frame">
         <img id="lightboxImg" src="" alt="Area Reservasi Café Acala" style="display: none;">
         <div id="lightboxPlaceholder" class="lightbox-placeholder-box" style="display: none;">
@@ -290,22 +273,17 @@
         </div>
       </div>
 
-      <!-- Tombol Navigasi Kanan (Next) -->
       <button type="button" class="btn-lightbox-nav next" onclick="geserFotoModal(1)" aria-label="Foto Selanjutnya">›</button>
 
-      <!-- Caption Nama Area -->
       <div class="lightbox-caption" id="lightboxCaption">Nama Area</div>
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL 4: POP-UP ATURAN LENGKAP (CARD 12.3.3)
-       ======================================================== -->
+  <!-- MODAL 4: POP-UP ATURAN LENGKAP (CARD 12.3.3) -->
   <div class="modal-acala-backdrop" id="modalAturan" style="display: none;" role="dialog" aria-modal="true" onclick="tutupModalAturan()">
     <div class="modal-card-cream" onclick="event.stopPropagation()" style="max-width: 580px; max-height: 85vh; display: flex; flex-direction: column;">
       <h3 class="modal-title-serif mb-3 text-center">Syarat & Ketentuan Reservasi</h3>
       <div id="modalAturanBody" class="rules-scrollable-content pe-2" style="overflow-y: auto; max-height: 55vh; font-size: 13.5px; line-height: 1.6;">
-        <!-- Aturan akan diisi dinamis dari API / fallback -->
       </div>
       <div class="text-center mt-3 pt-2 border-top">
         <button type="button" class="btn-modal-green py-2 px-5" onclick="tutupModalAturan()">Tutup</button>
