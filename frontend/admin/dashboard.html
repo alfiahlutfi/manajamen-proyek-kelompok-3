@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!-- Kerangka dashboard sementara (sampai card 16). Konten disembunyikan sampai sesi terverifikasi. -->
+<html lang="id" class="auth-pending">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard — Café Acala</title>
+  <link rel="icon" href="../assets/logo_acala.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="dash-body">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><rect x="11" y="6.5" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="16.8" r="1.2" fill="#fff"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5.5A1.5 1.5 0 004 5.5v13A1.5 1.5 0 005.5 20H9M16 8l4 4-4 4M20 12H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <noscript><p class="guard-msg">Aktifkan JavaScript untuk membuka dashboard admin.</p></noscript>
+
+  <!-- Ditampilkan hanya jika server tidak dapat memverifikasi sesi -->
+  <div class="guard-error" id="guardError" role="alert">
+    <div class="guard-error__box">
+      <h1>Sesi tidak dapat diverifikasi</h1>
+      <p>Server tidak dapat dihubungi. Periksa koneksi lalu coba lagi.</p>
+      <button type="button" class="btn btn--primary" id="guardRetry">Coba Lagi</button>
+    </div>
+  </div>
+
+  <div class="dash" id="dash">
+    <aside class="dash-side">
+      <div class="dash-brand">
+        <span class="avatar">A</span>
+        <span class="dash-brand__name">Café Acala</span>
+      </div>
+
+      <nav class="dash-nav" aria-label="Navigasi admin">
+        <a class="dash-nav__item is-active" href="dashboard.html" aria-current="page"><span class="dash-nav__ic"></span>Dashboard</a>
+        <!-- Halaman berikut belum tersedia (card berikutnya) -->
+        <a class="dash-nav__item is-disabled" aria-disabled="true"><span class="dash-nav__ic"></span>Menu</a>
+        <a class="dash-nav__item is-disabled" aria-disabled="true"><span class="dash-nav__ic"></span>Kategori</a>
+        <a class="dash-nav__item is-disabled" aria-disabled="true"><span class="dash-nav__ic"></span>Pesanan</a>
+        <a class="dash-nav__item is-disabled" aria-disabled="true"><span class="dash-nav__ic"></span>Pengaturan</a>
+      </nav>
+
+      <div class="dash-side__foot">
+        <button type="button" class="btn-logout" id="btnLogout">
+          <svg aria-hidden="true"><use href="#i-logout"></use></svg>Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="dash-main">
+      <header class="dash-top">
+        <h1>Dashboard</h1>
+        <div class="dash-user">
+          <span id="adminNama">Admin</span>
+          <span class="avatar" id="adminAvatar">A</span>
+        </div>
+      </header>
+
+      <main class="dash-content">
+        <!-- Angka di bawah hanya placeholder sesuai desain, diganti data nyata pada card 16 -->
+        <section class="stats" aria-label="Ringkasan">
+          <article class="stat"><p>Total Menu</p><strong>48</strong></article>
+          <article class="stat"><p>Pesanan Hari Ini</p><strong>126</strong></article>
+          <article class="stat"><p>Kategori</p><strong>8</strong></article>
+          <article class="stat"><p>Pendapatan</p><strong>Rp 4,2 jt</strong></article>
+        </section>
+
+        <section class="panel">
+          <h2>Ringkasan Pesanan</h2>
+          <div class="skel-list" aria-hidden="true">
+            <div class="skel-row"><i style="width:22%"></i><i style="width:11%"></i></div>
+            <div class="skel-row"><i style="width:27%"></i><i style="width:11%"></i></div>
+            <div class="skel-row"><i style="width:32%"></i><i style="width:11%"></i></div>
+            <div class="skel-row"><i style="width:22%"></i><i style="width:11%"></i></div>
+            <div class="skel-row"><i style="width:27%"></i><i style="width:11%"></i></div>
+          </div>
+        </section>
+
+        <section class="panel panel--tall">
+          <h2>Menu Terlaris</h2>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Konfirmasi logout -->
+  <div class="modal" id="logoutModal" hidden>
+    <div class="modal__backdrop"></div>
+    <div class="modal__box" role="alertdialog" aria-modal="true" aria-labelledby="logoutTitle" aria-describedby="logoutDesc">
+      <div class="modal__icon"><svg aria-hidden="true"><use href="#i-logout"></use></svg></div>
+      <h2 id="logoutTitle">Logout dari Dashboard?</h2>
+      <p id="logoutDesc">Anda akan mengakhiri sesi admin dan kembali ke halaman login.</p>
+      <div class="alert alert--error" id="logoutAlert" role="alert" hidden>
+        <svg class="alert__icon" aria-hidden="true"><use href="#i-alert"></use></svg>
+        <p class="alert__body"><span>Logout gagal diproses. Silakan coba lagi.</span></p>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--outline" id="logoutBatal">Batal</button>
+        <button type="button" class="btn btn--dark" id="logoutYa">
+          <span class="spinner" hidden aria-hidden="true"></span>
+          <span class="btn__label">Ya, Logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin_dashboard.js"></script>
+</body>
+</html>
