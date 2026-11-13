@@ -35,16 +35,21 @@
         <div class="orange-blob-hero" aria-hidden="true"></div>
 
         <!-- Polaroid Kiri Atas (Miring Kiri -7.42deg) -->
+<!-- Wrapper Polaroid & Elemen Lingkaran Jingga -->
+      <div class="hero-artboard-wrapper">
+        <div class="orange-blob-hero" aria-hidden="true"></div>
+
+        <!-- Polaroid Kiri Atas (Miring Kiri -7.42deg) -->
         <div class="polaroid-frame hero-polaroid-1">
           <div class="polaroid-img-crop">
-            <img src="assets/acala-outdoor.png" alt="Teras outdoor Acala dengan pemandangan hijau" class="polaroid-img-inner" loading="eager">
+            <img src="assets/acala-outdoor.png" alt="Teras outdoor Acala dengan pemandangan hijau" class="polaroid-img-inner" loading="eager" onerror="this.onerror=null; this.src='assets/placeholder-reservasi.png';">
           </div>
         </div>
 
         <!-- Polaroid Kanan Bawah (Miring Kanan 8.65deg) -->
         <div class="polaroid-frame hero-polaroid-2">
           <div class="polaroid-img-crop">
-            <img src="assets/acala-vibes.png" alt="Suasana sore Acala di antara pohon dan pakis" class="polaroid-img-inner" loading="eager">
+            <img src="assets/acala-vibes.png" alt="Suasana sore Acala di antara pohon dan pakis" class="polaroid-img-inner" loading="eager" onerror="this.onerror=null; this.src='assets/placeholder-reservasi.png';">
           </div>
         </div>
       </div>
@@ -123,12 +128,12 @@
         </div>
         
         <div id="rulesPreviewContainer" class="rules-list-preview">
-          <!-- Item aturan dinamis: 3 butir saat ringkas, 7 butir saat selengkapnya -->
+          <!-- Item aturan dinamis: 3 butir awal, seluruh aturan setelah "Selengkapnya" -->
         </div>
 
-        <!-- Tombol di Kanan Bawah: "Selengkapnya" <-> "Tampilkan lebih sedikit" -->
+        <!-- Tombol "Selengkapnya": hilang setelah diklik, tidak ada tombol kembali -->
         <div class="rules-btn-wrapper" id="rulesBtnWrapper">
-          <button type="button" class="btn-selengkapnya-outline" id="btnToggleAturan" onclick="toggleAturan()" aria-expanded="false">Selengkapnya</button>
+          <button type="button" class="btn-selengkapnya-outline" id="btnToggleAturan" onclick="ekspansiAturan()" aria-expanded="false">Selengkapnya</button>
         </div>
       </div>
 
@@ -137,21 +142,21 @@
         <h3 class="form-green-heading">FORM RESERVASI</h3>
 
         <form id="formReservasiAcala" novalidate>
-          <!-- Nama Pemesan / Lengkap -->
+          <!-- 1. Nama Pemesan / Lengkap -->
           <div class="mb-3">
             <label for="nama" class="form-label-green">Nama Pemesan*</label>
             <input type="text" id="nama" name="nama_lengkap" class="form-input-green" placeholder="Masukkan nama anda" autocomplete="name">
             <div class="invalid-feedback-custom" id="error-nama"></div>
           </div>
 
-          <!-- Nomor Telepon / WhatsApp -->
+          <!-- 2. Nomor Telepon / WhatsApp -->
           <div class="mb-3">
             <label for="whatsapp" class="form-label-green">Nomor Telepon*</label>
             <input type="tel" id="whatsapp" name="nomor_whatsapp" class="form-input-green" placeholder="Contoh: 08123456789" autocomplete="tel">
             <div class="invalid-feedback-custom" id="error-whatsapp"></div>
           </div>
 
-          <!-- Baris Tanggal Kunjungan & Jam Kedatangan (Side-by-side) -->
+          <!-- 3 & 4. Tanggal Kunjungan & Jam Kedatangan (Side-by-side) -->
           <div class="row mb-3 gx-2">
             <div class="col-6">
               <label for="tanggal" class="form-label-green">Tanggal Kunjungan*</label>
@@ -170,26 +175,26 @@
             </div>
           </div>
 
-          <!-- Area Reservasi (Dropdown Dinamis) -->
+          <!-- 5. Jumlah Tamu (Orang) -->
+          <div class="mb-3">
+            <label for="jumlah" class="form-label-green">Jumlah Tamu (Orang)*</label>
+            <input type="number" id="jumlah" name="jumlah_pengunjung" class="form-input-green" min="1" step="1" placeholder="Contoh: 2/Dua">
+            <div class="invalid-feedback-custom" id="error-jumlah"></div>
+          </div>
+
+          <!-- 6. Area Reservasi (Dropdown Dinamis dari data area) -->
           <div class="mb-3">
             <label for="areaSelect" class="form-label-green">Area Reservasi*</label>
             <select id="areaSelect" name="area_reservasi" class="form-input-green" disabled>
               <option value="">Pilih Area</option>
             </select>
-            <div class="invalid-feedback-custom" id="error-area"></div>
+            <div class="invalid-feedback-custom" id="error-areaSelect"></div>
           </div>
 
-          <!-- Jumlah Tamu (Orang) -->
-          <div class="mb-3">
-            <label for="jumlah" class="form-label-green">Jumlah Tamu (Orang)*</label>
-            <input type="number" id="jumlah" name="jumlah_pengunjung" class="form-input-green" min="1" placeholder="Contoh: 2/Dua">
-            <div class="invalid-feedback-custom" id="error-jumlah"></div>
-          </div>
-
-          <!-- Catatan Khusus (opsional) -->
+          <!-- 7. Catatan Khusus (opsional) -->
           <div class="mb-4">
-            <label for="catatan" class="form-label-green">Catatan Khusus (opsional)</label>
-            <textarea id="catatan" name="catatan" class="form-input-green" rows="2" placeholder="Masukkan catatan tambahan..."></textarea>
+            <label for="catatan" class="form-label-green">Catatan Khusus (Opsional)</label>
+            <textarea id="catatan" name="catatan" class="form-input-green" rows="2" placeholder="Masukkan catatan (jika ada)"></textarea>
           </div>
 
           <!-- Tombol Kirim / Submit -->
@@ -279,7 +284,7 @@
     </div>
   </div>
 
-  <!-- MODAL 4: POP-UP ATURAN LENGKAP (CARD 12.3.3) -->
+  <!-- MODAL 4: POP-UP ATURAN LENGKAP (cadangan, tidak dipakai tombol "Selengkapnya") -->
   <div class="modal-acala-backdrop" id="modalAturan" style="display: none;" role="dialog" aria-modal="true" onclick="tutupModalAturan()">
     <div class="modal-card-cream" onclick="event.stopPropagation()" style="max-width: 580px; max-height: 85vh; display: flex; flex-direction: column;">
       <h3 class="modal-title-serif mb-3 text-center">Syarat & Ketentuan Reservasi</h3>
