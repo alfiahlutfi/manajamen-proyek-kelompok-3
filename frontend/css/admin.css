@@ -1,0 +1,236 @@
+/* ==========================================================
+   admin.css — Gaya halaman admin Café Acala
+   Dipakai: login.html, dashboard.html (dan halaman admin berikutnya)
+   ========================================================== */
+:root {
+  --a-cream: #faf5ee;
+  --a-white: #ffffff;
+  --a-ink: #2b1810;          /* teks utama */
+  --a-muted: #8a6f5f;        /* teks sekunder */
+  --a-placeholder: #c9a98c;
+  --a-line: #eadfd3;
+  --a-brown: #3b2418;        /* sidebar, tombol gelap */
+  --a-brown-2: #5a3a2c;
+  --a-amber: #c77f2d;        /* tombol utama */
+  --a-amber-soft: #dcaa68;   /* tombol saat loading */
+  --a-disabled-bg: #f3eae0;
+
+  --a-red: #d32f2f;
+  --a-red-bg: #fde8e6;
+  --a-red-line: #f0b4ae;
+  --a-warn: #b7791f;
+  --a-warn-bg: #fff3dc;
+  --a-warn-line: #e6c77f;
+  --a-warn-ink: #7a4f0f;
+  --a-green: #2e8b4e;
+  --a-green-bg: #e6f3ea;
+  --a-green-line: #3e9b5b;
+  --a-green-ink: #1f6b3a;
+
+  --a-font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body.login-body, body.dash-body {
+  margin: 0;
+  font-family: var(--a-font);
+  color: var(--a-ink);
+  background: var(--a-cream);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font-family: inherit; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid rgba(199, 127, 45, .45); outline-offset: 2px; }
+
+/* ---------- Tombol ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid transparent;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background .15s, border-color .15s, opacity .15s;
+}
+.btn--block { width: 100%; }
+.btn--primary { background: var(--a-amber); color: #fff; }
+.btn--primary:hover:not(:disabled) { background: #b36f24; }
+.btn--primary.is-loading, .btn--primary:disabled { background: var(--a-amber-soft); cursor: not-allowed; }
+.btn--outline { background: #fff; color: var(--a-ink); border-color: var(--a-line); }
+.btn--outline:hover:not(:disabled) { background: var(--a-cream); }
+.btn--dark { background: var(--a-brown); color: #fff; }
+.btn--dark:hover:not(:disabled) { background: #2b1810; }
+.btn:disabled { cursor: not-allowed; }
+.btn--outline:disabled { background: var(--a-disabled-bg); color: #b9a595; }
+.btn--dark:disabled { background: #8b6b5c; }
+
+.spinner {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .45); border-top-color: #fff;
+  animation: putar .8s linear infinite;
+}
+@keyframes putar { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+
+/* ---------- Alert ---------- */
+.alert {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; margin: 0 0 16px; border-radius: 8px; border: 1px solid;
+  font-size: 12px; line-height: 1.45;
+}
+.alert__icon { flex: none; width: 18px; height: 18px; margin-top: 1px; }
+.alert__body { margin: 0; display: flex; flex-direction: column; }
+.alert--error   { background: var(--a-red-bg);  border-color: var(--a-red-line);  color: var(--a-red); }
+.alert--warning { background: var(--a-warn-bg); border-color: var(--a-warn-line); color: var(--a-warn-ink); }
+.alert--warning .alert__icon { color: var(--a-warn); }
+.alert--success { background: var(--a-green-bg); border-color: var(--a-green-line); color: var(--a-green-ink); }
+.alert--success .alert__icon { color: var(--a-green); }
+.alert--error .alert__icon { color: var(--a-red); }
+
+/* ==========================================================
+   HALAMAN LOGIN
+   ========================================================== */
+.login { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+
+/* Panel kiri */
+.login-brand {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: #dadada url("../assets/gray.png") center / cover no-repeat;
+}
+.login-brand__circle { position: absolute; border-radius: 50%; background: rgba(236, 214, 188, .45); }
+.login-brand__circle--a { width: 300px; height: 300px; top: -80px; left: -80px; }
+.login-brand__circle--b { width: 460px; height: 460px; right: -130px; bottom: -150px; background: rgba(246, 232, 214, .85); }
+.login-brand__center { position: relative; z-index: 1; text-align: center; }
+.login-brand__logo { width: clamp(170px, 19vw, 270px); height: auto; margin: 0 auto; }
+.login-brand__name {
+  margin: -4px 0 6px; font-size: clamp(24px, 2.6vw, 34px); font-weight: 700; color: #fff;
+  -webkit-text-stroke: 2px #2b1810; paint-order: stroke fill; letter-spacing: .5px;
+}
+.login-brand__tag { margin: 0; font-size: 12px; font-weight: 500; color: #e9b949; letter-spacing: .3px; }
+.login-brand__copy { position: absolute; bottom: 14px; left: 0; right: 0; margin: 0; text-align: center; font-size: 10px; color: #e9b949; z-index: 1; }
+
+/* Panel kanan */
+.login-panel { display: flex; align-items: center; justify-content: center; padding: 32px 24px; background: var(--a-cream); }
+.login-card {
+  width: 100%; max-width: 420px; padding: 32px;
+  background: var(--a-white); border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(59, 36, 24, .08), 0 1px 3px rgba(59, 36, 24, .06);
+}
+.login-card__logo { display: none; width: 96px; margin: 0 auto 12px; }
+.login-card__title { margin: 0; font-size: 24px; font-weight: 700; color: var(--a-ink); }
+.login-card__sub { margin: 2px 0 18px; font-size: 12px; color: var(--a-muted); }
+.login-card__foot { margin: 16px 0 0; text-align: center; font-size: 10px; color: var(--a-muted); }
+
+/* Field */
+.field { margin-bottom: 4px; }
+.field label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 500; color: var(--a-ink); }
+.input-wrap { position: relative; }
+.input {
+  width: 100%; height: 44px; padding: 0 14px;
+  font-size: 13px; color: var(--a-ink);
+  background: #fff; border: 1px solid var(--a-line); border-radius: 8px;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.input::placeholder { color: var(--a-placeholder); }
+.input:focus { outline: none; border-color: var(--a-amber); box-shadow: 0 0 0 3px rgba(199, 127, 45, .18); }
+.input--icon { padding-right: 44px; }
+.input:disabled { background: var(--a-disabled-bg); color: var(--a-ink); cursor: not-allowed; }
+.input.is-invalid { border-color: var(--a-red); }
+.input.is-invalid:focus { box-shadow: 0 0 0 3px rgba(211, 47, 47, .15); }
+
+.input-toggle {
+  position: absolute; top: 0; right: 0; width: 44px; height: 44px;
+  display: grid; place-items: center; background: none; border: 0; color: var(--a-muted); cursor: pointer;
+}
+.input-toggle svg { width: 18px; height: 18px; }
+.input-toggle:disabled { cursor: not-allowed; opacity: .6; }
+
+/* Ruang pesan error dicadangkan agar layout tidak melompat */
+.field-error {
+  display: flex; align-items: center; gap: 6px;
+  min-height: 20px; margin: 4px 0 0; font-size: 11px; color: var(--a-red);
+}
+.field-error svg { flex: none; width: 12px; height: 12px; }
+.field-error[hidden] { display: block !important; visibility: hidden; }
+.field-error[hidden] span, .field-error[hidden] svg { display: none; }
+.login-card .btn--block { margin-top: 12px; }
+
+/* Layar kecil: panel kiri disembunyikan, logo pindah ke kartu */
+@media (max-width: 860px) {
+  .login { grid-template-columns: 1fr; }
+  .login-brand { display: none; }
+  .login-card__logo { display: block; }
+  .login-panel { min-height: 100vh; padding: 20px 16px; }
+  .login-card { padding: 24px 20px; }
+}
+
+/* ==========================================================
+   DASHBOARD (kerangka sementara)
+   ========================================================== */
+html.auth-pending body { visibility: hidden; }
+.guard-error { display: none; }
+html.auth-error .dash { display: none; }
+html.auth-error .guard-error { display: grid; place-items: center; min-height: 100vh; padding: 24px; }
+.guard-error__box { max-width: 380px; padding: 28px; text-align: center; background: #fff; border-radius: 14px; box-shadow: 0 6px 24px rgba(59, 36, 24, .08); }
+.guard-error__box h1 { margin: 0 0 6px; font-size: 18px; }
+.guard-error__box p { margin: 0 0 16px; font-size: 13px; color: var(--a-muted); }
+.guard-msg { padding: 24px; text-align: center; }
+
+.dash { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
+.dash-side { display: flex; flex-direction: column; padding: 16px 12px; background: var(--a-brown); color: #f3e6d9; position: sticky; top: 0; height: 100vh; }
+.dash-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px; font-size: 14px; font-weight: 600; color: #fff; }
+.avatar { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--a-amber); color: #fff; font-size: 12px; font-weight: 600; }
+
+.dash-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.dash-nav__item { position: relative; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 12px; color: #e7d6c7; text-decoration: none; }
+.dash-nav__ic { width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 3px; opacity: .85; }
+.dash-nav__item.is-active { background: var(--a-brown-2); color: #fff; }
+.dash-nav__item.is-active::before { content: ""; position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--a-amber); }
+.dash-nav__item.is-disabled { opacity: .55; cursor: not-allowed; }
+.dash-side__foot { padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .12); }
+.btn-logout {
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px;
+  background: transparent; color: #f3e6d9; border: 1px solid #8a5a3c; border-radius: 8px;
+  font-size: 12px; cursor: pointer;
+}
+.btn-logout:hover { background: rgba(255, 255, 255, .06); }
+.btn-logout svg { width: 14px; height: 14px; }
+
+.dash-main { min-width: 0; display: flex; flex-direction: column; }
+.dash-top { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 24px; background: #fff; border-bottom: 1px solid var(--a-line); }
+.dash-top h1 { margin: 0; font-size: 14px; font-weight: 600; }
+.dash-user { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+.dash-content { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat { padding: 14px 16px; background: #fff; border: 1px solid var(--a-line); border-radius: 10px; }
+.stat p { margin: 0 0 4px; font-size: 10px; color: var(--a-muted); }
+.stat strong { font-size: 20px; font-weight: 700; }
+.panel { padding: 18px 20px; background: #fff; border: 1px solid var(--a-line); border-radius: 10px; }
+.panel h2 { margin: 0 0 12px; font-size: 13px; font-weight: 600; }
+.panel--tall { min-height: 170px; }
+.skel-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid var(--a-line); }
+.skel-row i { display: block; height: 8px; border-radius: 4px; background: #f1e9dd; }
+.skel-row:last-child { padding-bottom: 6px; }
+
+/* Modal logout */
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; }
+.modal__backdrop { position: absolute; inset: 0; background: rgba(43, 24, 16, .5); }
+.modal__box { position: relative; width: 100%; max-width: 420px; padding: 28px 24px 24px; text-align: center; background: #fff; border-radius: 16px; box-shadow: 0 16px 48px rgba(0, 0, 0, .25); }
+.modal__icon { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 14px; border-radius: 50%; background: #f7e6cf; color: var(--a-amber); }
+.modal__icon svg { width: 20px; height: 20px; }
+.modal__box h2 { margin: 0 0 6px; font-size: 18px; font-weight: 700; }
+.modal__box > p { margin: 0 0 18px; font-size: 12px; color: var(--a-muted); }
+.modal__box .alert { text-align: left; }
+.modal__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+@media (max-width: 860px) {
+  .dash { grid-template-columns: 1fr; }
+  .dash-side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; }
+  .dash-brand { padding: 0; }
+  .dash-nav { flex-direction: row; flex-wrap: wrap; order: 3; width: 100%; flex: none; }
+  .dash-nav__item.is-active::before { display: none; }
+  .dash-side__foot { margin-left: auto; padding: 0; border: 0; }
+  .btn-logout { width: auto; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
