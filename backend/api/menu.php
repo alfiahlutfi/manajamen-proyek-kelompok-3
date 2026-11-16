@@ -14,11 +14,12 @@ require_once __DIR__ . '/../config/response.php';
 require_once __DIR__ . '/../config/database.php';
 
 const MAX_MENU_PILIHAN = 4;
-const LABEL_MENU       = ['best_seller', 'signature', 'new'];
+const LABEL_MENU       = ['best_seller', 'new', 'signature'];
 
 /**
- * Menu pilihan = menu berstatus aktif yang kolom label-nya terisi (diatur admin),
+ * Menu pilihan = menu berstatus aktif pada KATEGORI AKTIF yang kolom label-nya terisi (diatur admin),
  * diurutkan sesuai kolom urutan, maksimal MAX_MENU_PILIHAN.
+ * Kategori yang dinonaktifkan admin (card 14.2.1) menyembunyikan menunya dari beranda.
  * Card 4.4: respons memuat id menu dan id kategori (category_id); field lain tidak berubah.
  */
 function kirim_menu_pilihan(): void
@@ -30,18 +31,19 @@ function kirim_menu_pilihan(): void
         respond(400, false, 'Label tidak valid. Gunakan best_seller, signature, atau new', null, 'MNU-4001');
     }
 
-    $sql = 'SELECT id, category_id, label, foto, nama, harga
-              FROM menu
-             WHERE status = \'aktif\'
-               AND label IS NOT NULL';
+    $sql = 'SELECT m.id, m.category_id, m.label, m.foto, m.nama, m.harga
+              FROM menu m
+              JOIN menu_category c ON c.id = m.category_id AND c.status = \'aktif\'
+             WHERE m.status = \'aktif\'
+               AND m.label IS NOT NULL';
     $params = [];
 
     if ($label !== '') {
-        $sql .= ' AND label = :label';
+        $sql .= ' AND m.label = :label';
         $params[':label'] = $label;
     }
 
-    $sql .= ' ORDER BY urutan, id LIMIT ' . MAX_MENU_PILIHAN;
+    $sql .= ' ORDER BY m.urutan, m.id LIMIT ' . MAX_MENU_PILIHAN;
 
     try {
         $stmt = db()->prepare($sql);
