@@ -518,8 +518,18 @@ async function muatMenu() {
     const urlParams = new URLSearchParams(window.location.search);
     const kategoriDariUrl = urlParams.get('kategori');
 
-    if (kategoriDariUrl && daftarKat.includes(kategoriDariUrl)) {
-      kategoriAktif = kategoriDariUrl;
+    // Parameter ?kategori= boleh berisi ID kategori (dari kartu Signature di beranda)
+    // atau nama kategori. ID dicocokkan lebih dulu, lalu nama.
+    let kategoriTujuan = "";
+    if (kategoriDariUrl) {
+      const cocok =
+        listKategori.find(k => String(k.id) === kategoriDariUrl) ||
+        listKategori.find(k => k.nama === kategoriDariUrl);
+      if (cocok) kategoriTujuan = cocok.nama;
+    }
+
+    if (kategoriTujuan && daftarKat.includes(kategoriTujuan)) {
+      kategoriAktif = kategoriTujuan;
     } else if (!kategoriAktif || !daftarKat.includes(kategoriAktif)) {
       kategoriAktif = daftarKat[0] || ""; 
     }

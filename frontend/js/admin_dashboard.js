@@ -35,9 +35,6 @@
 
   $("guardRetry").addEventListener("click", periksaSesi);
 
-  // Tombol Back (bfcache) setelah logout: cek ulang, jangan tampilkan halaman lama
-  window.addEventListener("pageshow", (e) => { if (e.persisted) periksaSesi(); });
-
   periksaSesi();
 
   /* ---------- Modal logout ---------- */
@@ -81,7 +78,13 @@
     const sudahBerakhir = r.status === 401 && r.kode === "ADM-4012"; // sesi memang sudah habis
 
     if (r.ok || sudahBerakhir) {
+      // Status autentikasi sudah dihapus oleh AcalaAuth.logout(). Kosongkan data admin dan
+      // sembunyikan dashboard supaya tidak terlihat bila halaman dipulihkan dari cache Back.
+      $("adminNama").textContent = "";
+      $("adminAvatar").textContent = "";
+      root.classList.add("auth-pending");
       AcalaAuth.setFlash("logout");
+      // replace(): dashboard dihapus dari riwayat, sehingga Back tidak kembali ke dashboard
       location.replace(AcalaAuth.HALAMAN_LOGIN);
       return;
     }
@@ -90,6 +93,17 @@
     yaLabel.textContent = "Coba Lagi";
     boxAlert.hidden = false;
   }
+
+  // Tombol Back/Forward (bfcache): halaman dipulihkan apa adanya, jadi sembunyikan dulu lalu
+  // verifikasi ulang ke server. Tanpa sesi valid -> otomatis ke login. Pop-up yang tertinggal
+  // (mis. Back ditekan saat logout berjalan) ditutup dan statusnya direset.
+  window.addEventListener("pageshow", (e) => {
+    if (!e.persisted) return;
+    root.classList.add("auth-pending");
+    if (sedangLogout) setLoading(false);
+    modal.hidden = true;
+    periksaSesi();
+  });
 
   btnBuka.addEventListener("click", bukaModal);
   btnBatal.addEventListener("click", tutupModal);

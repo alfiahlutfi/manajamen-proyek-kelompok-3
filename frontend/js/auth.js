@@ -90,8 +90,30 @@
     return adminRequest("login", { method: "POST", body: { username, password }, simulasi: true });
   }
 
-  function logout() {
-    return adminRequest("logout", { method: "POST", simulasi: true });
+  /**
+   * Hapus status autentikasi di sisi FE.
+   * Cookie sesi bersifat HttpOnly sehingga dihapus oleh BE (card 13.2.1), dan FE tidak
+   * menyimpan token/password. Fungsi ini membersihkan sisa status apa pun yang mungkin
+   * tersimpan di browser (kunci "acala_auth*", "acala_admin*", "acala_token*", "acala_session*").
+   * Kunci pesan flash (acala_flash) sengaja tidak dihapus.
+   */
+  function hapusStatusAuth() {
+    const POLA = /^acala[_-]?(auth|admin|token|session)/i;
+    [window.localStorage, window.sessionStorage].forEach((st) => {
+      try {
+        Object.keys(st).filter((k) => POLA.test(k)).forEach((k) => st.removeItem(k));
+      } catch (_) { /* penyimpanan tidak tersedia */ }
+    });
+  }
+
+  /**
+   * Kirim logout ke BE. Status autentikasi FE dihapus hanya jika logout berhasil
+   * (atau sesi memang sudah berakhir: 401 ADM-4012). Bila gagal, status tetap.
+   */
+  async function logout() {
+    const r = await adminRequest("logout", { method: "POST", simulasi: true });
+    if (r.ok || (r.status === 401 && r.kode === "ADM-4012")) hapusStatusAuth();
+    return r;
   }
 
   // Pesan sekali tampil lintas halaman (mis. "Anda berhasil logout.")
@@ -108,6 +130,6 @@
 
   window.AcalaAuth = {
     HALAMAN_LOGIN, HALAMAN_DASHBOARD,
-    adminRequest, adminApi, cekSesi, login, logout, setFlash, ambilFlash,
+    adminRequest, adminApi, cekSesi, login, logout, hapusStatusAuth, setFlash, ambilFlash,
   };
 })();

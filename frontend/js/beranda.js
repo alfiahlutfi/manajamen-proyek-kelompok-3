@@ -297,9 +297,8 @@ async function isiBeranda() {
   const judulAbout = document.getElementById("judul-about");
   const deskripsi  = document.getElementById("deskripsi");
 
-  // Judul: pakai database kalau ada, kalau tidak pertahankan teks statis HTML
-  const judulDb = c.judul_deskripsi || c.judul_about || c.judul;
-  if (judulAbout && judulDb) judulAbout.textContent = judulDb;
+  // Judul: isi dari database. Kalau kosong/gagal, tampil skeleton teks.
+  isiTeks(judulAbout, c.judul_deskripsi || c.judul_about || c.judul);
 
   const deskripsiOk = isiTeks(deskripsi, c.deskripsi_about || c.deskripsi);
   tampilPesan(deskripsi, "profil", !cafe || !deskripsiOk ? "Gagal memuat profil cafe" : "");
@@ -308,8 +307,7 @@ async function isiBeranda() {
   const judulReservasi     = document.getElementById("judul-reservasi");
   const deskripsiReservasi = document.getElementById("deskripsi-reservasi");
 
-  const judulResDb = reservasi.judul || c.judul_reservasi;
-  if (judulReservasi && judulResDb) judulReservasi.textContent = judulResDb;
+  isiTeks(judulReservasi, reservasi.judul || c.judul_reservasi);
 
   const deskripsiResOk = isiTeks(deskripsiReservasi, reservasi.deskripsi || c.deskripsi_reservasi);
   tampilPesan(deskripsiReservasi, "reservasi", !reservasiData || !deskripsiResOk ? "Gagal memuat data reservasi" : "");
@@ -646,12 +644,6 @@ async function mulaiBeranda() {
     disembunyikan.forEach(([el]) => { el.style.display = "none"; });
     skeleton = buatSkeleton();
     body.prepend(skeleton);
-  } else {
-    ["judul-about", "deskripsi", "judul-reservasi", "deskripsi-reservasi", "alamat"]
-      .forEach(id => {
-        const el = document.getElementById(id);
-        if (el && !el.textContent.trim()) el.classList.add("skel-teks");
-      });
   }
 
   await Promise.allSettled([
