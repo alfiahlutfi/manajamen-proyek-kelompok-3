@@ -4,6 +4,7 @@
     # Jika request bukan file atau folder yang benar-benar ada
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
     
     # Teruskan request ke file .php di dalam folder api
     RewriteRule ^(.*)$ $1.php [L]

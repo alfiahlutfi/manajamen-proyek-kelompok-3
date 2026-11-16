@@ -94,3 +94,27 @@ function ambil_kategori(PDO $pdo, int $id): ?array
     $r = $stmt->fetch();
     return $r ? bentuk_kategori($r) : null;
 }
+
+/**
+ * Nilai-nilai enum kolom menu.label, dibaca dari definisi kolom di database (urutan sesuai definisi).
+ * Tidak ada daftar nilai yang ditulis di kode. Melempar RuntimeException jika kolom bukan enum.
+ */
+function daftar_enum_label(PDO $pdo): array
+{
+    $row  = $pdo->query("SHOW COLUMNS FROM `menu` LIKE 'label'")->fetch();
+    $tipe = $row['Type'] ?? '';
+
+    // Contoh nilai: enum('best_seller','new','signature')
+    if (!preg_match('/^enum\((.*)\)$/is', $tipe, $m)) {
+        throw new RuntimeException('kolom menu.label bukan enum: ' . $tipe);
+    }
+    preg_match_all("/'((?:[^']|'')*)'/", $m[1], $cocok);
+    $nilai = array_map(static function (string $v): string {
+        return str_replace("''", "'", $v);
+    }, $cocok[1]);
+
+    if (!$nilai) {
+        throw new RuntimeException('enum label kosong');
+    }
+    return array_values($nilai);
+}

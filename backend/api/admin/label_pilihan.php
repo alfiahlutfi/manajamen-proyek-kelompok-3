@@ -10,29 +10,14 @@
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/auth.php';
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/menu_helper.php';
 
 admin_prepare(['GET']);
 admin_require_auth();
 simulate_error('Gagal memuat daftar pilihan label', 'MNU-5007');
 
 try {
-    $row = $pdo->query("SHOW COLUMNS FROM `menu` LIKE 'label'")->fetch();
-    $tipe = $row['Type'] ?? '';
-
-    // Contoh nilai: enum('best_seller','new','signature')
-    if (!preg_match('/^enum\((.*)\)$/is', $tipe, $m)) {
-        throw new RuntimeException('kolom menu.label bukan enum: ' . $tipe);
-    }
-    preg_match_all("/'((?:[^']|'')*)'/", $m[1], $cocok);
-    $nilai = array_map(static function (string $v): string {
-        return str_replace("''", "'", $v);
-    }, $cocok[1]);
-
-    if (!$nilai) {
-        throw new RuntimeException('enum label kosong');
-    }
-
-    respond(200, true, 'Daftar pilihan label berhasil diambil', array_values($nilai));
+    respond(200, true, 'Daftar pilihan label berhasil diambil', daftar_enum_label($pdo));
 } catch (Throwable $e) {
     error_log('[MNU-5007] admin/label_pilihan: ' . $e->getMessage());
     respond(500, false, 'Gagal memuat daftar pilihan label', null, 'MNU-5007');
