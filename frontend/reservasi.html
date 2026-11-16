@@ -35,21 +35,16 @@
         <div class="orange-blob-hero" aria-hidden="true"></div>
 
         <!-- Polaroid Kiri Atas (Miring Kiri -7.42deg) -->
-<!-- Wrapper Polaroid & Elemen Lingkaran Jingga -->
-      <div class="hero-artboard-wrapper">
-        <div class="orange-blob-hero" aria-hidden="true"></div>
-
-        <!-- Polaroid Kiri Atas (Miring Kiri -7.42deg) -->
         <div class="polaroid-frame hero-polaroid-1">
           <div class="polaroid-img-crop">
-            <img src="assets/acala-outdoor.png" alt="Teras outdoor Acala dengan pemandangan hijau" class="polaroid-img-inner" loading="eager" onerror="this.onerror=null; this.src='assets/placeholder-reservasi.png';">
+            <img src="assets/acala-outdoor.png" alt="Teras outdoor Acala dengan pemandangan hijau" class="polaroid-img-inner" loading="eager">
           </div>
         </div>
 
         <!-- Polaroid Kanan Bawah (Miring Kanan 8.65deg) -->
         <div class="polaroid-frame hero-polaroid-2">
           <div class="polaroid-img-crop">
-            <img src="assets/acala-vibes.png" alt="Suasana sore Acala di antara pohon dan pakis" class="polaroid-img-inner" loading="eager" onerror="this.onerror=null; this.src='assets/placeholder-reservasi.png';">
+            <img src="assets/acala-vibes.png" alt="Suasana sore Acala di antara pohon dan pakis" class="polaroid-img-inner" loading="eager">
           </div>
         </div>
       </div>
@@ -128,10 +123,10 @@
         </div>
         
         <div id="rulesPreviewContainer" class="rules-list-preview">
-          <!-- Item aturan dinamis: 3 butir awal, seluruh aturan setelah "Selengkapnya" -->
+          <!-- Item aturan dinamis: 3 butir saat ringkas, 7 butir saat selengkapnya -->
         </div>
 
-        <!-- Tombol "Selengkapnya": hilang setelah diklik, tidak ada tombol kembali -->
+        <!-- Tombol di Kanan Bawah: "Selengkapnya" <-> "Tampilkan lebih sedikit" -->
         <div class="rules-btn-wrapper" id="rulesBtnWrapper">
           <button type="button" class="btn-selengkapnya-outline" id="btnToggleAturan" onclick="ekspansiAturan()" aria-expanded="false">Selengkapnya</button>
         </div>
@@ -142,21 +137,21 @@
         <h3 class="form-green-heading">FORM RESERVASI</h3>
 
         <form id="formReservasiAcala" novalidate>
-          <!-- 1. Nama Pemesan / Lengkap -->
+          <!-- Nama Pemesan / Lengkap -->
           <div class="mb-3">
             <label for="nama" class="form-label-green">Nama Pemesan*</label>
             <input type="text" id="nama" name="nama_lengkap" class="form-input-green" placeholder="Masukkan nama anda" autocomplete="name">
             <div class="invalid-feedback-custom" id="error-nama"></div>
           </div>
 
-          <!-- 2. Nomor Telepon / WhatsApp -->
+          <!-- Nomor Telepon / WhatsApp -->
           <div class="mb-3">
             <label for="whatsapp" class="form-label-green">Nomor Telepon*</label>
             <input type="tel" id="whatsapp" name="nomor_whatsapp" class="form-input-green" placeholder="Contoh: 08123456789" autocomplete="tel">
             <div class="invalid-feedback-custom" id="error-whatsapp"></div>
           </div>
 
-          <!-- 3 & 4. Tanggal Kunjungan & Jam Kedatangan (Side-by-side) -->
+          <!-- Baris Tanggal Kunjungan & Jam Kedatangan (Side-by-side) -->
           <div class="row mb-3 gx-2">
             <div class="col-6">
               <label for="tanggal" class="form-label-green">Tanggal Kunjungan*</label>
@@ -175,26 +170,26 @@
             </div>
           </div>
 
-          <!-- 5. Jumlah Tamu (Orang) -->
-          <div class="mb-3">
-            <label for="jumlah" class="form-label-green">Jumlah Tamu (Orang)*</label>
-            <input type="number" id="jumlah" name="jumlah_pengunjung" class="form-input-green" min="1" step="1" placeholder="Contoh: 2/Dua">
-            <div class="invalid-feedback-custom" id="error-jumlah"></div>
-          </div>
-
-          <!-- 6. Area Reservasi (Dropdown Dinamis dari data area) -->
+          <!-- Area Reservasi (Dropdown Dinamis) -->
           <div class="mb-3">
             <label for="areaSelect" class="form-label-green">Area Reservasi*</label>
             <select id="areaSelect" name="area_reservasi" class="form-input-green" disabled>
               <option value="">Pilih Area</option>
             </select>
-            <div class="invalid-feedback-custom" id="error-areaSelect"></div>
+            <div class="invalid-feedback-custom" id="error-area"></div>
           </div>
 
-          <!-- 7. Catatan Khusus (opsional) -->
+          <!-- Jumlah Tamu (Orang) -->
+          <div class="mb-3">
+            <label for="jumlah" class="form-label-green">Jumlah Tamu (Orang)*</label>
+            <input type="number" id="jumlah" name="jumlah_pengunjung" class="form-input-green" min="1" placeholder="Contoh: 2/Dua">
+            <div class="invalid-feedback-custom" id="error-jumlah"></div>
+          </div>
+
+          <!-- Catatan Khusus (opsional) -->
           <div class="mb-4">
-            <label for="catatan" class="form-label-green">Catatan Khusus (Opsional)</label>
-            <textarea id="catatan" name="catatan" class="form-input-green" rows="2" placeholder="Masukkan catatan (jika ada)"></textarea>
+            <label for="catatan" class="form-label-green">Catatan Khusus (opsional)</label>
+            <textarea id="catatan" name="catatan" class="form-input-green" rows="2" placeholder="Masukkan catatan tambahan..."></textarea>
           </div>
 
           <!-- Tombol Kirim / Submit -->
@@ -203,26 +198,6 @@
           </div>
         </form>
 
-        <!-- Area Pesan Fallback Jika WhatsApp Tidak Terbuka Otomatis -->
-        <div id="waFallbackContainer" class="wa-fallback-card mt-4" style="display: none;">
-          <div class="d-flex align-items-center mb-2">
-            <span class="me-2 fs-5">💬</span>
-            <h5 class="fw-bold mb-0 text-warning" style="font-size: 13.5px;">WhatsApp Belum Terbuka Otomatis?</h5>
-          </div>
-          <p class="text-white-50 mb-2" style="font-size: 11.5px; line-height: 1.5;">
-            Jika WhatsApp tidak terbuka otomatis di browser Anda, silakan klik tombol di bawah ini atau salin format pesan yang sudah disiapkan:
-          </p>
-          <div class="d-flex flex-wrap gap-2 mb-2">
-            <a id="btnBukaWALangsung" href="#" target="_blank" rel="noopener noreferrer" class="btn-wa-action btn-wa-open">
-              Buka WhatsApp Sekarang
-            </a>
-            <button type="button" id="btnSalinPesanWA" class="btn-wa-action btn-wa-copy" onclick="salinPesanWA()">
-              📋 Salin Pesan
-            </button>
-          </div>
-          <div class="wa-message-preview" id="waMessagePreviewText"></div>
-          <div id="copyAlertSuccess" class="copy-alert-badge" style="display: none;">✓ Pesan berhasil disalin ke clipboard!</div>
-        </div>
 
       </div>
 
@@ -263,6 +238,27 @@
     </div>
   </div>
 
+  <!-- MODAL 2B: POP-UP WHATSAPP TIDAK DAPAT DIBUKA (fallback) -->
+  <div class="modal-acala-backdrop" id="modalWAGagal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="titleWAGagal" onclick="tutupModalWAGagal()">
+    <div class="modal-card-cream wa-gagal-card" onclick="event.stopPropagation()">
+      <div class="wa-gagal-header">
+        <div class="wa-gagal-icon" aria-hidden="true">!</div>
+        <div>
+          <h3 class="wa-gagal-title" id="titleWAGagal">WhatsApp tidak dapat dibuka</h3>
+          <p class="wa-gagal-sub">Salin pesan di bawah dan kirim manual, atau coba lagi. Isian form tetap tersimpan.</p>
+        </div>
+      </div>
+
+      <div class="wa-gagal-message" id="waMessagePreviewText"></div>
+
+      <div class="wa-gagal-actions">
+        <button type="button" id="btnSalinPesanWA" class="btn-modal-green" onclick="salinPesanWA()">Salin Pesan</button>
+        <a id="btnBukaWALangsung" href="#" target="_blank" rel="noopener noreferrer" class="wa-gagal-link">Coba buka WhatsApp lagi</a>
+      </div>
+      <div id="copyAlertSuccess" class="copy-alert-badge" style="display: none;">✓ Pesan berhasil disalin ke clipboard!</div>
+    </div>
+  </div>
+
   <!-- MODAL 3: POP-UP FOTO AREA BESAR (LIGHTBOX CARD 12.4.3) -->
   <div class="modal-photo-lightbox" id="modalFotoBesar" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption" onclick="tutupModalFotoBesar()">
     <div class="lightbox-content-box" onclick="event.stopPropagation()">
@@ -284,7 +280,7 @@
     </div>
   </div>
 
-  <!-- MODAL 4: POP-UP ATURAN LENGKAP (cadangan, tidak dipakai tombol "Selengkapnya") -->
+  <!-- MODAL 4: POP-UP ATURAN LENGKAP (CARD 12.3.3) -->
   <div class="modal-acala-backdrop" id="modalAturan" style="display: none;" role="dialog" aria-modal="true" onclick="tutupModalAturan()">
     <div class="modal-card-cream" onclick="event.stopPropagation()" style="max-width: 580px; max-height: 85vh; display: flex; flex-direction: column;">
       <h3 class="modal-title-serif mb-3 text-center">Syarat & Ketentuan Reservasi</h3>
@@ -296,32 +292,8 @@
     </div>
   </div>
 
-  <!-- Footer Global (Otomatis terhubung dengan layout.js) -->
-  <footer class="footer-section">
-    <div class="footer-container">
-      <div class="footer-col footer-brand-col">
-        <a href="index.html" aria-label="Café Ácala - Beranda">
-          <img src="assets/logo_acala.png" alt="Logo Café Ácala" class="footer-logo-img" loading="lazy">
-        </a>
-      </div>
-      <div class="footer-col footer-nav-col">
-        <h3>GET TO KNOW US</h3>
-        <ul class="footer-links">
-          <li><a href="menu.html">Menu</a></li>
-          <li><a href="event.html">Event</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-          <li><a href="reservasi.html">Reservation</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-        </ul>
-      </div>
-      <div class="footer-col footer-connect-col">
-        <h3>CONNECT WITH US</h3>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2021-2026 Cafe Acala &amp; Eatery</p>
-    </div>
-  </footer>
+  <!-- FOOTER GLOBAL (diisi otomatis oleh js/layout.js) -->
+  <footer id="footer" class="footer-section"></footer>
 
   <!-- Scripts -->
   <script src="js/api.js"></script>

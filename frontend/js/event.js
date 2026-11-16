@@ -59,7 +59,6 @@
   };
 
   function kartu(ev) {
-    const kategori = pick(ev, "kategori", "category", "jenis", "tipe");
     const status   = pick(ev, "status", "status_event", "status_label");
     const mulai    = pick(ev, "waktu", "jam_mulai", "waktu_mulai");
     const selesai  = pick(ev, "waktu_selesai", "jam_selesai", "waktu_akhir");
@@ -84,7 +83,6 @@
 
     const body = el("div", "ev-body");
     const badges = el("div", "ev-badges");
-    if (kategori) badges.append(el("span", "ev-badge", kategori));
     if (status) {
       const done = /selesai/i.test(status);          // hanya untuk warna; teks tetap dari API
       badges.append(el("span", "ev-badge " + (done ? "status-selesai" : "status-akan"), status));
