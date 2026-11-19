@@ -9,7 +9,7 @@
   const grid = document.getElementById("event-grid");
   if (!grid) return;
 
-  const MIN_SKELETON = 3000;
+  const MIN_SKELETON = 1000;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const HARI = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const BULAN = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
@@ -183,6 +183,8 @@
       if (sisa > 0) await sleep(sisa);
       if (saya !== nomor) return;
 
+      // Lepas skeleton halaman SEBELUM kartu dirender (supaya scroll ke kartu tujuan akurat)
+      if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();
       if (!data.length) return tampilkanKosong();
       tampilkanDaftar(data, tujuan);
     } catch (err) {
@@ -191,7 +193,9 @@
       const sisa = MIN_SKELETON - (Date.now() - mulai);
       if (sisa > 0) await sleep(sisa);
       if (saya !== nomor) return;
-      tampilkanGagal();
+      // Gagal: skeleton halaman penuh tetap tampil, pesan + "Muat ulang" di atasnya
+      if (window.AcalaSkeleton) AcalaSkeleton.gagal("Gagal memuat event", muat);
+      else tampilkanGagal();
     }
   }
 

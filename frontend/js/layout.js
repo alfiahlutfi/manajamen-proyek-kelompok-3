@@ -19,6 +19,50 @@ const FOOTER_NAV = [
   { label: "Reservation", href: "reservasi.html" },
 ];
 
+// =========================================================
+// NOTIFIKASI "KONTAK GAGAL DIMUAT"
+// Bila data kontak (API /contact) gagal diambil, ikon kontak di footer
+// (Instagram, TikTok, Email, WhatsApp) tetap tampil. Notifikasi merah
+// muncul sebentar di atas layar HANYA saat ikon-ikon itu ditekan.
+// Simulasi: tambahkan ?error=contact pada URL.
+// =========================================================
+const PESAN_KONTAK_GAGAL = "Kontak Gagal Dimuat";
+const DURASI_NOTIF_MS = 3000;
+let timerNotifKontak = null;
+
+window.kontakGagal = false;
+
+function tampilkanNotifKontakGagal() {
+  let notif = document.getElementById("notif-kontak-gagal");
+
+  if (!notif) {
+    notif = document.createElement("div");
+    notif.id = "notif-kontak-gagal";
+    notif.className = "notif-kontak-gagal";
+    notif.setAttribute("role", "alert");
+    notif.textContent = PESAN_KONTAK_GAGAL;
+    document.body.appendChild(notif);
+  }
+
+  // Reflow agar animasi masuk berjalan ulang bila ikon ditekan berkali-kali
+  notif.classList.remove("tampil");
+  void notif.offsetWidth;
+  notif.classList.add("tampil");
+
+  clearTimeout(timerNotifKontak);
+  timerNotifKontak = setTimeout(() => notif.classList.remove("tampil"), DURASI_NOTIF_MS);
+}
+
+// Dipakai juga oleh tombol WhatsApp melayang di halaman Reservasi
+function tanganiKlikKontak(event) {
+  if (!window.kontakGagal) return;
+  event.preventDefault();
+  tampilkanNotifKontakGagal();
+}
+
+window.tampilkanNotifKontakGagal = tampilkanNotifKontakGagal;
+window.tanganiKlikKontak = tanganiKlikKontak;
+
 // Render footer global ke <footer id="footer" class="footer-section"></footer>
 function renderFooter() {
   const footer = document.getElementById("footer");
@@ -259,6 +303,16 @@ async function renderLayout() {
     console.warn("Gagal mengambil data dari database:", err);
   }
 
+  // ?error=contact -> simulasi kontak gagal dimuat (untuk pengujian SQA)
+  if (new URLSearchParams(location.search).get("error") === "contact") {
+    contact = null;
+    cafe = null;
+  }
+
+  // Gagal = request /contact gagal / tidak mengembalikan data.
+  // (Data ada tetapi sebagian kolom kosong BUKAN gagal; ikonnya saja yang disembunyikan.)
+  window.kontakGagal = !contact || typeof contact !== "object";
+
   const c = contact || {};
   const k = cafe || {};
 
@@ -281,10 +335,29 @@ async function renderLayout() {
     }
   }
 
-  setLink("footer-whatsapp", waUrl, null, "inline-flex");
-  setLink("footer-email", emailUrl, null, "inline-flex");
-  setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-flex");
-  setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-flex");
+  const idIkonKontak = ["footer-whatsapp", "footer-email", "footer-instagram", "footer-tiktok"];
+
+  if (window.kontakGagal) {
+    // Kontak gagal dimuat: ikon tetap tampil, tetapi tidak membuka tautan apa pun
+    idIkonKontak.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.href = "#";
+      el.removeAttribute("target");
+      el.style.display = "inline-flex";
+    });
+  } else {
+    setLink("footer-whatsapp", waUrl, null, "inline-flex");
+    setLink("footer-email", emailUrl, null, "inline-flex");
+    setLink("footer-instagram", /^https?:\/\//i.test(igVal) ? igVal : "", null, "inline-flex");
+    setLink("footer-tiktok", /^https?:\/\//i.test(ttVal) ? ttVal : "", null, "inline-flex");
+  }
+
+  // Saat kontak gagal dimuat, menekan ikon menampilkan notifikasi
+  idIkonKontak.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", tanganiKlikKontak);
+  });
 
   const copyright = document.querySelector(".footer-bottom p");
   if (copyright) {

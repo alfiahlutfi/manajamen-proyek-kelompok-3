@@ -93,6 +93,10 @@
 .ev-skel .ev-line.w2 { width:70%; }
 .ev-skel .ev-line.w3 { width:100%; }
 .ev-skel .ev-line.w4 { width:85%; }
+/* Sesuai gambar skeleton: kartu putih polos (tanpa foto/garis), selang-seling kiri-kanan */
+.ev-card.ev-skel { background:#fff; width:calc(var(--u)*69); min-height:calc(var(--u)*23.6); animation:media-shimmer-pulse 1.2s ease-in-out infinite; }
+.ev-skel .ev-photo, .ev-skel .ev-line { background:transparent; animation:none; }
+@keyframes media-shimmer-pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
 
 /* PESAN */
 .ev-pesan { text-align:center; color:#fff; padding:24px 12px; font-weight:600; }
