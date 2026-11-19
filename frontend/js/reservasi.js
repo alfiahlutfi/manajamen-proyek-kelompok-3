@@ -64,8 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   MuatNomorWhatsApp();
 
-  // Muat data dari API
-  MuatDataAreaReservasi();
+  // Muat data dari API. Skeleton halaman penuh dilepas begitu data area berhasil dimuat.
+  // Gagal: skeleton tetap tampil, pesan + "Muat ulang" di atasnya.
+  function muatAwalReservasi() {
+    return MuatDataAreaReservasi().then(() => {
+      if (!window.AcalaSkeleton) return;
+      if (isAreaLoadFailed) AcalaSkeleton.gagal("Gagal memuat data reservasi", muatAwalReservasi);
+      else AcalaSkeleton.sembunyi();
+    });
+  }
+  muatAwalReservasi();
   MuatDataJamOperasional();
   MuatDataAturanReservasi();
 });
@@ -75,19 +83,27 @@ document.addEventListener('DOMContentLoaded', () => {
  * Mengembalikan true bila nomor berhasil didapat. ?error=contact untuk simulasi gagal.
  */
 async function MuatNomorWhatsApp() {
-  if (new URLSearchParams(window.location.search).get('error') === 'contact') return false;
+  const gagalKontak = () => {
+    window.kontakGagal = true;
+    return false;
+  };
+
+  if (new URLSearchParams(window.location.search).get('error') === 'contact') return gagalKontak();
   try {
     const c = await fetchData('/contact');
-    const sumber = (c && (c.url_whatsapp || c.nomor_telepon)) || '';
+    if (!c || typeof c !== 'object') return gagalKontak();
+
+    const sumber = c.url_whatsapp || c.nomor_telepon || '';
     let digit = String(sumber).replace(/\D+/g, '');
-    if (!digit) return false;
+    if (!digit) return false; // data kontak ada tetapi nomor WhatsApp belum diisi: bukan gagal memuat
     if (digit.startsWith('0')) digit = '62' + digit.slice(1);
     NOMOR_WA_CAFE = digit;
     InisialisasiFloatingWA();
+    window.kontakGagal = false;
     return true;
   } catch (e) {
     console.warn('Nomor WhatsApp dari API /contact tidak tersedia:', e);
-    return false;
+    return gagalKontak();
   }
 }
 

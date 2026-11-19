@@ -15,10 +15,15 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/reservasi.css">
 </head>
-<body class="reservasi-page">
+<body class="reservasi-page skel-aktif">
 
   <!-- Navbar Global (otomatis diisi oleh layout.js) -->
   <header id="navbar" class="nav-acala"></header>
+
+  <!-- Skeleton halaman penuh (navbar + isi + footer): tampil selama data dimuat, dilepas oleh js/skeleton.js -->
+  <div id="skel-halaman" class="skel-halaman" role="status" aria-label="Memuat halaman">
+    <img src="assets/skeleton_reservasi.png" width="1440" height="3095" alt="" decoding="async">
+  </div>
 
   <!-- Konten Utama Reservasi -->
   <main class="reservasi-main-content">
@@ -298,6 +303,7 @@
   <!-- Scripts -->
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>
+  <script src="js/skeleton.js"></script>
   <script src="js/reservasi.js"></script>
 </body>
 </html>

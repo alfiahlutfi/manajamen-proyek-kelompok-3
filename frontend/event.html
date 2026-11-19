@@ -16,10 +16,16 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/event.css">
 </head>
-<body class="ev-page">
+<body class="ev-page skel-aktif">
 
   <!-- Navbar -->
   <header id="navbar" class="nav-acala"></header>
+
+  <!-- Skeleton halaman penuh (navbar + isi + footer): tampil selama data dimuat, dilepas oleh js/skeleton.js -->
+  <div id="skel-halaman" class="skel-halaman" role="status" aria-label="Memuat halaman">
+    <img src="assets/skeleton_event.png" width="1440" height="3284" alt="" decoding="async">
+  </div>
+
 
   <main>
     <section class="ev-hero" aria-labelledby="ev-judul">
@@ -51,6 +57,7 @@
   <script src="js/api.js"></script>
   <script src="js/states.js"></script>
   <script src="js/layout.js"></script>
+  <script src="js/skeleton.js"></script>
   <script src="js/event.js"></script>
 </body>
 </html>

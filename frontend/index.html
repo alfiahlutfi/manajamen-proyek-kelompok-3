@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -18,9 +17,14 @@
   <link rel="stylesheet" href="css/style.css">
 
 </head>
-<body>
+<body class="beranda-page skel-aktif">
 
   <header id="navbar" class="nav-acala"></header>
+
+  <!-- Skeleton halaman penuh (navbar + isi + footer): tampil selama data dimuat, dilepas oleh js/skeleton.js -->
+  <div id="skel-halaman" class="skel-halaman" role="status" aria-label="Memuat halaman">
+    <img src="assets/skeleton_home.png" width="1440" height="5879" alt="" decoding="async">
+  </div>
 
   <main>
 
@@ -29,7 +33,7 @@
       <div class="hero-bg" id="hero-bg"></div>
       <div class="hero-text">
         <h1 id="hero-judul"></h1>
-        <a id="hero-btn" class="btn-hijau" href="#">Join the Class</a>
+        <a id="hero-btn" class="btn-hijau" href="#">Lihat Detail Event</a>
       </div>
       <div class="hero-slider" id="hero-slider"></div>
     </section>
@@ -128,6 +132,7 @@
 <!-- Urutan penting: api -> layout (navbar) -> beranda (isi halaman) -->
 <script src="js/api.js"></script>
 <script src="js/layout.js"></script>
+<script src="js/skeleton.js"></script>
 <script src="js/beranda.js"></script>
 
 </body>

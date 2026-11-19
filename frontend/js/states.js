@@ -4,8 +4,8 @@
 (() => {
   "use strict";
 
-  const MIN_SKELETON = 3000;
-  const TIMEOUT = 10000;
+  const MIN_SKELETON = 1000;
+  const TIMEOUT = 1000;
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const isOffline = () => !navigator.onLine;

@@ -2,8 +2,7 @@
    PENGATURAN
 ======================================================= */
 const PLACEHOLDER_FOTO = "assets/placeholder.png"; // Placeholder gambar
-const SKELETON_GAMBAR  = "assets/Skeleton.svg";        // Gambar skeleton halaman penuh
-const MIN_SKELETON     = 1500;  // Skeleton minimal tampil (ms)
+const MIN_SKELETON     = 1000;  // Skeleton minimal tampil (ms)
 const BATAS_WAKTU      = 5000;  // Batas tunggu per data / foto / peta (ms)
 
 /* =======================================================
@@ -21,6 +20,12 @@ function esc(string) {
 /* =======================================================
    UTILITAS
 ======================================================= */
+// true bila data utama beranda (carousel, signature) gagal dimuat -> skeleton halaman penuh dipertahankan
+let gagalMuat = false;
+
+// Banner merah gagal memuat (data deskripsi / foto). Ditampung dulu, ditampilkan setelah skeleton halaman dilepas.
+const antrianBanner = [];
+
 function tunggu(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -60,7 +65,58 @@ function isiTeks(el, nilai) {
   const teks = String(nilai || "").trim();
   el.textContent = teks;
   el.classList.toggle("skel-teks", !teks);
+  // Paragraf kosong: skeleton berupa 4 baris abu-abu (sesuai desain)
+  if (!teks && el.tagName === "P") {
+    for (let i = 0; i < 4; i++) {
+      const baris = document.createElement("span");
+      baris.className = "skel-baris";
+      el.appendChild(baris);
+    }
+  }
   return Boolean(teks);
+}
+
+// Tombol di bawah deskripsi jadi kotak abu-abu selama deskripsi gagal dimuat
+function skeletonTombol(el, aktif) {
+  const tombol = el && el.parentElement && el.parentElement.querySelector(".btn-garis");
+  if (!tombol) return;
+  tombol.classList.toggle("skel-btn", aktif);
+  if (aktif) { tombol.setAttribute("aria-disabled", "true"); tombol.tabIndex = -1; }
+  else { tombol.removeAttribute("aria-disabled"); tombol.removeAttribute("tabindex"); }
+}
+
+// Banner merah penuh lebar di bawah navbar. Hilang sendiri setelah 6 detik atau saat diklik.
+function tampilkanBanner(teks) {
+  let wadah = document.getElementById("banner-gagal-wadah");
+  if (!wadah) {
+    wadah = document.createElement("div");
+    wadah.id = "banner-gagal-wadah";
+    document.body.appendChild(wadah);
+  }
+  if ([...wadah.children].some(el => el.textContent === teks)) return;
+
+  const nav = document.querySelector(".nav-acala");
+  const tinggi = nav ? Math.round(nav.getBoundingClientRect().height) : 70;
+  wadah.style.top = tinggi + "px";
+  wadah.style.setProperty("--tinggi-banner", tinggi + "px");
+
+  const banner = document.createElement("div");
+  banner.className = "banner-gagal";
+  banner.setAttribute("role", "alert");
+  banner.textContent = teks;
+
+  const tutup = () => {
+    banner.classList.remove("tampil");
+    setTimeout(() => banner.remove(), 300);
+  };
+  banner.addEventListener("click", tutup);
+  wadah.appendChild(banner);
+  requestAnimationFrame(() => banner.classList.add("tampil"));
+  setTimeout(tutup, 6000);
+}
+
+function tampilkanAntrianBanner() {
+  antrianBanner.splice(0).forEach(tampilkanBanner);
 }
 
 // Tampilkan / hapus pesan gagal tepat setelah elemen "jangkar".
@@ -258,20 +314,6 @@ function pasangPeta(wadah, iframe, url) {
 /* =======================================================
    SKELETON HALAMAN PENUH
 ======================================================= */
-function buatSkeleton() {
-  const el = document.createElement("div");
-  el.id = "skeleton-beranda";
-  el.setAttribute("role", "status");
-  el.setAttribute("aria-busy", "true");
-  el.setAttribute("aria-label", "Memuat halaman");
-
-  const img = document.createElement("img");
-  img.src = SKELETON_GAMBAR;
-  img.alt = "";
-  img.decoding = "async";
-  el.appendChild(img);
-  return el;
-}
 
 /* =======================================================
    BERANDA: ABOUT, RESERVASI, FOOTER, JAM OPERASIONAL
@@ -301,7 +343,9 @@ async function isiBeranda() {
   isiTeks(judulAbout, c.judul_deskripsi || c.judul_about || c.judul);
 
   const deskripsiOk = isiTeks(deskripsi, c.deskripsi_about || c.deskripsi);
-  tampilPesan(deskripsi, "profil", !cafe || !deskripsiOk ? "Gagal memuat profil cafe" : "");
+  // Gagal memuat data deskripsi: yang tampil hanya skeleton (judul, baris teks, tombol) + banner
+  const aboutGagal = !cafe || !deskripsiOk;
+  skeletonTombol(deskripsi, aboutGagal);
 
   // ----- RESERVASI -----
   const judulReservasi     = document.getElementById("judul-reservasi");
@@ -310,15 +354,22 @@ async function isiBeranda() {
   isiTeks(judulReservasi, reservasi.judul || c.judul_reservasi);
 
   const deskripsiResOk = isiTeks(deskripsiReservasi, reservasi.deskripsi || c.deskripsi_reservasi);
-  tampilPesan(deskripsiReservasi, "reservasi", !reservasiData || !deskripsiResOk ? "Gagal memuat data reservasi" : "");
+  const reservasiGagal = !reservasiData || !deskripsiResOk;
+  skeletonTombol(deskripsiReservasi, reservasiGagal);
+  if (aboutGagal || reservasiGagal) antrianBanner.push("Gagal Memuat Data Deskripsi");
 
   // Foto dipasang bersamaan, tidak menahan teks
-  await Promise.all([
-    pasangFoto(document.querySelector(".foto-wrap.kiri"),
-      c.gambar_about || c.foto || "", "Tampak depan " + nama),
-    pasangFoto(document.querySelector(".foto-wrap.kanan"),
-      reservasi.foto || c.gambar_reservasi || "", "Area indoor " + nama)
+  const srcAbout     = c.gambar_about || c.foto || "";
+  const srcReservasi = reservasi.foto || c.gambar_reservasi || "";
+  const [fotoAboutOk, fotoReservasiOk] = await Promise.all([
+    pasangFoto(document.querySelector(".foto-wrap.kiri"), srcAbout, "Tampak depan " + nama),
+    pasangFoto(document.querySelector(".foto-wrap.kanan"), srcReservasi, "Area indoor " + nama)
   ]);
+  // Foto gagal dimuat: yang tampil placeholder (diatur pasangFoto) + banner.
+  // Kalau datanya sendiri yang gagal (tidak ada alamat foto), cukup banner data deskripsi.
+  if ((srcAbout && !fotoAboutOk) || (srcReservasi && !fotoReservasiOk)) {
+    antrianBanner.push("Gagal Memuat Foto");
+  }
   
  // ----- JAM OPERASIONAL -----
   const openHours = document.getElementById("open-hours");
@@ -423,6 +474,7 @@ async function isiLokasi() {
 ======================================================= */
 async function tampilkanHero() {
   const carousel = await ambil("/carousel");
+  if (carousel === null) gagalMuat = true;
 
   const judul = document.getElementById("hero-judul");
   const slider = document.getElementById("hero-slider");
@@ -434,22 +486,65 @@ async function tampilkanHero() {
   if (!carousel || carousel.length === 0) {
     judul.textContent = "Café Ácala";
     slider.innerHTML = "";
-    bg.style.backgroundImage = "";
+    bg.innerHTML = "";
     btn.href = "#";
     btn.hidden = true;                  // tidak ada event: tombol detail disembunyikan
     return;
   }
 
   const n = carousel.length;
+  const teksHero = judul.parentElement;
+  const kurangiGerak = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DURASI = 4000;        // jeda otomatis antar event (ms)
+  const DURASI_GESER = 500;   // harus sama dengan transition .slide di style.css
   let i = 0;
   let timer;
+  let sudahTampil = false;
 
-  function render() {
+  // Kartu dibuat SEKALI. Saat pindah, hanya kelas posisinya yang berganti,
+  // sehingga CSS transition membuat kartu bergeser dan bertukar ukuran.
+  slider.innerHTML = carousel.map((data, idx) => `
+    <button type="button" class="slide" data-idx="${idx}" aria-label="${esc(data.nama || "Event")}">
+      <img src="${esc(cariGambar(data) || PLACEHOLDER_FOTO)}" alt="${esc(data.nama || "Event")}" draggable="false">
+    </button>
+  `).join("");
+  const kartu = Array.from(slider.querySelectorAll(".slide"));
+
+  // Posisi kartu terhadap event aktif (i)
+  function kelasPosisi(idx) {
+    const selisih = (idx - i + n) % n;
+    if (selisih === 0) return "tengah";
+    if (n === 2) return "kanan";
+    if (selisih === 1) return "kanan";
+    if (selisih === n - 1) return "kiri";
+    return "sembunyi";                  // cadangan jika event lebih dari 3
+  }
+
+  // Latar: gambar baru ditumpuk di atas lalu di-fade-in; lapisan lama dibuang setelahnya
+  function gantiLatar(url) {
+    const lama = Array.from(bg.querySelectorAll(".hero-bg__layer"));
+    if (!url) { lama.forEach((l) => l.remove()); return; }
+
+    const baru = document.createElement("div");
+    baru.className = "hero-bg__layer";
+    baru.style.backgroundImage = `url("${url}")`;
+    bg.appendChild(baru);
+
+    if (kurangiGerak || !sudahTampil) {
+      baru.classList.add("tampil");
+      lama.forEach((l) => l.remove());
+      return;
+    }
+    void baru.offsetWidth;              // paksa reflow agar transition opacity berjalan
+    baru.classList.add("tampil");
+    setTimeout(() => lama.forEach((l) => l.remove()), DURASI_GESER);
+  }
+
+  function isiTeks() {
     const item = carousel[i];
     judul.textContent = item.nama || "Café Ácala";
-    // Tombol "Lihat Detail Event" menuju bagian event terkait di halaman event.
+    // Tombol "Join the Class" menuju bagian event terkait di halaman event.
     // API /carousel mengirim id event pada field `id` (bukan `id_event`).
-    // Halaman event cukup memberi elemen tiap event atribut id="event-{id}" agar langsung tergulir ke bagiannya.
     const idEvent = item.id ?? item.id_event;
     if (idEvent !== undefined && idEvent !== null && idEvent !== "") {
       const kode = encodeURIComponent(idEvent);
@@ -459,29 +554,41 @@ async function tampilkanHero() {
       btn.href = "#";
       btn.hidden = true;
     }
-
-    const gambarItem = cariGambar(item);
-    bg.style.backgroundImage = gambarItem ? `url("${gambarItem}")` : "";
-
-    const posisi = n === 1
-      ? [["tengah", i]]
-      : [["kiri", (i - 1 + n) % n], ["tengah", i], ["kanan", (i + 1) % n]];
-
-    slider.innerHTML = posisi.map(([kelas, idx]) => {
-      const data = carousel[idx];
-      return `
-        <button class="slide ${kelas}" data-idx="${idx}" aria-label="${esc(data.nama || "Event")}">
-          <img src="${esc(cariGambar(data) || PLACEHOLDER_FOTO)}" alt="${esc(data.nama || "Event")}">
-        </button>
-      `;
-    }).join("");
   }
 
-  const DURASI = 4000;
-  const kurangiGerak = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function render() {
+    // 1) Posisi kartu (bergeser lewat CSS transition)
+    kartu.forEach((el, idx) => {
+      const lama = ["kiri", "tengah", "kanan"].find((k) => el.classList.contains(k));
+      const baru = kelasPosisi(idx);
+      if (lama === baru) return;
+
+      // Kartu yang menyeberang dari kiri ke kanan (atau sebaliknya) lewat di belakang
+      if ((lama === "kiri" && baru === "kanan") || (lama === "kanan" && baru === "kiri")) {
+        el.classList.add("melintas");
+        setTimeout(() => el.classList.remove("melintas"), DURASI_GESER);
+      }
+      el.classList.remove("kiri", "tengah", "kanan", "sembunyi");
+      el.classList.add(baru);
+      if (baru === "tengah") el.setAttribute("aria-current", "true");
+      else el.removeAttribute("aria-current");
+    });
+
+    // 2) Latar (cross-fade) dan teks (fade)
+    gantiLatar(cariGambar(carousel[i]));
+    if (!sudahTampil || kurangiGerak) {
+      isiTeks();
+    } else {
+      teksHero.classList.add("ganti");
+      setTimeout(() => { isiTeks(); teksHero.classList.remove("ganti"); }, 250);
+    }
+    sudahTampil = true;
+  }
 
   function pindah(ke) {
-    i = (ke + n) % n;
+    const tujuan = (ke + n) % n;
+    if (tujuan === i) return;
+    i = tujuan;
     render();
   }
 
@@ -498,6 +605,7 @@ async function tampilkanHero() {
   }
 
   if (n > 1) {
+    // Klik kartu kiri/kanan: kartu itu naik jadi tengah, kartu lain ikut berputar
     slider.addEventListener("click", (e) => {
       const tombol = e.target.closest(".slide");
       if (!tombol || !slider.contains(tombol) || tombol.classList.contains("tengah")) return;
@@ -577,6 +685,7 @@ async function tampilkanSignature() {
   const [menu] = await Promise.all([ambil("/menu?label=signature"), tunggu(800)]);
 
   if (!Array.isArray(menu)) {
+    gagalMuat = true;
     gagalSignature(wadah);
     return;
   }
@@ -634,16 +743,13 @@ function perluSkeletonPenuh() {
 
 async function mulaiBeranda() {
   const body = document.body;
-  const penuh = perluSkeletonPenuh();
-  let skeleton = null;
-  let disembunyikan = [];
+  // Skeleton halaman penuh (navbar + isi + footer) selalu tampil selama data dimuat,
+  // sama seperti halaman lain. Elemennya sudah ada di index.html.
+  const penuh = Boolean(document.getElementById("skel-halaman"));
 
   if (penuh) {
     body.classList.add("memuat-awal");
-    disembunyikan = [...body.children].map(el => [el, el.style.display]);
-    disembunyikan.forEach(([el]) => { el.style.display = "none"; });
-    skeleton = buatSkeleton();
-    body.prepend(skeleton);
+    if (window.AcalaSkeleton) AcalaSkeleton.tampil(); else body.classList.add("skel-aktif");
   }
 
   await Promise.allSettled([
@@ -653,12 +759,18 @@ async function mulaiBeranda() {
     penuh ? tunggu(MIN_SKELETON) : Promise.resolve()
   ]);
 
-  if (penuh) {
-    disembunyikan.forEach(([el, tampil]) => { el.style.display = tampil; });
-    body.classList.remove("memuat-awal");
-    body.classList.add("beranda-siap");
-    skeleton.remove();
+  if (!penuh) { tampilkanAntrianBanner(); return; }
+
+  // Gagal memuat: skeleton tetap tampil, pesan + "Muat ulang" di atasnya
+  if (gagalMuat && window.AcalaSkeleton) {
+    AcalaSkeleton.gagal("Gagal memuat Beranda", () => location.reload());
+    return;
   }
+
+  if (window.AcalaSkeleton) AcalaSkeleton.sembunyi(); else body.classList.remove("skel-aktif");
+  body.classList.remove("memuat-awal");
+  body.classList.add("beranda-siap");
+  tampilkanAntrianBanner();
 }
 
 if (document.readyState === "loading") {

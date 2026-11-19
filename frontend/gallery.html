@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/gallery.css">
 </head>
-<body>
+<body class="skel-aktif">
 
   <!-- Filter garis tepi untuk judul banner (menghilangkan garis tumpang tindih pada font Montserrat variable).
        Ketebalan garis = angka radius. -->
@@ -33,6 +33,11 @@
 
   <!-- Navbar -->
   <header id="navbar" class="nav-acala"></header>
+
+  <!-- Skeleton halaman penuh (navbar + isi + footer): tampil selama data dimuat, dilepas oleh js/skeleton.js -->
+  <div id="skel-halaman" class="skel-halaman" role="status" aria-label="Memuat halaman">
+    <img src="assets/skeleton_gallery.png" width="1440" height="2916" alt="" decoding="async">
+  </div>
 
   <!-- Konten Utama -->
   <main>
@@ -56,6 +61,7 @@
   <!-- Script Pendukung -->
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>
+  <script src="js/skeleton.js"></script>
   <script src="js/gallery.js"></script>
 </body>
 </html>

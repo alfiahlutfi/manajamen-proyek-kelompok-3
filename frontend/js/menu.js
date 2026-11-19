@@ -361,7 +361,7 @@ async function bukaDetailMenu(menuId) {
           errorMsg.style.display = 'none';
           errorMsg.style.opacity = '1';
         }, 300);
-      }, 4000);
+      }, 1000);
     }
   }
 }
@@ -477,10 +477,14 @@ async function muatMenu() {
   tampilkanSkeletonKategori();
   tampilkanSkeletonMenu();
 
+  let gagal = false;   // true -> skeleton halaman dipertahankan di belakang notifikasi gagal
+
   try {
     await new Promise(resolve => setTimeout(resolve, 800));
 
     const rawKategori = await fetchData("/menu-category");
+    // fetchData mengembalikan null bila request gagal -> itu GAGAL, bukan "kategori kosong"
+    if (rawKategori === null) throw new Error("Kategori menu gagal dimuat");
     const listKategori = ambilDaftar(rawKategori);
 
     if (!listKategori || !listKategori.length) {
@@ -495,6 +499,7 @@ async function muatMenu() {
     await Promise.all(
       listKategori.map(async (kat) => {
         const rawMenuPerKat = await fetchData(`/menu?category_id=${kat.id}`);
+        if (rawMenuPerKat === null) throw new Error("Daftar menu gagal dimuat");
         const menuPerKat = ambilDaftar(rawMenuPerKat);
 
         if (Array.isArray(menuPerKat) && menuPerKat.length > 0) {
@@ -537,6 +542,9 @@ async function muatMenu() {
     halamanAktif  = 0;
     tampilkan(false);
 
+    // Data siap: lepas skeleton halaman sebelum menggulir daftar kategori
+    if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();
+
     // Pastikan kategori aktif terlihat di daftar kategori
     if (elKategori) elKategori.querySelector(".aktif")?.scrollIntoView({ block: "nearest" });
 
@@ -544,9 +552,14 @@ async function muatMenu() {
     console.error("Gagal memuat data menu dan kategori:", err);
 
     // KONDISI GAGAL: Pertahankan skeleton di kategori dan grid menu, lalu tampilkan notifikasi sekilas di atas
+    gagal = true;
     tampilkanSkeletonKategori();
     tampilkanSkeletonMenu();
-    tampilkanNotifikasiError("Gagal Memuat Menu");
+    // Skeleton halaman penuh tetap tampil, pesan + "Muat ulang" di atasnya
+    if (window.AcalaSkeleton) AcalaSkeleton.gagal("Gagal memuat Menu", muatMenu);
+  } finally {
+    // Selain gagal (termasuk "belum ada menu"), halaman asli tampil
+    if (!gagal && window.AcalaSkeleton) AcalaSkeleton.sembunyi();
   }
 }
 

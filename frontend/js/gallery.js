@@ -6,7 +6,7 @@
 "use strict";
 
 const GAL_LOGO        = "assets/logo_acala.png";
-const GAL_MIN_SKELETON = 300;                        // ms, supaya skeleton tidak berkedip
+const GAL_MIN_SKELETON = 1000;                        // ms, supaya skeleton tidak berkedip
 const GAL_BATAS_HERO   = 8000;                       // ms, batas tunggu gambar banner
 const GAL_FOTO_AWAL    = 8;                          // foto yang langsung dimuat; sisanya menyusul saat mendekati layar
 
@@ -117,6 +117,7 @@ function pasangFoto(img, url, onSelesai) {
 ======================================================= */
 function tampilkanSkeleton() {
   hapusPesan();
+  if (window.AcalaSkeleton) AcalaSkeleton.tampil();   // skeleton halaman (gambar) tampil lagi saat muat ulang
   elHero.classList.remove("gagal");
   elHero.classList.add("memuat");               // banner putih (skeleton)
   elHero.classList.remove("siap");
@@ -178,6 +179,7 @@ function buatToast(teks, id, onUlang) {
 
 function tampilkanGagal() {
   hapusPesan();
+  if (window.AcalaSkeleton) AcalaSkeleton.tahan();    // skeleton halaman tetap tampil di belakang pesan
   document.body.appendChild(buatToast("Gagal memuat Gallery", "galeri-toast", muatGaleri));
   elArea.setAttribute("aria-busy", "false");
 }
@@ -427,6 +429,7 @@ async function muatGaleri() {
   if (sisa > 0) await tunggu(sisa);
   if (nomor !== nomorMuat) return;
 
+  if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();   // skeleton halaman dilepas, galeri asli tampil
   elHero.classList.remove("memuat");
   elHero.classList.add("siap");                  // memicu animasi zoom banner + judul
   elArea.setAttribute("aria-busy", "false");

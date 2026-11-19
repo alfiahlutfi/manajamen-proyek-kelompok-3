@@ -175,10 +175,10 @@ main { animation: masuk .35s ease both; }
 .btn-hijau {
   display: inline-block;
   padding: 6px 16px;
-  border: 1.5px solid #4cae4c;
+  border: 1.5px solid #2D5F2E;
   border-radius: 4px;
   color: #FFE77B;
-  background: rgba(0,0,0,.35);
+  background: rgba(0,0,0,.30);
   text-decoration: none;
   font-size: 14px;
   transition: background-color 0.25s ease, color 0.25s ease;
@@ -186,24 +186,86 @@ main { animation: masuk .35s ease both; }
 
 .btn-hijau:hover { color: var(--hijau-tua); background-color: transparent; }
 
-/* ========== HERO ========== */
-.hero { position: relative; overflow: hidden; min-height: 460px; padding: 40px 5vw 48px; text-align: center; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 28px; }
-.hero-bg { position: absolute; inset: -20px; background: #2a1d14 center/cover; filter: blur(6px) brightness(.45); transition: background-image .4s; }
-.hero-text, .hero-slider { position: relative; }
-.hero-text h1 { font-family: "Montserrat", sans-serif; font-size: clamp(28px, 5vw, 48px); margin-bottom: 10px; }
-.hero-slider { display: flex; align-items: center; justify-content: center; gap: 16px; width: 100%; max-width: 1100px; }
-.slide { border: 0; padding: 0; background: none; cursor: pointer; flex: 1 1 0; border-radius: 12px; overflow: hidden; }
-.slide img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
-.slide.kiri, .slide.kanan { opacity: .8; }
-.slide.tengah { flex: 1.6 1 0; box-shadow: 0 6px 24px rgba(0,0,0,.6); cursor: default; }
-/* Efek gerak carousel (tambahan saja, tampilan tidak berubah) */
-@keyframes gulir-masuk {
-  from { opacity: 0; transform: translateX(48px); }
+/* ========== HERO ==========
+   Layout: judul + tombol di atas, tiga kartu di bawah (kiri kecil, tengah besar, kanan kecil).
+   Kartu memakai posisi absolut + transition, sehingga saat pindah kartu BERGESER dan
+   BERTUKAR ukuran (bukan diganti isinya). Posisi diatur lewat kelas .kiri / .tengah / .kanan
+   yang dipasang oleh js/beranda.js (tampilkanHero). */
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 430px;
+  padding: 88px 3vw 16px;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
 }
-.hero-slider .slide { animation: gulir-masuk .7s cubic-bezier(.65, 0, .35, 1); }
+
+/* Latar blur: tiap gambar jadi satu lapisan, pergantian = cross-fade */
+.hero-bg { position: absolute; inset: -20px; background: #2a1d14; filter: blur(6px) brightness(.45); }
+.hero-bg__layer {
+  position: absolute; inset: 0;
+  background: center / cover no-repeat;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.hero-bg__layer.tampil { opacity: 1; }
+
+.hero-text, .hero-slider { position: relative; }
+.hero-text { transition: opacity .25s ease; }
+.hero-text.ganti { opacity: 0; }
+.hero-text h1 { font-family: "Montserrat", sans-serif; font-size: clamp(28px, 5vw, 48px); margin-bottom: 10px; font-weight: 700; }
+
+/* Panggung kartu. Proporsi: lebar 955 : tinggi kartu tengah 205 */
+.hero-slider {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: auto;
+  aspect-ratio: 955 / 205;
+}
+
+.hero-slider .slide {
+  position: absolute;
+  bottom: 0;
+  padding: 0;
+  border: 0;
+  background: #1a1a1a;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 2;
+  transition:
+    left .5s cubic-bezier(.65, 0, .35, 1),
+    width .5s cubic-bezier(.65, 0, .35, 1),
+    height .5s cubic-bezier(.65, 0, .35, 1),
+    filter .5s ease,
+    opacity .5s ease,
+    box-shadow .5s ease;
+}
+.hero-slider .slide img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto; }
+
+.hero-slider .slide.kiri   { left: 0;      width: 29.5%; height: 66%; filter: brightness(.7); }
+.hero-slider .slide.tengah { left: 33%;    width: 34.1%; height: 100%; z-index: 3; cursor: default; box-shadow: 0 6px 24px rgba(0, 0, 0, .6); }
+.hero-slider .slide.kanan  { left: 70.6%;  width: 29.4%; height: 66%; filter: brightness(.7); }
+.hero-slider .slide.sembunyi { left: 70.6%; width: 29.4%; height: 66%; opacity: 0; pointer-events: none; }
+/* Kartu yang melintas dari sisi ke sisi lewat di belakang kartu lain */
+.hero-slider .slide.melintas { z-index: 1; }
+.hero-slider .slide.kiri:hover, .hero-slider .slide.kanan:hover { filter: brightness(.9); }
+
+@media (max-width: 700px) {
+  .hero { min-height: 380px; padding-top: 64px; gap: 24px; }
+  .hero-slider { aspect-ratio: 16 / 8; }
+  .hero-slider .slide.kiri   { left: 0;   width: 30%; height: 60%; }
+  .hero-slider .slide.tengah { left: 20%; width: 60%; }
+  .hero-slider .slide.kanan  { left: 70%; width: 30%; height: 60%; }
+  .hero-slider .slide.sembunyi { left: 70%; width: 30%; height: 60%; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-slider .slide { animation: none; }
+  .hero-bg__layer, .hero-text, .hero-slider .slide { transition: none; }
 }
 
 /* ========== TEMBOK BETON (About & Reservasi) ========== */
@@ -569,6 +631,37 @@ body:not(.loading) #skeleton { display: none !important; }
 
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
 
+/* ========== SKELETON HALAMAN PENUH (navbar + isi + footer) ==========
+   Selama body.skel-aktif, navbar, isi <main>, dan footer asli disembunyikan
+   (tinggi 0, lebar tetap supaya JS halaman tetap bisa mengisinya di belakang layar)
+   dan diganti satu gambar skeleton penuh. Dilepas oleh js/skeleton.js. */
+.skel-halaman { display: none; width: 100%; line-height: 0; background: #d6d6d6; }
+.skel-halaman img { display: block; width: 100%; height: auto; animation: skelDenyut 1.2s ease-in-out infinite; }
+body.skel-aktif .skel-halaman { display: block; }
+body.skel-aktif .nav-acala,
+body.skel-aktif main,
+body.skel-aktif .footer-section {
+  height: 0 !important; min-height: 0 !important; overflow: hidden !important;
+  margin: 0 !important; padding: 0 !important; border: 0 !important;
+  visibility: hidden !important; animation: none !important;
+}
+@keyframes skelDenyut { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+@media (prefers-reduced-motion: reduce) { .skel-halaman img { animation: none; } }
+
+/* Pesan gagal memuat (semua halaman): tampil di atas skeleton, dengan tombol Muat ulang */
+.skel-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2100;
+  display: flex; align-items: center; gap: 14px; padding: 12px 26px;
+  background: #FFFDDF; color: #141414; border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  font: 700 14px var(--font); letter-spacing: .08em; text-align: center;
+}
+.skel-toast button {
+  border: 0; background: none; padding: 0; cursor: pointer;
+  font: 600 12px var(--font); color: var(--hijau-tua); text-decoration: underline;
+}
+.skel-toast button:disabled { opacity: .5; cursor: wait; }
+
 /* ========== STATE: LOADING, GAGAL, OFFLINE ========== */
 .skel {
   width: 100%;
@@ -626,11 +719,85 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
   animation: media-shimmer 1.2s infinite linear;
 }
 
+/* Skeleton deskripsi (gagal memuat data), sesuai desain: batang abu-abu #696969, tombol #A1A0A0 */
+#judul-about.skel-teks,
+#judul-reservasi.skel-teks {
+  width: 100%;
+  height: 47px;
+  min-height: 47px;
+  border-radius: 4px;
+  background: #696969;
+  animation: pulse .9s ease-in-out infinite;
+}
+
 #deskripsi.skel-teks,
 #deskripsi-reservasi.skel-teks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 100%;
-  min-height: 6em;
+  min-height: 0;
+  margin-bottom: 27px;
+  background: none;
+  animation: none;
 }
+#deskripsi-reservasi.skel-teks { align-items: flex-end; }
+
+.skel-baris {
+  display: block;
+  height: 19px;
+  border-radius: 4px;
+  background: #696969;
+  animation: pulse .9s ease-in-out infinite;
+}
+.skel-baris:nth-child(1) { width: 94.8%; }
+.skel-baris:nth-child(2) { width: 88%; }
+.skel-baris:nth-child(3) { width: 90.2%; }
+.skel-baris:nth-child(4) { width: 80%; }
+
+.btn-garis.skel-btn,
+.btn-garis.skel-btn:hover {
+  width: 89px;
+  height: 41px;
+  padding: 0;
+  border-color: #A1A0A0;
+  background: #A1A0A0;
+  color: transparent;
+  font-size: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: pulse .9s ease-in-out infinite;
+}
+
+/* Banner merah gagal memuat (data deskripsi / foto): penuh lebar, tepat di bawah navbar */
+#banner-gagal-wadah {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 70px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+.banner-gagal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tinggi-banner, 70px);
+  padding: 0 16px;
+  background: #FF3A3A;
+  color: #FFFFFF;
+  font: 400 clamp(14px, 1.7vw, 24px) / 1.3 var(--font);
+  text-align: center;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.banner-gagal.tampil { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .banner-gagal { transition: none; transform: none; } }
 
 .media-state {
   position: absolute;
@@ -1071,3 +1238,107 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .best-skel__foto, .best-skel__teks { animation: none; }
 }
+
+/* ========== LATAR BERANDA: SATU GAMBAR UTUH ==========
+   Seperti halaman Reservasi: gray.png dipasang SEKALI di body (fixed),
+   section di atasnya dibuat transparan agar tidak ada sambungan/potongan. */
+body.beranda-page {
+  background-color: #D7D5CF;
+  background-image: url("../assets/gray.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+body.beranda-page .tembok,
+body.beranda-page .best-header-wrapper,
+body.beranda-page .lokasi-section {
+  background: transparent;
+}
+
+/* ========== RETAKAN TEMBOK ==========
+   1) Retakan tidak boleh keluar dari section (tidak masuk ke carousel).
+   2) Retakan dilebarkan ke arah luar sampai menyentuh sisi layar;
+      nilai --retak-skala dihitung js/beranda.js (pasangRetakan). */
+body.beranda-page .tembok { overflow: clip; }
+
+.foto-wrap .retak-probe {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  width: 70%;
+  aspect-ratio: 354 / 477;
+  top: -35%;
+}
+.foto-wrap.kiri .retak-probe  { left: -22%; }
+.foto-wrap.kanan .retak-probe { right: -22%; }
+
+body.beranda-page .foto-wrap.kiri::before {
+  transform-origin: right center;
+  transform: scaleX(var(--retak-skala, 1));
+}
+body.beranda-page .foto-wrap.kanan::before {
+  transform-origin: left center;
+  transform: translateX(calc(var(--retak-skala, 1) * 100%)) scaleX(calc(-1 * var(--retak-skala, 1)));
+}
+
+/* ========== JARAK ANTAR BLOK FOTO (About -> Reservasi) ==========
+   Ubah nilai clamp(min, tengah, maks) untuk mengatur lebar jaraknya. */
+body.beranda-page .blok + .blok {
+  margin-top: clamp(90px, 10vw, 170px);
+}
+
+/* ========== NOTIFIKASI KONTAK GAGAL DIMUAT ==========
+   Muncul di atas layar saat ikon kontak ditekan. Ukuran memakai clamp(vw)
+   agar proporsinya sama dengan desain (1440px -> tinggi 105px, teks 35px). */
+.notif-kontak-gagal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  box-sizing: border-box;
+  min-height: clamp(52px, 7.3vw, 105px);
+  padding: 12px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FF3B3B;
+  color: #FFFFFF;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: clamp(15px, 2.43vw, 35px);
+  line-height: 1.2;
+  text-align: center;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .3s ease, opacity .3s ease;
+}
+
+.notif-kontak-gagal.tampil {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notif-kontak-gagal { transition: none; }
+}
+
+/* ========== SKELETON JAM OPERASIONAL (beranda) ==========
+   Memakai potongan bagian jam operasional dari skeleton halaman penuh
+   (assets/skeleton_home.png -> assets/skeleton_jam.png, 1196 x 483). */
+.retak.skel-jam {
+  max-width: none;
+  width: 100%;
+  aspect-ratio: 1196 / 483;
+  padding: 0;
+  border-radius: 0;
+  background: #696969 url("../assets/skeleton_jam.png") center / 100% 100% no-repeat;
+  animation: skelDenyut 1.2s ease-in-out infinite;
+}
+
+/* Isi asli disembunyikan; yang tampil hanya gambar skeleton */
+.retak.skel-jam > .retak-isi { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) { .retak.skel-jam { animation: none; } }
