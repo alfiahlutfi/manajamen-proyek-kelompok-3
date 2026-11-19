@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Login Admin — Café Acala</title>
+  <link rel="icon" href="../assets/logo_acala.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="login-body">
+
+  <!-- Ikon -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><rect x="11" y="6.5" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="16.8" r="1.2" fill="#fff"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0112 5c6.5 0 10.5 7 10.5 7a17 17 0 01-3.2 3.9M6.5 6.7C3.4 8.6 1.5 12 1.5 12S5.5 19 12 19c1.7 0 3.2-.5 4.5-1.2M9.9 9.9a3 3 0 004.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <main class="login">
+
+    <!-- Panel kiri: branding -->
+    <section class="login-brand">
+      <span class="login-brand__circle login-brand__circle--a" aria-hidden="true"></span>
+      <span class="login-brand__circle login-brand__circle--b" aria-hidden="true"></span>
+      <div class="login-brand__center">
+        <img class="login-brand__logo" src="../assets/logo_acala.png" alt="Logo Café Acala">
+        <p class="login-brand__name">Café Acala</p>
+        <p class="login-brand__tag">Panel Pengelolaan Website</p>
+      </div>
+      <p class="login-brand__copy">© 2026 Café Acala</p>
+    </section>
+
+    <!-- Panel kanan: form -->
+    <section class="login-panel">
+      <div class="login-card">
+        <img class="login-card__logo" src="../assets/logo_acala.png" alt="Logo Café Acala">
+        <h1 class="login-card__title">Login Admin</h1>
+        <p class="login-card__sub">Masuk untuk mengelola website Café Acala</p>
+
+        <!-- Pesan hasil login (data salah / akun nonaktif / backend error / setelah logout) -->
+        <div id="loginAlert" class="alert" role="alert" hidden>
+          <svg class="alert__icon" aria-hidden="true"><use id="loginAlertIcon" href="#i-alert"></use></svg>
+          <p class="alert__body">
+            <span id="loginAlertTitle"></span>
+            <span id="loginAlertText"></span>
+          </p>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" class="input"
+                   placeholder="Masukkan username" autocomplete="username"
+                   maxlength="50" autocapitalize="none" spellcheck="false"
+                   aria-describedby="usernameError" aria-invalid="false">
+            <p class="field-error" id="usernameError" hidden>
+              <svg aria-hidden="true"><use href="#i-alert"></use></svg><span></span>
+            </p>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input id="password" name="password" type="password" class="input input--icon"
+                     placeholder="Masukkan password" autocomplete="current-password"
+                     aria-describedby="passwordError" aria-invalid="false">
+              <button type="button" id="togglePassword" class="input-toggle"
+                      aria-label="Tampilkan password" aria-pressed="false">
+                <svg aria-hidden="true"><use href="#i-eye"></use></svg>
+              </button>
+            </div>
+            <p class="field-error" id="passwordError" hidden>
+              <svg aria-hidden="true"><use href="#i-alert"></use></svg><span></span>
+            </p>
+          </div>
+
+          <button type="submit" id="loginBtn" class="btn btn--primary btn--block">
+            <span class="spinner" hidden aria-hidden="true"></span>
+            <span class="btn__label">Login</span>
+          </button>
+        </form>
+
+        <p class="login-card__foot">© 2026 Café Acala</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin_login.js"></script>
+</body>
+</html>

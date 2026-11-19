@@ -1,4 +1,3 @@
-
 /* =======================================================
    PENGATURAN
 ======================================================= */
@@ -298,9 +297,8 @@ async function isiBeranda() {
   const judulAbout = document.getElementById("judul-about");
   const deskripsi  = document.getElementById("deskripsi");
 
-  // Judul: pakai database kalau ada, kalau tidak pertahankan teks statis HTML
-  const judulDb = c.judul_about || c.judul;
-  if (judulAbout && judulDb) judulAbout.textContent = judulDb;
+  // Judul: isi dari database. Kalau kosong/gagal, tampil skeleton teks.
+  isiTeks(judulAbout, c.judul_deskripsi || c.judul_about || c.judul);
 
   const deskripsiOk = isiTeks(deskripsi, c.deskripsi_about || c.deskripsi);
   tampilPesan(deskripsi, "profil", !cafe || !deskripsiOk ? "Gagal memuat profil cafe" : "");
@@ -309,8 +307,7 @@ async function isiBeranda() {
   const judulReservasi     = document.getElementById("judul-reservasi");
   const deskripsiReservasi = document.getElementById("deskripsi-reservasi");
 
-  const judulResDb = reservasi.judul || c.judul_reservasi;
-  if (judulReservasi && judulResDb) judulReservasi.textContent = judulResDb;
+  isiTeks(judulReservasi, reservasi.judul || c.judul_reservasi);
 
   const deskripsiResOk = isiTeks(deskripsiReservasi, reservasi.deskripsi || c.deskripsi_reservasi);
   tampilPesan(deskripsiReservasi, "reservasi", !reservasiData || !deskripsiResOk ? "Gagal memuat data reservasi" : "");
@@ -394,6 +391,14 @@ async function isiLokasi() {
       btnMaps.style.pointerEvents = "none";
       btnMaps.style.opacity = "0.6";
     }
+
+    // BARU: pesan "Gagal membuka Google Maps" (hanya jika data lokasi
+    // berhasil dimuat tetapi link Google Maps-nya kosong / tidak valid)
+    tampilPesan(
+      btnMaps,
+      "maps",
+      lokasi && !linkOk ? "Gagal membuka Google Maps" : ""
+    );
   }
 
   // Peta embed
@@ -401,7 +406,15 @@ async function isiLokasi() {
   const wadahPeta = peta ? peta.parentElement : null;
 
   if (wadahPeta) {
-    await pasangPeta(wadahPeta, peta, mapUrl);
+    const petaOk = await pasangPeta(wadahPeta, peta, mapUrl);
+
+    // BARU: pesan "Gagal memuat peta" di bawah kotak peta.
+    // Alamat dan tombol Maps tidak terpengaruh, tetap tampil.
+    tampilPesan(
+      wadahPeta,
+      "peta",
+      petaOk ? "" : "Gagal memuat peta"
+    );
   }
 }
 
@@ -423,6 +436,7 @@ async function tampilkanHero() {
     slider.innerHTML = "";
     bg.style.backgroundImage = "";
     btn.href = "#";
+    btn.hidden = true;                  // tidak ada event: tombol detail disembunyikan
     return;
   }
 
@@ -433,7 +447,18 @@ async function tampilkanHero() {
   function render() {
     const item = carousel[i];
     judul.textContent = item.nama || "Café Ácala";
-    btn.href = item.id_event ? "event.html?id=" + encodeURIComponent(item.id_event) : "#";
+    // Tombol "Lihat Detail Event" menuju bagian event terkait di halaman event.
+    // API /carousel mengirim id event pada field `id` (bukan `id_event`).
+    // Halaman event cukup memberi elemen tiap event atribut id="event-{id}" agar langsung tergulir ke bagiannya.
+    const idEvent = item.id ?? item.id_event;
+    if (idEvent !== undefined && idEvent !== null && idEvent !== "") {
+      const kode = encodeURIComponent(idEvent);
+      btn.href = `event.html?id=${kode}#event-${kode}`;
+      btn.hidden = false;
+    } else {
+      btn.href = "#";
+      btn.hidden = true;
+    }
 
     const gambarItem = cariGambar(item);
     bg.style.backgroundImage = gambarItem ? `url("${gambarItem}")` : "";
@@ -452,7 +477,7 @@ async function tampilkanHero() {
     }).join("");
   }
 
-  const DURASI = 2000;
+  const DURASI = 4000;
   const kurangiGerak = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function pindah(ke) {
@@ -508,30 +533,74 @@ async function tampilkanHero() {
 /* =======================================================
    SIGNATURE
 ======================================================= */
+const JUMLAH_SKELETON_SIGNATURE = 4;
+
+// Skeleton kartu menu pilihan (bentuk kartu sama dengan aslinya)
+function skeletonSignature(wadah) {
+  wadah.setAttribute("aria-busy", "true");
+  wadah.innerHTML = Array.from({ length: JUMLAH_SKELETON_SIGNATURE }, () => `
+    <div class="best-card best-skel" aria-hidden="true">
+      <div class="best-skel__foto"></div>
+      <div class="best-skel__teks"></div>
+      <div class="best-skel__teks pendek"></div>
+    </div>`).join("");
+}
+
+// Gagal: skeleton TETAP tampil, pesan "Gagal memuat menu" muncul di atasnya.
+function gagalSignature(wadah) {
+  wadah.setAttribute("aria-busy", "false");
+  wadah.querySelector(".best-gagal")?.remove();
+
+  const pesan = document.createElement("div");
+  pesan.className = "best-gagal block-failed";
+  pesan.setAttribute("role", "alert");
+  pesan.innerHTML = `
+    <p class="failed-title">Gagal memuat menu</p>
+    <p class="failed-description">Menu belum dapat ditampilkan. Silakan coba lagi.</p>
+    <button type="button" class="btn-retry">Muat Ulang</button>`;
+  wadah.appendChild(pesan);
+
+  const tombol = pesan.querySelector(".btn-retry");
+  tombol.addEventListener("click", () => {
+    tombol.disabled = true;
+    tampilkanSignature();
+  });
+}
+
 async function tampilkanSignature() {
-  const menu = await ambil("/menu?label=signature");
   const wadah = document.getElementById("best-list");
   if (!wadah) return;
 
+  skeletonSignature(wadah);
+
+  // Skeleton tampil minimal 800 ms supaya tidak berkedip
+  const [menu] = await Promise.all([ambil("/menu?label=signature"), tunggu(800)]);
+
   if (!Array.isArray(menu)) {
-    wadah.textContent = "Menu gagal dimuat.";
+    gagalSignature(wadah);
     return;
   }
 
-  const best = menu.filter(m => m.label === "signature").slice(0, 4);
-  if (best.length === 0) {
+  // Tampilkan SEMUA menu yang dikembalikan API (API sudah membatasi jumlahnya)
+  if (menu.length === 0) {
+    wadah.setAttribute("aria-busy", "false");
     wadah.innerHTML = `<p>Menu signature belum tersedia.</p>`;
     return;
   }
 
-  const sorot = best.length >= 3 ? 2 : 0;
-  wadah.innerHTML = best.map((m, k) => `
-    <a class="best-card${k === sorot ? " sorot" : ""}" href="menu-detail.html?id=${encodeURIComponent(m.id)}">
+  // Klik kartu -> halaman menu dengan kategori menu tersebut langsung aktif
+  wadah.innerHTML = menu.map(m => {
+    const tujuan = m.category_id != null
+      ? `menu.html?kategori=${encodeURIComponent(m.category_id)}`
+      : "menu.html";
+    return `
+    <a class="best-card" href="${tujuan}">
       <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(m.nama || "Menu")}" loading="lazy">
       <h3>${esc(m.nama || "")}</h3>
       <small>${rupiahSingkat(m.harga)}</small>
-    </a>
-  `).join("");
+    </a>`;
+  }).join("");
+  wadah.setAttribute("aria-busy", "false");
 }
 
 /* =======================================================
@@ -575,12 +644,6 @@ async function mulaiBeranda() {
     disembunyikan.forEach(([el]) => { el.style.display = "none"; });
     skeleton = buatSkeleton();
     body.prepend(skeleton);
-  } else {
-    ["judul-about", "deskripsi", "judul-reservasi", "deskripsi-reservasi", "alamat"]
-      .forEach(id => {
-        const el = document.getElementById(id);
-        if (el && !el.textContent.trim()) el.classList.add("skel-teks");
-      });
   }
 
   await Promise.allSettled([
