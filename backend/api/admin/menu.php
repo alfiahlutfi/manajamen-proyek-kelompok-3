@@ -12,8 +12,8 @@
 //   - Tambah : foto wajib, kategori harus aktif, status awal aktif, slug dan urutan dibuat BE.
 //   - Ubah   : foto opsional (tidak dikirim = foto lama tetap), kategori saat ini boleh nonaktif tetapi
 //              kategori nonaktif lain ditolak. label: TIDAK dikirim = tidak diubah, dikirim kosong = dikosongkan.
-//   - Foto   : tahap awal disimpan apa adanya (PNG sungguhan, maks 2 MB); card 14.5.1 menambahkan
-//              pemeriksaan transparansi dan perapian foto.
+//   - Foto   : PNG sungguhan, maks 2 MB, berlatar transparan; area kosong dipangkas dan foto dikecilkan
+//              jika melebihi ukuran maksimum (card 14.5.1, lihat config/foto_menu.php).
 //   - Pengeluaran menu dari menu pilihan beranda saat dinonaktifkan / label diubah dihubungkan di card 14.6.1.
 
 require_once __DIR__ . '/../../config/response.php';
@@ -347,11 +347,12 @@ try {
         respond_error_field(400, 'MNU-4008', 'Data menu tidak lengkap atau tidak valid', $errors);
     }
 
-    // ---- foto (hanya jika dikirim): PNG sungguhan, maks 2 MB ---------------------
+    // ---- foto (hanya jika dikirim): periksa dan rapikan --------------------------
     $pathBaru = null;
     if (foto_dikirim()) {
-        $tmp      = foto_periksa_upload($_FILES['foto']);
-        $pathBaru = foto_simpan($tmp, $nama);   // disimpan apa adanya (14.5.1 menambah perapian)
+        $tmp      = foto_periksa_upload($_FILES['foto']);   // PNG sungguhan, maks 2 MB, dimensi wajar
+        $biner    = foto_rapikan($tmp);                      // latar transparan, pangkas area kosong, kecilkan (card 14.5.1)
+        $pathBaru = foto_simpan($biner, $nama);
     }
 
     try {
