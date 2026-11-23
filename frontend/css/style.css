@@ -352,10 +352,15 @@ main { animation: masuk .35s ease both; }
   position: relative;
   max-width: 900px;
   margin: 0 auto;
-  padding: 80px 10%;
+  padding: 80px clamp(16px, 2.8vw, 40px); /* bukan % dari lebar layar; mengecil sedikit di viewport sempit */
   text-align: center;
   background: #2d5f2e;
   border-radius: 30px;
+}
+
+@media (max-width: 700px) {
+  .retak { padding: 56px 20px; }
+  .retak .jam-grid { gap: 20px 40px; }
 }
 
 .retak-svg, .lampu { display: none; }
@@ -374,25 +379,25 @@ main { animation: masuk .35s ease both; }
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 20px 80px;
+  gap: 20px clamp(24px, 5.5vw, 80px); /* jarak antar jam ikut mengecil agar tetap berdampingan saat zoom */
   text-align: center;
 }
 
 .jam-grid h3 {
   font-family: "Montserrat", sans-serif;
   color: #F5D76E;
-  font-size: 25px;
+  font-size: clamp(16px, 1.74vw, 25px); /* 25px pada layar 1440px; mengecil di viewport sempit (zoom besar) */
   font-weight: 500;
-  letter-spacing: 2px;
+  letter-spacing: 0.08em;
 }
 
 .jam-grid p {
   font-family: "Montserrat", sans-serif;
   color: #F5D76E;
   margin: 8px 0 0;
-  font-size: 18px;
+  font-size: clamp(13px, 1.25vw, 18px);
   font-weight: 400;
-  letter-spacing: 3px;
+  letter-spacing: 0.17em;
 }
 
 /* ========== BEST SELLERS ========== */
@@ -414,7 +419,7 @@ main { animation: masuk .35s ease both; }
 }
 
 .best-card {
-  position: relative; flex: 1 1 0; min-width: 0;
+  position: relative; flex: 0 0 calc((100% - 72px) / 4); min-width: 0; /* 3 jarak x 24px; lebar tetap walau kartu < 4 */
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   text-align: center; padding: 0 8px 24px; color: #111; text-decoration: none;
   transform-origin: 50% 100%;
@@ -427,9 +432,20 @@ main { animation: masuk .35s ease both; }
 }
 .best-card h3 {
   display: flex; align-items: center; justify-content: center;
-  height: 38px; margin: 0; padding: 0 8px; font-size: 16px; line-height: 1.2; font-weight: 500; letter-spacing: 3px;
+  width: 100%; min-width: 0; height: 2.4em; margin: 0; padding: 0 8px;
+  font-size: clamp(12px, 1.15vw, 16px); line-height: 1.2; font-weight: 500; letter-spacing: clamp(1px, 0.2vw, 3px);
 }
-.best-card small { display: flex; margin: 0; font-size: 16px; line-height: 16px; letter-spacing: 1px; }
+/* Nama maksimal 2 baris, sisanya dipotong "..." (nama lengkap ada di atribut title) */
+.best-card h3 span {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2;
+  max-width: 100%; overflow: hidden; overflow-wrap: anywhere; text-align: center;
+}
+/* Harga satu baris, dipotong "..." bila terlalu panjang */
+.best-card small {
+  display: block; max-width: 100%; margin: 0; padding: 0 8px; overflow: hidden;
+  font-size: clamp(12px, 1.15vw, 16px); line-height: 16px; letter-spacing: 1px;
+  white-space: nowrap; text-overflow: ellipsis; text-align: center;
+}
 
 /* Latar kartu: bentuk tetap (kartu ganjil melebar ke bawah, kartu genap melebar ke atas).
    Saat hover hanya warnanya yang berubah jadi kuning. */
@@ -452,10 +468,10 @@ main { animation: masuk .35s ease both; }
   .best { padding: 18px 4vw 28px; }
   .best > p { letter-spacing: 3px; font-size: 14px; margin-bottom: 36px; }
   .best-list { gap: 8px; min-height: 200px; }
-  .best-card { padding: 0 4px 16px; }
+  .best-card { flex-basis: calc((100% - 24px) / 4); padding: 0 4px 16px; } /* 3 jarak x 8px */
   .best-card img { height: 120px; margin-bottom: 18px; }
-  .best-card h3 { height: 30px; font-size: 11px; }
-  .best-card small { font-size: 10px; line-height: 14px; }
+  .best-card h3 { font-size: 11px; padding: 0 4px; letter-spacing: 1px; }
+  .best-card small { font-size: 10px; line-height: 14px; padding: 0 4px; }
   .best-card::before { height: 120px; }
   .best-card:hover, .best-card:focus-visible, .best-card.sorot { transform: scale(1.06); }
 }
@@ -784,7 +800,7 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--tinggi-banner, 70px);
+  min-height: var(--tinggi-banner, 50px);
   padding: 0 16px;
   background: #FF3A3A;
   color: #FFFFFF;
@@ -1216,15 +1232,22 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
 /* ========== OUR SIGNATURE: skeleton & gagal memuat ========== */
 .best-list { position: relative; }
 .best-card.best-skel { pointer-events: none; transform: none; justify-content: flex-end; }
+/* Desain skeleton: foto berupa kotak biru muda berikon gambar, nama & harga berupa balok putih */
 .best-skel__foto {
-  width: 62%; height: 150px; margin-bottom: 22px; border-radius: 10px;
-  background: #9a9a9a; animation: pulse .9s ease-in-out infinite;
+  height: 206px; aspect-ratio: 73 / 123; margin-bottom: 22px; border-radius: 0;
+  background: #E1EEFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 76'%3E%3Ccircle cx='80' cy='14' r='9' fill='%23BBD3F5'/%3E%3Cpath d='M0 76 L34 22 L58 56 L72 40 L100 76 Z' fill='%23BBD3F5'/%3E%3C/svg%3E") center / 58% auto no-repeat;
+  animation: pulse .9s ease-in-out infinite;
 }
 .best-skel__teks {
-  width: 70%; height: 14px; margin-bottom: 8px; border-radius: 4px;
-  background: #9a9a9a; animation: pulse .9s ease-in-out infinite;
+  width: 80%; height: 20px; margin: 9px 0; border-radius: 4px;
+  background: #FFFFFF; animation: pulse .9s ease-in-out infinite;
 }
-.best-skel__teks.pendek { width: 36%; }
+.best-skel__teks.pendek { width: 28%; height: 16px; margin: 0; }
+@media (max-width: 700px) {
+  .best-skel__foto { height: 120px; margin-bottom: 18px; }
+  .best-skel__teks { height: 14px; margin: 8px 0; }
+  .best-skel__teks.pendek { height: 12px; margin: 0; }
+}
 
 .best-list .best-gagal {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3;
@@ -1293,12 +1316,12 @@ body.beranda-page .blok + .blok {
    agar proporsinya sama dengan desain (1440px -> tinggi 105px, teks 35px). */
 .notif-kontak-gagal {
   position: fixed;
-  top: 0;
+  top: 66px; /* diatur ulang lewat JS agar pas di bawah navbar */
   left: 0;
   right: 0;
-  z-index: 10000;
+  z-index: 900; /* di bawah navbar (z-index 1000) */
   box-sizing: border-box;
-  min-height: clamp(52px, 7.3vw, 105px);
+  min-height: clamp(52px, 7.3vw, 50px);
   padding: 12px 5%;
   display: flex;
   align-items: center;

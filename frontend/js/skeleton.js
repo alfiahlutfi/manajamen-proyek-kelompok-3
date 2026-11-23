@@ -2,23 +2,34 @@
    SKELETON HALAMAN PENUH (navbar + isi + footer)
    Dipakai SAMA di semua halaman (Beranda, Menu, Event, Gallery, Reservasi).
 
-   Cara kerja:
-   - <body class="skel-aktif"> + <div id="skel-halaman"> di HTML = skeleton tampil.
-     Navbar, isi <main>, dan footer asli disembunyikan (lihat style.css), tetapi
-     tetap ikut dihitung ukurannya sehingga JS halaman bisa mengisinya di belakang layar.
+   Skeleton TIDAK tampil di awal. Halaman asli langsung terlihat (tanpa jeda kosong).
+   Skeleton baru muncul kalau memang ada gangguan:
+   - pemuatan data lambat (belum selesai setelah LAMBAT_MS), atau
+   - pemuatan gagal (jaringan putus / API error).
+   Kalau data siap sebelum LAMBAT_MS (jaringan lancar), skeleton tidak pernah tampil.
+
+   Cara pakai di HTML: cukup sediakan <div id="skel-halaman"> + muat skeleton.js
+   (body TIDAK perlu diberi class apa pun).
    - Data siap        -> AcalaSkeleton.sembunyi()
    - Pemuatan gagal   -> AcalaSkeleton.gagal("pesan", fungsiMuatUlang):
-                         skeleton tetap tampil, pesan + tombol "Muat ulang" muncul di atasnya.
+                         skeleton langsung tampil, pesan + tombol "Muat ulang" di atasnya.
    ========================================================= */
 "use strict";
 
 (function () {
+  // Pemuatan dianggap lambat bila belum selesai setelah sekian ms; baru saat itu skeleton muncul
+  const LAMBAT_MS = 500;
   // Pengaman: kalau skrip halaman tidak pernah memanggil sembunyi()/gagal(), skeleton dilepas otomatis (ms)
   const BATAS_WAKTU_MS = 15000;
-  let timer = null;
+  let timerLambat = null;
+  let timerBatas = null;
+  let menunggu = false;   // true selama menghitung LAMBAT_MS (skeleton belum tampil)
 
+  const kelas = () => document.body.classList;
+
+  // true selama menunggu data atau saat skeleton tampil
   function aktif() {
-    return document.body.classList.contains("skel-aktif");
+    return menunggu || kelas().contains("skel-aktif");
   }
 
   function hapusPesan() {
@@ -26,27 +37,42 @@
   }
 
   function mulaiPengaman() {
-    clearTimeout(timer);
-    timer = setTimeout(sembunyi, BATAS_WAKTU_MS);
+    clearTimeout(timerBatas);
+    timerBatas = setTimeout(sembunyi, BATAS_WAKTU_MS);
   }
 
-  // Tampilkan skeleton (pemuatan awal atau muat ulang)
+  // Pemuatan lambat atau gagal -> skeleton tampil
+  function munculkan() {
+    clearTimeout(timerLambat);
+    menunggu = false;
+    kelas().add("skel-aktif");
+  }
+
+  // Mulai pemuatan (awal atau muat ulang). Halaman asli tetap terlihat; skeleton baru muncul
+  // kalau melewati LAMBAT_MS. Kalau skeleton sudah tampil (mis. muat ulang setelah gagal), dibiarkan.
   function tampil() {
     hapusPesan();
-    document.body.classList.add("skel-aktif");
+    if (!aktif()) {
+      menunggu = true;
+      clearTimeout(timerLambat);
+      timerLambat = setTimeout(munculkan, LAMBAT_MS);
+    }
     mulaiPengaman();
   }
 
-  // Lepas skeleton: navbar, isi, dan footer asli tampil
+  // Data siap: batalkan hitungan / lepas skeleton, halaman asli tampil
   function sembunyi() {
-    clearTimeout(timer);
+    clearTimeout(timerLambat);
+    clearTimeout(timerBatas);
+    menunggu = false;
     hapusPesan();
-    document.body.classList.remove("skel-aktif");
+    kelas().remove("skel-aktif");
   }
 
-  // Pemuatan gagal: skeleton dipertahankan (tanpa batas waktu)
+  // Pemuatan gagal: skeleton langsung tampil dan dipertahankan (tanpa batas waktu)
   function tahan() {
-    clearTimeout(timer);
+    clearTimeout(timerBatas);
+    munculkan();
   }
 
   // Pemuatan gagal + pesan di atas skeleton. onUlang dipanggil saat "Muat ulang" ditekan.
@@ -71,5 +97,6 @@
 
   window.AcalaSkeleton = { tampil, sembunyi, tahan, gagal, aktif };
 
-  if (aktif()) mulaiPengaman();
+  // Mulai menghitung sejak skrip ini dimuat (halaman yang punya #skel-halaman)
+  if (document.getElementById("skel-halaman")) tampil();
 })();
