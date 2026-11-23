@@ -9,7 +9,6 @@
   const grid = document.getElementById("event-grid");
   if (!grid) return;
 
-  const MIN_SKELETON = 1000;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const HARI = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const BULAN = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
@@ -169,7 +168,6 @@
   async function muat() {
     const saya = ++nomor;
     tampilkanSkeleton();
-    const mulai = Date.now();
     const tujuan = idTujuan();
 
     try {
@@ -179,8 +177,6 @@
       if (!Array.isArray(data)) throw new Error("Format respons tidak sesuai kontrak.");
       data = perbaikiPathGambar(data);
 
-      const sisa = MIN_SKELETON - (Date.now() - mulai);
-      if (sisa > 0) await sleep(sisa);
       if (saya !== nomor) return;
 
       // Lepas skeleton halaman SEBELUM kartu dirender (supaya scroll ke kartu tujuan akurat)
@@ -190,8 +186,6 @@
     } catch (err) {
       if (saya !== nomor) return;
       console.error("Gagal memuat event:", err);
-      const sisa = MIN_SKELETON - (Date.now() - mulai);
-      if (sisa > 0) await sleep(sisa);
       if (saya !== nomor) return;
       // Gagal: skeleton halaman penuh tetap tampil, pesan + "Muat ulang" di atasnya
       if (window.AcalaSkeleton) AcalaSkeleton.gagal("Gagal memuat event", muat);

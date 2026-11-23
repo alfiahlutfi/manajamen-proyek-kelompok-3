@@ -83,10 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
  * Mengembalikan true bila nomor berhasil didapat. ?error=contact untuk simulasi gagal.
  */
 async function MuatNomorWhatsApp() {
-  const gagalKontak = () => {
-    window.kontakGagal = true;
-    return false;
-  };
+  // Status footer (window.kontakGagal) HANYA dikelola js/layout.js. Fungsi ini tidak menyentuhnya,
+  // supaya hasil pemuatan kontak di footer tidak tertimpa (ke true maupun false) dari halaman ini.
+  const gagalKontak = () => false;
 
   if (new URLSearchParams(window.location.search).get('error') === 'contact') return gagalKontak();
   try {
@@ -99,7 +98,6 @@ async function MuatNomorWhatsApp() {
     if (digit.startsWith('0')) digit = '62' + digit.slice(1);
     NOMOR_WA_CAFE = digit;
     InisialisasiFloatingWA();
-    window.kontakGagal = false;
     return true;
   } catch (e) {
     console.warn('Nomor WhatsApp dari API /contact tidak tersedia:', e);

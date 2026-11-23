@@ -278,16 +278,17 @@ async function bukaDetailMenu(menuId) {
   modal.style.display = 'flex';
   modal.setAttribute('aria-hidden', 'false');
   
-  if (skeletonState) skeletonState.setAttribute('style', 'display: block !important; width: 100%;');
+  // Skeleton modal hanya muncul bila data lambat (> 500 ms)
+  if (skeletonState) skeletonState.setAttribute('style', 'display: none !important;');
   if (realContent) realContent.setAttribute('style', 'display: none !important; width: 100%;');
   if (errorMsg) errorMsg.style.display = 'none';
+  const timerSkelModal = setTimeout(() => {
+    if (skeletonState) skeletonState.setAttribute('style', 'display: block !important; width: 100%;');
+  }, 500);
 
   try {
-    // Ambil data dari API dan jalankan penundaan 700ms paralel agar skeleton selalu tampil
-    const [data] = await Promise.all([
-      fetchData(`/menu?id=${menuId}`), //cek
-      new Promise(resolve => setTimeout(resolve, 700))
-    ]);
+    const data = await fetchData(`/menu?id=${menuId}`);
+    clearTimeout(timerSkelModal);
 
     if (!data) throw new Error("Gagal memuat detail menu");
 
@@ -344,6 +345,7 @@ async function bukaDetailMenu(menuId) {
 
   } catch (err) {
     console.error("Gagal memuat detail menu:", err);
+    clearTimeout(timerSkelModal);
 
     const errSkelBadge = document.getElementById('modalDynamicSkeletonBadge');
     if (errSkelBadge) errSkelBadge.remove();
@@ -398,10 +400,6 @@ async function pilihKategori(nama) {
   halamanAktif  = 0;
 
   renderKategori();
-  tampilkanSkeletonMenu();
-
-  await new Promise(resolve => setTimeout(resolve, 800));
-
   tampilkan(true);
 }
 
@@ -473,15 +471,10 @@ function ambilDaftar(respon) {
 }
 
 async function muatMenu() {
-  // Tampilkan skeleton di awal untuk kategori dan menu
-  tampilkanSkeletonKategori();
-  tampilkanSkeletonMenu();
-
+  // Skeleton tidak ditampilkan di awal: skeleton halaman muncul sendiri hanya bila pemuatan lambat/gagal
   let gagal = false;   // true -> skeleton halaman dipertahankan di belakang notifikasi gagal
 
   try {
-    await new Promise(resolve => setTimeout(resolve, 800));
-
     const rawKategori = await fetchData("/menu-category");
     // fetchData mengembalikan null bila request gagal -> itu GAGAL, bukan "kategori kosong"
     if (rawKategori === null) throw new Error("Kategori menu gagal dimuat");

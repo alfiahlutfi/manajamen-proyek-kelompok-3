@@ -27,7 +27,7 @@ const FOOTER_NAV = [
 // Simulasi: tambahkan ?error=contact pada URL.
 // =========================================================
 const PESAN_KONTAK_GAGAL = "Kontak Gagal Dimuat";
-const DURASI_NOTIF_MS = 3000;
+const DURASI_NOTIF_MS = 800;
 let timerNotifKontak = null;
 
 window.kontakGagal = false;
@@ -43,6 +43,10 @@ function tampilkanNotifKontakGagal() {
     notif.textContent = PESAN_KONTAK_GAGAL;
     document.body.appendChild(notif);
   }
+
+  // Tampil tepat di bawah navbar (navbar bersifat sticky di atas layar)
+  const nav = document.querySelector(".nav-acala");
+  notif.style.top = (nav ? Math.round(nav.getBoundingClientRect().bottom) : 0) + "px";
 
   // Reflow agar animasi masuk berjalan ulang bila ikon ditekan berkali-kali
   notif.classList.remove("tampil");

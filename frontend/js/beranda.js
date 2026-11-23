@@ -2,7 +2,6 @@
    PENGATURAN
 ======================================================= */
 const PLACEHOLDER_FOTO = "assets/placeholder.png"; // Placeholder gambar
-const MIN_SKELETON     = 1000;  // Skeleton minimal tampil (ms)
 const BATAS_WAKTU      = 5000;  // Batas tunggu per data / foto / peta (ms)
 
 /* =======================================================
@@ -112,7 +111,7 @@ function tampilkanBanner(teks) {
   banner.addEventListener("click", tutup);
   wadah.appendChild(banner);
   requestAnimationFrame(() => banner.classList.add("tampil"));
-  setTimeout(tutup, 6000);
+  setTimeout(tutup, 800);
 }
 
 function tampilkanAntrianBanner() {
@@ -358,6 +357,9 @@ async function isiBeranda() {
   skeletonTombol(deskripsiReservasi, reservasiGagal);
   if (aboutGagal || reservasiGagal) antrianBanner.push("Gagal Memuat Data Deskripsi");
 
+  // ----- JAM OPERASIONAL -----
+  isiJamOperasional(hours, cafe);
+
   // Foto dipasang bersamaan, tidak menahan teks
   const srcAbout     = c.gambar_about || c.foto || "";
   const srcReservasi = reservasi.foto || c.gambar_reservasi || "";
@@ -370,17 +372,37 @@ async function isiBeranda() {
   if ((srcAbout && !fotoAboutOk) || (srcReservasi && !fotoReservasiOk)) {
     antrianBanner.push("Gagal Memuat Foto");
   }
-  
- // ----- JAM OPERASIONAL -----
+}
+
+/* =======================================================
+   JAM OPERASIONAL
+   Gagal memuat: hanya bagian "Open Hours" yang tampil sebagai skeleton
+   (potongan dari skeleton halaman penuh, assets/skeleton_jam.png) +
+   notifikasi merah "Gagal Memuat Jam Operasional". Bagian lain tetap normal.
+======================================================= */
+function skeletonJam(aktif) {
+  const kotak = document.querySelector(".jam-wrap .retak");
+  if (!kotak) return;
+  kotak.classList.toggle("skel-jam", aktif);
+  if (aktif) kotak.setAttribute("aria-busy", "true");
+  else kotak.removeAttribute("aria-busy");
+}
+
+function isiJamOperasional(hours, cafe) {
   const openHours = document.getElementById("open-hours");
   if (!openHours) return;
 
-  if (!hours || !Array.isArray(hours) || hours.length === 0) {
-    openHours.innerHTML = `<p>Jam operasional gagal dimuat.</p>`;
+  // ?error=jam -> simulasi jam operasional gagal dimuat (untuk pengujian SQA)
+  const simulasiGagal = new URLSearchParams(location.search).get("error") === "jam";
+
+  if (simulasiGagal || !hours || !Array.isArray(hours) || hours.length === 0) {
+    openHours.innerHTML = "";
+    skeletonJam(true);
+    antrianBanner.push("Gagal Memuat Jam Operasional");
     return;
   }
 
-  // Coba filter berdasarkan cafe_id, tetapi jika hasilnya kosong, 
+  // Coba filter berdasarkan cafe_id, tetapi jika hasilnya kosong,
   // gunakan seluruh data jam yang ada agar tetap bisa tampil di web.
   let cafeHours = hours;
   if (cafe && cafe.id) {
@@ -390,10 +412,7 @@ async function isiBeranda() {
     }
   }
 
-  if (cafeHours.length === 0) {
-    openHours.innerHTML = `<p>Jam operasional belum tersedia.</p>`;
-    return;
-  }
+  skeletonJam(false);
 
   openHours.innerHTML = kelompokJam(cafeHours).map(kelompok => `
     <div>
@@ -654,58 +673,52 @@ function skeletonSignature(wadah) {
     </div>`).join("");
 }
 
-// Gagal: skeleton TETAP tampil, pesan "Gagal memuat menu" muncul di atasnya.
-function gagalSignature(wadah) {
-  wadah.setAttribute("aria-busy", "false");
-  wadah.querySelector(".best-gagal")?.remove();
-
-  const pesan = document.createElement("div");
-  pesan.className = "best-gagal block-failed";
-  pesan.setAttribute("role", "alert");
-  pesan.innerHTML = `
-    <p class="failed-title">Gagal memuat menu</p>
-    <p class="failed-description">Menu belum dapat ditampilkan. Silakan coba lagi.</p>
-    <button type="button" class="btn-retry">Muat Ulang</button>`;
-  wadah.appendChild(pesan);
-
-  const tombol = pesan.querySelector(".btn-retry");
-  tombol.addEventListener("click", () => {
-    tombol.disabled = true;
-    tampilkanSignature();
-  });
+// Tampilkan / sembunyikan seluruh bagian Menu Pilihan (judul + kotak hijau)
+function aturBagianSignature(tampil) {
+  document.querySelector(".best-header-wrapper")?.toggleAttribute("hidden", !tampil);
+  document.querySelector("section.best")?.toggleAttribute("hidden", !tampil);
 }
 
 async function tampilkanSignature() {
   const wadah = document.getElementById("best-list");
   if (!wadah) return;
 
-  skeletonSignature(wadah);
+  // Skeleton kartu tidak ditampilkan di awal (skeleton halaman muncul sendiri bila pemuatan lambat).
+  wadah.setAttribute("aria-busy", "true");
 
-  // Skeleton tampil minimal 800 ms supaya tidak berkedip
-  const [menu] = await Promise.all([ambil("/menu?label=signature"), tunggu(800)]);
+  // Hanya menu berlabel "signature". API sudah membatasi jumlahnya (maksimal 4) dan mengurutkannya.
+  const menu = await ambil("/menu?label=signature");
 
+  // Gagal: HANYA bagian Menu Pilihan yang terdampak. Skeleton tampil di bagian ini
+  // + notifikasi merah "Gagal Memuat Menu Pilihan". Bagian beranda lain tetap normal.
   if (!Array.isArray(menu)) {
-    gagalMuat = true;
-    gagalSignature(wadah);
+    aturBagianSignature(true);
+    skeletonSignature(wadah);
+    wadah.setAttribute("aria-busy", "false");
+    antrianBanner.push("Gagal Memuat Menu Pilihan");
     return;
   }
 
-  // Tampilkan SEMUA menu yang dikembalikan API (API sudah membatasi jumlahnya)
+  // Tidak ada menu pilihan: seluruh bagian Menu Pilihan disembunyikan
   if (menu.length === 0) {
+    aturBagianSignature(false);
+    wadah.innerHTML = "";
     wadah.setAttribute("aria-busy", "false");
-    wadah.innerHTML = `<p>Menu signature belum tersedia.</p>`;
     return;
   }
+
+  aturBagianSignature(true);
 
   // Klik kartu -> halaman menu dengan kategori menu tersebut langsung aktif
   wadah.innerHTML = menu.map(m => {
     const tujuan = m.category_id != null
       ? `menu.html?kategori=${encodeURIComponent(m.category_id)}`
       : "menu.html";
+    const nama = m.nama || "";
     return `
-    <a class="best-card" href="${tujuan}">
-      <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(m.nama || "Menu")}" loading="lazy">
-      <h3>${esc(m.nama || "")}</h3>
+    <a class="best-card" href="${tujuan}" title="${esc(nama)}">
+      <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(nama || "Menu")}" loading="lazy">
+      <h3><span>${esc(nama)}</span></h3>
       <small>${rupiahSingkat(m.harga)}</small>
     </a>`;
   }).join("");
@@ -743,20 +756,19 @@ function perluSkeletonPenuh() {
 
 async function mulaiBeranda() {
   const body = document.body;
-  // Skeleton halaman penuh (navbar + isi + footer) selalu tampil selama data dimuat,
-  // sama seperti halaman lain. Elemennya sudah ada di index.html.
+  // Skeleton halaman penuh (navbar + isi + footer) hanya tampil bila data lambat dimuat
+  // (lihat js/skeleton.js). Elemennya sudah ada di index.html.
   const penuh = Boolean(document.getElementById("skel-halaman"));
 
   if (penuh) {
     body.classList.add("memuat-awal");
-    if (window.AcalaSkeleton) AcalaSkeleton.tampil(); else body.classList.add("skel-aktif");
+    if (window.AcalaSkeleton) AcalaSkeleton.tampil();
   }
 
   await Promise.allSettled([
     tampilkanBeranda(),
     tampilkanHero(),
-    tampilkanSignature(),
-    penuh ? tunggu(MIN_SKELETON) : Promise.resolve()
+    tampilkanSignature()
   ]);
 
   if (!penuh) { tampilkanAntrianBanner(); return; }

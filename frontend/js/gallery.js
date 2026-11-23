@@ -6,7 +6,6 @@
 "use strict";
 
 const GAL_LOGO        = "assets/logo_acala.png";
-const GAL_MIN_SKELETON = 1000;                        // ms, supaya skeleton tidak berkedip
 const GAL_BATAS_HERO   = 8000;                       // ms, batas tunggu gambar banner
 const GAL_FOTO_AWAL    = 8;                          // foto yang langsung dimuat; sisanya menyusul saat mendekati layar
 
@@ -402,13 +401,10 @@ async function muatGaleri() {
   const nomor = ++nomorMuat;
   tampilkanSkeleton();
 
-  const mulai = Date.now();
   const data = await fetchData("/gallery");   // null bila gagal
 
   // Gagal: skeleton tetap tampil, pesan "Gagal memuat galeri" di atasnya.
   if (!Array.isArray(data)) {
-    const sisa = GAL_MIN_SKELETON - (Date.now() - mulai);
-    if (sisa > 0) await tunggu(sisa);
     if (nomor !== nomorMuat) return;
     tampilkanGagal();
     return;
@@ -425,8 +421,6 @@ async function muatGaleri() {
   renderGrid();
 
   await Promise.race([heroSiap, tunggu(GAL_BATAS_HERO)]);
-  const sisa = GAL_MIN_SKELETON - (Date.now() - mulai);
-  if (sisa > 0) await tunggu(sisa);
   if (nomor !== nomorMuat) return;
 
   if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();   // skeleton halaman dilepas, galeri asli tampil
