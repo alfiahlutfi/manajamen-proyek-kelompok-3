@@ -17,9 +17,11 @@ const MAX_MENU_PILIHAN = 4;
 const LABEL_MENU       = ['best_seller', 'new', 'signature'];
 
 /**
- * Menu pilihan = menu berstatus aktif pada KATEGORI AKTIF yang kolom label-nya terisi (diatur admin),
- * diurutkan sesuai kolom urutan, maksimal MAX_MENU_PILIHAN.
- * Kategori yang dinonaktifkan admin (card 14.2.1) menyembunyikan menunya dari beranda.
+ * Menu pilihan = menu yang disimpan admin sebagai menu pilihan beranda (tabel menu_pilihan, card 14.6.1),
+ * berstatus aktif, pada KATEGORI AKTIF, diurutkan sesuai kolom urutan lalu id (bukan urutan pemilihan admin),
+ * maksimal MAX_MENU_PILIHAN. Semua menu pilihan berlabel sama, sehingga FE mengambil judul dari label menu pertama.
+ * Kategori yang dinonaktifkan admin (card 14.2.1) hanya menyembunyikan menunya dari beranda; menu tampil lagi
+ * saat kategori diaktifkan. Belum ada menu pilihan tersimpan -> daftar kosong (bukan error).
  * Card 4.4: respons memuat id menu dan id kategori (category_id); field lain tidak berubah.
  */
 function kirim_menu_pilihan(): void
@@ -32,7 +34,8 @@ function kirim_menu_pilihan(): void
     }
 
     $sql = 'SELECT m.id, m.category_id, m.label, m.foto, m.nama, m.harga
-              FROM menu m
+              FROM menu_pilihan p
+              JOIN menu m ON m.id = p.menu_id
               JOIN menu_category c ON c.id = m.category_id AND c.status = \'aktif\'
              WHERE m.status = \'aktif\'
                AND m.label IS NOT NULL';

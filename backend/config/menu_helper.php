@@ -168,3 +168,46 @@ function ambil_menu(PDO $pdo, int $id): ?array
     $r = $stmt->fetch();
     return $r ? bentuk_menu($r) : null;
 }
+
+// ---------------------------------------------------------------------------
+// Menu pilihan beranda (card 14.6.1)
+// ---------------------------------------------------------------------------
+const MENU_PILIHAN_MIN = 1;   // minimal menu pada satu penyimpanan
+const MENU_PILIHAN_MAX = 4;   // maksimal menu pada satu penyimpanan
+
+/** Satu menu dalam bentuk respons + penanda kategori nonaktif (dipakai API admin menu pilihan). */
+function bentuk_menu_pilihan(array $r): array
+{
+    $menu = bentuk_menu($r);
+    $menu['kategori_nonaktif'] = $menu['kategori_status'] === 'nonaktif';
+    return $menu;
+}
+
+/**
+ * Pengaturan menu pilihan beranda: label terpilih (null jika belum pernah disimpan) dan menu terpilih,
+ * urut menurut kolom urutan lalu id (BUKAN urutan pemilihan admin). Menu pada kategori nonaktif tetap
+ * ikut (hanya disembunyikan dari pelanggan) dan ditandai kategori_nonaktif = true.
+ */
+function ambil_pengaturan_menu_pilihan(PDO $pdo): array
+{
+    $label = $pdo->query('SELECT label FROM menu_pilihan_pengaturan WHERE id = 1')->fetchColumn();
+    $rows  = $pdo->query(
+        SQL_SELECT_MENU . ' JOIN menu_pilihan p ON p.menu_id = m.id ORDER BY m.urutan, m.id'
+    )->fetchAll();
+
+    return [
+        'label' => ($label === false || $label === '') ? null : $label,
+        'menu'  => array_map('bentuk_menu_pilihan', $rows),
+    ];
+}
+
+/**
+ * Keluarkan satu menu dari menu pilihan beranda. Dipanggil api/admin/menu.php saat menu dinonaktifkan
+ * atau labelnya diubah/dicabut. Menu TIDAK kembali otomatis saat diaktifkan atau diberi label lagi.
+ * Pakai di dalam transaksi yang sama dengan perubahan menu agar keduanya berhasil atau gagal bersama.
+ */
+function keluarkan_dari_menu_pilihan(PDO $pdo, int $menuId): void
+{
+    $stmt = $pdo->prepare('DELETE FROM menu_pilihan WHERE menu_id = :id');
+    $stmt->execute([':id' => $menuId]);
+}

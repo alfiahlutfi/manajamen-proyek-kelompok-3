@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 16, 2026 at 06:43 AM
+-- Generation Time: Nov 25, 2026 at 01:42 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -99,7 +99,7 @@ CREATE TABLE `cafe` (
 --
 
 INSERT INTO `cafe` (`id`, `deskripsi`, `foto`, `judul_deskripsi`, `judul_reservasi`, `deskripsi_reservasi`, `foto_reservasi`, `alamat`, `link_maps`, `maps_embed_url`, `whatsapp`, `email`, `instagram`, `tiktok`, `updated_at`) VALUES
-(1, 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.png', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 821 626 850 17', 'acalacafe@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-11-13 14:48:48');
+(1, 'Acala Coffee & Eatery adalah coffee & eatery yang berada di kawasan Pasawahan, kaki Gunung Ciremai, sekitar 30 menit dari Cirebon dan 1 jam dari Majalengka. Konsepnya menggabungkan coffee shop, ruang nongkrong, dan tempat untuk bekerja dengan suasana industrial garden. Acala memiliki area indoor, outdoor, dan rooftop dengan daya tarik utama berupa suasana terbuka, pemandangan persawahan, serta Gunung Ciremai.', 'uploads/cafe/gambar-about.png', 'Unfinished Escape', 'Acala Reservation', 'Reservasi dapat dilakukan langsung melalui form di website, sehingga proses booking jadi lebih praktis dan cepat. Kamu bisa memilih meja indoor dengan nuansa hangat atau outdoor dengan atmosfer alami sesuai preferensi.', 'uploads/cafe/gambar-reservasi.png', 'Jl. Pasawahan, Pasawahan, Kec. Pasawahan, Kabupaten Kuningan, Jawa Barat 45559', 'https://maps.app.goo.gl/YJC855MqBPNThfi36', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.7813415546134!2d108.42684257364743!3d-6.796437466467504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f1f4d5b9a85e3%3A0x52857f90ac4c3a82!2sAcala%20Coffee%20%26%20Eatery!5e0!3m2!1sid!2sid!4v1791342172402!5m2!1sid!2sid', '+62 821 626 850 17', 'naulaalfiyatull@gmail.com', 'https://www.instagram.com/acala_cne', 'https://vm.tiktok.com/ZS9DCyE8Ttnvg-zngAg/', '2026-11-22 04:20:11');
 
 -- --------------------------------------------------------
 
@@ -151,7 +151,7 @@ CREATE TABLE `event` (
 INSERT INTO `event` (`id`, `nama`, `slug`, `deskripsi`, `foto`, `tanggal`, `waktu`, `lokasi`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Perpisahan Staff Puskesmas Pasawahan', 'perpisahan-staff-puskesmas-pasawahan', 'Perpisahan memang selalu menyisakan sunyi, tetapi kebersamaan yang telah kita ukir di tempat ini takkan pernah terganti. Langkah baru telah memanggil, namun ruang cerita kita di sini akan selalu abadi. Terima kasih untuk perjuangan dan tawa yang pernah ada.', 'uploads/event/perpisahan-staff-puskesmas.png', '2022-11-28', '10:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:48:25', '2026-11-16 05:00:31'),
 (2, 'Perpisahan Ultras Budi Bhakti', 'perpisahan-ultras-budi-bhakti', 'Solidaritas tidak diukur dari seberapa lama kita bersama, melainkan dari jejak loyalitas dan cerita yang kita bangun bersama. Malam ini tirai ditutup, tetapi semangat dan kenangan persaudaraan ini akan terus hidup. Satu kebersamaan, sejuta cerita.', 'uploads/event/perpisahan-ultras-budi-bhakti.png', '2023-06-07', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:50:16', '2026-11-16 05:00:42'),
-(3, 'Pernikahan Galih dan Vera ', 'pernikahan-galih-dan-vera', 'Perjalanan dua hati kini resmi berpadu dalam satu ikatan suci, ditemani doa hangat dari orang-orang tersayang. Pesta boleh usai, tetapi lembaran baru penuh cinta baru saja dimulai. Selamat merajut masa depan, Galih dan Vera.', 'uploads/event/pernikahan-galih-dan-vera.png', '2023-06-08', '08:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-11-16 05:00:54'),
+(3, 'Pernikahan Galih dan Vera ', 'pernikahan-galih-dan-vera', 'Perjalanan dua hati kini resmi berpadu dalam satu ikatan suci, ditemani doa hangat dari orang-orang tersayang. Pesta boleh usai, tetapi lembaran baru penuh cinta baru saja dimulai. Selamat merajut masa depan, Galih dan Vera.', 'uploads/event/pernikahan-galih-dan-vera.png', '2023-06-08', '08:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-10-07 04:52:32', '2026-11-20 12:21:33'),
 (4, 'Manesa Famiglia', 'manesa-famiglia', 'Rumah terbaik adalah mereka yang selalu ada dalam suka maupun duka. Waktu boleh berganti, namun kehangatan dan canda tawa di lingkaran kecil ini akan selalu menemukan jalannya untuk pulang. Sebuah ikatan tulus, selamanya berbekas.', 'uploads/event/manesa-famiglia.png', '2023-06-08', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 09:35:20', '2026-11-16 05:01:06'),
 (5, 'Keluarga Besar Bidan Puskesmas Krangkeng', 'keluarga-besar-bidan-puskesmas-krangkeng', 'Di balik lelahnya melayani dan menjaga kesehatan sesama, tersimpan tawa dan cerita indah yang kita bagi bersama. Sejenak melepas penat, merajut erat tali silaturahmi yang tak lekang oleh waktu. Tenaga boleh lelah, tapi kenangannya indah.', 'uploads/event/keluarga-besar-bidan-puskesmas-krangkeng.png', '2023-07-16', '14:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 09:35:20', '2026-11-16 05:01:20'),
 (6, 'Imagination Music', 'imagination-music', 'Alunan melodi boleh saja berhenti berdenting, namun resonansi malam penuh kehangatan ini akan tetap tinggal di hati. Menikmati akhir pekan bersama alunan rasa, menyatu dalam harmoni malam yang tak terlupakan.', 'uploads/event/imagination-music.png', '2026-09-19', '20:00:00', 'Acala Cafe & Eatery', 'aktif', '2026-11-06 10:02:09', '2026-11-16 05:01:32'),
@@ -220,7 +220,7 @@ CREATE TABLE `menu` (
 
 INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `foto`, `label`, `urutan`, `status`, `created_at`, `updated_at`) VALUES
 (5, 1, 'Cafe Latte', 'cafe-latte', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 14000, 'uploads/menu/sample.png', 'new', 1, 'aktif', '2026-10-13 07:56:12', '2026-11-04 09:43:25'),
-(6, 1, 'Cappuccino', 'cappuccino', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 16000, 'uploads/menu/sample.png', 'best_seller', 2, 'aktif', '2026-10-13 07:56:12', '2026-11-02 11:28:38'),
+(6, 1, 'Cappuccino', 'cappuccino', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 16000, 'uploads/menu/sample.png', 'best_seller', 2, 'aktif', '2026-10-13 07:56:12', '2026-11-25 00:42:18'),
 (7, 1, 'Mochoccino', 'mochoccino', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 7, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (8, 1, 'Cafe Latte Vanilla', 'cafe-latte-vanilla', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 8, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
 (9, 1, 'Cafe Latte Caramel', 'cafe-latte-caramel', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 18000, 'uploads/menu/sample.png', NULL, 9, 'aktif', '2026-10-13 07:56:12', '2026-11-02 13:54:59'),
@@ -294,7 +294,38 @@ INSERT INTO `menu` (`id`, `category_id`, `nama`, `slug`, `deskripsi`, `harga`, `
 (77, 12, 'Cheese Beef Burger', 'cheese-beef-burger', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 22000, 'uploads/menu/Burger.png', NULL, 74, 'aktif', '2026-10-13 07:56:12', '2026-11-15 12:51:55'),
 (78, 12, 'Cheese Chicken Burger', 'cheese-chicken-burger', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 20000, 'uploads/menu/Burger.png', NULL, 75, 'aktif', '2026-10-13 07:56:12', '2026-11-15 12:52:13'),
 (79, 12, 'Cheese Egg Burger', 'cheese-egg-burger', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi egestas velit nibh, a maximus tortor malesuada quis. Duis et varius est.', 20000, 'uploads/menu/Burger.png', NULL, 76, 'aktif', '2026-10-13 07:56:12', '2026-11-15 12:52:32'),
-(80, 13, 'Lotus Nut Cloudshake', 'lotus-nut-cloudshake', 'Milkshake creamy dengan rasa Biscoff yang rich dan bikin nagih.', 20000, 'uploads/menu/lotus-nut-cloudshake.png', 'signature', 3, 'aktif', '2026-10-19 02:54:01', '2026-11-02 13:58:12');
+(80, 13, 'Lotus Nut Cloudshake', 'lotus-nut-cloudshake', 'Milkshake creamy dengan rasa Biscoff yang rich dan bikin nagih.', 20000, 'uploads/menu/lotus-nut-cloudshake.png', 'signature', 3, 'aktif', '2026-10-19 02:54:01', '2026-11-02 13:58:12'),
+(81, 1, 'Menu Uji 5897938', 'menu-uji-5897938', 'Deskripsi uji menu', 25000, 'uploads/menu/menu-uji-5897938-b1abb94b.png', 'best_seller', 77, 'nonaktif', '2026-11-17 06:29:43', '2026-11-25 01:39:56'),
+(82, 1, 'Menu Uji 7030884', 'menu-uji-7030884', 'Deskripsi uji menu', 25000, 'uploads/menu/menu-uji-7030884-9d12d9be.png', 'best_seller', 78, 'nonaktif', '2026-11-17 06:54:48', '2026-11-25 01:39:56'),
+(83, 2, 'Menu Uji Dua 7030884', 'menu-uji-dua-7030884', 'Tanpa label', 18000, 'uploads/menu/menu-uji-dua-7030884-b1bbeb52.png', NULL, 79, 'nonaktif', '2026-11-17 06:56:32', '2026-11-25 01:39:56'),
+(84, 1, 'Menu Uji Tiga 7030884', 'menu-uji-tiga-7030884', 'Deskripsi uji menu', 25000, 'uploads/menu/menu-uji-tiga-7030884-94dfe7cf.png', NULL, 80, 'nonaktif', '2026-11-17 06:57:09', '2026-11-25 01:39:56'),
+(85, 1, 'Menu Uji 7030884', 'menu-uji-7030884-2', 'Deskripsi uji menu', 25000, 'uploads/menu/menu-uji-7030884-af789833.png', 'best_seller', 81, 'nonaktif', '2026-11-17 07:10:19', '2026-11-25 01:39:56'),
+(86, 2, 'Menu Uji Dua 7030884', 'menu-uji-dua-7030884-2', 'Tanpa label', 18000, 'uploads/menu/menu-uji-dua-7030884-068f5b91.png', NULL, 82, 'nonaktif', '2026-11-17 07:11:04', '2026-11-25 01:39:56'),
+(87, 1, 'Menu Uji Foto 8653469', 'menu-uji-foto-8653469', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-8653469-f5c78424.png', NULL, 83, 'nonaktif', '2026-11-21 02:37:34', '2026-11-25 01:39:56'),
+(88, 1, 'Menu Uji Foto 1151139', 'menu-uji-foto-1151139', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-1151139-66d44df6.png', NULL, 84, 'nonaktif', '2026-11-23 05:19:12', '2026-11-25 01:39:56'),
+(89, 1, 'Menu Uji Foto B 1151139', 'menu-uji-foto-b-1151139', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-1151139-231ba48b.png', NULL, 85, 'nonaktif', '2026-11-23 05:19:17', '2026-11-25 01:39:56'),
+(90, 1, 'Menu Uji Foto 1364311', 'menu-uji-foto-1364311', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-1364311-85f8e014.png', NULL, 86, 'nonaktif', '2026-11-23 05:22:44', '2026-11-25 01:39:56'),
+(91, 1, 'Menu Uji Foto B 1364311', 'menu-uji-foto-b-1364311', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-1364311-0b9459e4.png', NULL, 87, 'nonaktif', '2026-11-23 05:22:49', '2026-11-25 01:39:56'),
+(92, 1, 'Menu Uji Foto 2627820', 'menu-uji-foto-2627820', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-2627820-b59baa7e.png', NULL, 88, 'nonaktif', '2026-11-23 05:43:48', '2026-11-25 01:39:56'),
+(93, 1, 'Menu Uji Foto B 2627820', 'menu-uji-foto-b-2627820', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-2627820-6c051aa8.png', NULL, 89, 'nonaktif', '2026-11-23 05:43:51', '2026-11-25 01:39:56'),
+(94, 1, 'Menu Uji Foto 2920864', 'menu-uji-foto-2920864', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-2920864-2014e361.png', NULL, 90, 'nonaktif', '2026-11-23 05:48:41', '2026-11-25 01:39:56'),
+(95, 1, 'Menu Uji Foto B 2920864', 'menu-uji-foto-b-2920864', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-2920864-c6237469.png', NULL, 91, 'nonaktif', '2026-11-23 05:48:44', '2026-11-25 01:39:56'),
+(96, 1, 'Menu Uji Foto 3025463', 'menu-uji-foto-3025463', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-3025463-a8f3abf7.png', NULL, 92, 'nonaktif', '2026-11-23 05:50:25', '2026-11-25 01:39:56'),
+(97, 1, 'Menu Uji Foto B 3025463', 'menu-uji-foto-b-3025463', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-3025463-71876dfb.png', NULL, 93, 'nonaktif', '2026-11-23 05:50:29', '2026-11-25 01:39:56'),
+(98, 1, 'Menu Uji Foto 3922414', 'menu-uji-foto-3922414', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-3922414-dd204aa1.png', NULL, 94, 'nonaktif', '2026-11-23 06:05:23', '2026-11-25 01:39:56'),
+(99, 1, 'Menu Uji Foto B 3922414', 'menu-uji-foto-b-3922414', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-3922414-f8f596be.png', NULL, 95, 'nonaktif', '2026-11-23 06:05:27', '2026-11-25 01:39:56'),
+(100, 1, 'Menu Uji Foto 4428670', 'menu-uji-foto-4428670', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-4428670-d15e559a.png', NULL, 96, 'nonaktif', '2026-11-23 06:13:49', '2026-11-25 01:39:56'),
+(101, 1, 'Menu Uji Foto B 4428670', 'menu-uji-foto-b-4428670', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-4428670-0db407bd.png', NULL, 97, 'nonaktif', '2026-11-23 06:13:53', '2026-11-25 01:39:56'),
+(102, 1, 'Menu Uji Foto 4985912', 'menu-uji-foto-4985912', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-b-4985912-5bc07da3.png', NULL, 98, 'nonaktif', '2026-11-23 06:23:06', '2026-11-25 01:39:56'),
+(103, 1, 'Menu Uji Foto B 4985912', 'menu-uji-foto-b-4985912', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-4985912-5bc07da3.png', NULL, 99, 'nonaktif', '2026-11-23 06:23:10', '2026-11-25 01:39:56'),
+(104, 1, 'Menu Uji Foto 5100906', 'menu-uji-foto-5100906', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-5100906-0b3275ed.png', NULL, 100, 'nonaktif', '2026-11-23 06:25:01', '2026-11-25 01:39:56'),
+(105, 1, 'Menu Uji Foto B 5100906', 'menu-uji-foto-b-5100906', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-5100906-d0935c57.png', NULL, 101, 'nonaktif', '2026-11-23 06:25:04', '2026-11-23 06:25:05'),
+(106, 1, 'Menu Uji Foto 5393611', 'menu-uji-foto-5393611', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-5393611-e717c632.png', NULL, 102, 'nonaktif', '2026-11-23 06:29:54', '2026-11-23 06:29:58'),
+(107, 1, 'Menu Uji Foto B 5393611', 'menu-uji-foto-b-5393611', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-5393611-5c326780.png', NULL, 103, 'nonaktif', '2026-11-23 06:29:57', '2026-11-23 06:29:58'),
+(108, 1, 'Menu Uji Foto 5534397', 'menu-uji-foto-5534397', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-5534397-ecc79912.png', NULL, 104, 'nonaktif', '2026-11-23 06:32:14', '2026-11-23 06:32:19'),
+(109, 1, 'Menu Uji Foto B 5534397', 'menu-uji-foto-b-5534397', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-5534397-d94e47ba.png', NULL, 105, 'nonaktif', '2026-11-23 06:32:18', '2026-11-23 06:45:02'),
+(110, 1, 'Menu Uji Foto 6420730', 'menu-uji-foto-6420730', 'Uji foto', 26000, 'uploads/menu/menu-uji-foto-6420730-c167f4d0.png', NULL, 106, 'nonaktif', '2026-11-23 06:47:01', '2026-11-23 06:47:05'),
+(111, 1, 'Menu Uji Foto B 6420730', 'menu-uji-foto-b-6420730', 'Uji foto', 25000, 'uploads/menu/menu-uji-foto-b-6420730-dc5c7b9c.png', NULL, 107, 'nonaktif', '2026-11-23 06:47:05', '2026-11-23 06:47:05');
 
 -- --------------------------------------------------------
 
@@ -329,10 +360,60 @@ INSERT INTO `menu_category` (`id`, `nama`, `slug`, `urutan`, `status`, `created_
 (10, 'Snack', 'snack', 10, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
 (11, 'Main Course', 'main-course', 11, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
 (12, 'Light Meal', 'light-meal', 12, 'aktif', '2026-10-07 05:24:56', '2026-10-07 05:24:56'),
-(13, 'Milkshake', 'milkshake', 13, 'aktif', '2026-10-19 02:51:54', '2026-11-15 05:05:28'),
-(14, 'Kategori Uji 9035139', 'kategori-uji-9035139', 14, 'nonaktif', '2026-11-15 05:03:56', '2026-11-16 06:43:17'),
-(15, 'Kategori Uji 9060647', 'kategori-uji-9060647', 15, 'nonaktif', '2026-11-15 05:04:20', '2026-11-16 06:43:26'),
-(16, 'Tanpa Login', 'tanpa-login', 16, 'nonaktif', '2026-11-15 05:05:24', '2026-11-16 06:43:35');
+(13, 'Milkshake', 'milkshake', 13, 'aktif', '2026-10-19 02:51:54', '2026-11-25 00:42:20'),
+(14, 'Kategori Uji 9035139', 'kategori-uji-9035139', 14, 'nonaktif', '2026-11-15 05:03:56', '2026-11-25 01:41:22'),
+(15, 'Kategori Uji 9060647', 'kategori-uji-9060647', 15, 'nonaktif', '2026-11-15 05:04:20', '2026-11-25 01:41:22'),
+(16, 'Tanpa Login', 'tanpa-login', 16, 'nonaktif', '2026-11-15 05:05:24', '2026-11-25 01:41:22'),
+(19, 'Kategori Uji X 5748679', 'kategori-uji-x-5748679', 17, 'nonaktif', '2026-11-17 03:22:28', '2026-11-25 01:41:22'),
+(20, 'Kategori Uji Y 5748679', 'kategori-uji-y-5748679', 18, 'nonaktif', '2026-11-17 03:22:29', '2026-11-25 01:41:22'),
+(21, 'Kategori Uji X 5796934', 'kategori-uji-x-5796934', 19, 'nonaktif', '2026-11-17 03:23:17', '2026-11-25 01:41:22'),
+(22, 'Kategori Uji Y 5796934', 'kategori-uji-y-5796934', 20, 'nonaktif', '2026-11-17 03:23:17', '2026-11-25 01:41:22'),
+(23, 'Kategori Uji X 5897938', 'kategori-uji-x-5897938', 21, 'nonaktif', '2026-11-17 03:25:11', '2026-11-25 01:41:22'),
+(24, 'Kategori Uji Y 5897938', 'kategori-uji-y-5897938', 22, 'nonaktif', '2026-11-17 03:25:26', '2026-11-25 01:41:22'),
+(25, 'Kategori Uji X 7030884', 'kategori-uji-x-7030884', 23, 'nonaktif', '2026-11-17 06:30:31', '2026-11-25 01:41:22'),
+(26, 'Kategori Uji Y 7030884', 'kategori-uji-y-7030884', 24, 'nonaktif', '2026-11-17 06:30:31', '2026-11-25 01:41:22'),
+(27, 'Kategori Uji X 9515670', 'kategori-uji-x-9515670', 25, 'nonaktif', '2026-11-17 07:11:55', '2026-11-25 01:41:22'),
+(28, 'Kategori Uji Y 9515670', 'kategori-uji-y-9515670', 26, 'nonaktif', '2026-11-17 07:11:56', '2026-11-17 07:11:56'),
+(29, 'Kategori Uji X 6483231', 'kategori-uji-x-6483231', 27, 'nonaktif', '2026-11-18 07:23:26', '2026-11-18 07:23:40'),
+(30, 'Kategori Uji W 6483231', 'kategori-uji-w-6483231', 28, 'aktif', '2026-11-18 07:23:46', '2026-11-18 07:23:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_pilihan`
+--
+
+CREATE TABLE `menu_pilihan` (
+  `menu_id` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `menu_pilihan`
+--
+
+INSERT INTO `menu_pilihan` (`menu_id`, `created_at`) VALUES
+(14, '2026-11-25 00:42:19'),
+(80, '2026-11-25 00:42:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_pilihan_pengaturan`
+--
+
+CREATE TABLE `menu_pilihan_pengaturan` (
+  `id` tinyint UNSIGNED NOT NULL,
+  `label` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `menu_pilihan_pengaturan`
+--
+
+INSERT INTO `menu_pilihan_pengaturan` (`id`, `label`, `updated_at`) VALUES
+(1, 'signature', '2026-11-25 00:42:19');
 
 -- --------------------------------------------------------
 
@@ -457,6 +538,18 @@ ALTER TABLE `menu_category`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
+-- Indexes for table `menu_pilihan`
+--
+ALTER TABLE `menu_pilihan`
+  ADD PRIMARY KEY (`menu_id`);
+
+--
+-- Indexes for table `menu_pilihan_pengaturan`
+--
+ALTER TABLE `menu_pilihan_pengaturan`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `operating_hours`
 --
 ALTER TABLE `operating_hours`
@@ -514,13 +607,13 @@ ALTER TABLE `gallery`
 -- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `menu_category`
 --
 ALTER TABLE `menu_category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `operating_hours`
@@ -549,6 +642,12 @@ ALTER TABLE `carousel`
 --
 ALTER TABLE `menu`
   ADD CONSTRAINT `fk_menu_category` FOREIGN KEY (`category_id`) REFERENCES `menu_category` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
+-- Constraints for table `menu_pilihan`
+--
+ALTER TABLE `menu_pilihan`
+  ADD CONSTRAINT `fk_menu_pilihan_menu` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `operating_hours`
