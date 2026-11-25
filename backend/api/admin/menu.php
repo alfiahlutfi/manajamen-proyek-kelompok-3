@@ -14,7 +14,8 @@
 //              kategori nonaktif lain ditolak. label: TIDAK dikirim = tidak diubah, dikirim kosong = dikosongkan.
 //   - Foto   : PNG sungguhan, maks 2 MB, berlatar transparan; area kosong dipangkas dan foto dikecilkan
 //              jika melebihi ukuran maksimum (card 14.5.1, lihat config/foto_menu.php).
-//   - Pengeluaran menu dari menu pilihan beranda saat dinonaktifkan / label diubah dihubungkan di card 14.6.1.
+//   - Menu pilihan beranda (card 14.6.1): menu yang dinonaktifkan, atau yang labelnya diubah/dicabut, otomatis
+//     dikeluarkan dari menu pilihan (dalam transaksi yang sama) dan TIDAK kembali otomatis.
 
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/auth.php';
@@ -227,8 +228,13 @@ if ($method === 'PUT') {
             respond(404, false, 'Menu tidak ditemukan', null, 'MNU-4043');
         }
 
+        $pdo->beginTransaction();
         $stmt = $pdo->prepare('UPDATE menu SET status = :status WHERE id = :id');
         $stmt->execute([':status' => $status, ':id' => $id]);
+        if ($status === 'nonaktif') {
+            keluarkan_dari_menu_pilihan($pdo, $id);   // card 14.6.1: tidak kembali otomatis saat diaktifkan
+        }
+        $pdo->commit();
 
         respond(
             200,
@@ -237,6 +243,9 @@ if ($method === 'PUT') {
             ambil_menu($pdo, $id)
         );
     } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         error_log('[MNU-5011] admin/menu PUT status: ' . $e->getMessage());
         respond(500, false, 'Status menu gagal diubah', null, 'MNU-5011');
     }
@@ -255,7 +264,7 @@ try {
     // Menu yang diubah harus ada (dicek lebih dulu agar 404 tidak tertutup 400)
     $lama = null;
     if ($ubah) {
-        $stmt = $pdo->prepare('SELECT id, category_id, foto FROM menu WHERE id = :id LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, category_id, foto, label FROM menu WHERE id = :id LIMIT 1');
         $stmt->execute([':id' => $id]);
         $lama = $stmt->fetch();
         if (!$lama) {
@@ -396,8 +405,14 @@ try {
                 $set[]           = 'foto = :foto';
                 $params[':foto'] = $pathBaru;
             }
+            $pdo->beginTransaction();
             $stmt = $pdo->prepare('UPDATE menu SET ' . implode(', ', $set) . ' WHERE id = :id');
             $stmt->execute($params);
+            // card 14.6.1: label diubah atau dicabut -> menu keluar dari menu pilihan beranda
+            if ($labelDikirim && $labelBaru !== $lama['label']) {
+                keluarkan_dari_menu_pilihan($pdo, $id);
+            }
+            $pdo->commit();
             $idHasil = $id;
         }
     } catch (Throwable $e) {
