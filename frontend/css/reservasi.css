@@ -402,24 +402,6 @@ body.reservasi-page {
   justify-content: space-between;
 }
 
-.btn-close-rules-toggle {
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  font-weight: 700;
-  color: #1A281E;
-  cursor: pointer;
-  padding: 2px 8px;
-  border-radius: 6px;
-  line-height: 1;
-  transition: all 0.2s ease;
-}
-
-.btn-close-rules-toggle:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-  transform: scale(1.15);
-}
-
 .rules-box-title {
   font-family: "Playfair Display", Georgia, serif;
   font-size: 19px;
@@ -617,61 +599,6 @@ select.form-input-green {
   opacity: 0.75;
   cursor: not-allowed;
   transform: none;
-}
-
-/* Fallback Card WhatsApp */
-.wa-fallback-card {
-  background: rgba(15, 30, 22, 0.65);
-  border: 1px solid rgba(244, 196, 48, 0.3);
-  border-radius: 12px;
-  padding: 16px;
-  margin-top: 20px;
-}
-
-.btn-wa-action {
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-}
-
-.btn-wa-open {
-  background-color: #25D366;
-  color: #FFFFFF;
-}
-
-.btn-wa-open:hover {
-  background-color: #1EBE5D;
-  color: #FFFFFF;
-}
-
-.btn-wa-copy {
-  background-color: #4A5568;
-  color: #FFFFFF;
-}
-
-.btn-wa-copy:hover {
-  background-color: #2D3748;
-}
-
-.wa-message-preview {
-  background: #111E16;
-  border-radius: 6px;
-  padding: 10px 12px;
-  font-family: monospace;
-  font-size: 11px;
-  color: #E2E8F0;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-height: 140px;
-  overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .copy-alert-badge {
@@ -1922,61 +1849,8 @@ body.reservasi-page .nav-acala { font-family: "Montserrat", sans-serif; }
 }
 
 /* ======================================================
-   7. HERO — POLAROID TAMBAHAN (hero-3 & hero-4)
-   Gaya sama dengan polaroid hero yang ada: bingkai putih,
-   bayangan 5px 4px 4px, foto sudut 3px. Koordinat kanvas 1728px.
+   7. HERO — FOTO POLAROID 1 & 2
    ====================================================== */
-.polaroid-frame.hero-polaroid-3,
-.polaroid-frame.hero-polaroid-4 {
-  position: absolute;
-  padding: 0;
-  background: #FFFFFF;
-  border-radius: calc(var(--u) * 10);
-  box-shadow: calc(var(--u) * 5) calc(var(--u) * 4) calc(var(--u) * 4) rgba(0, 0, 0, 0.25);
-  transform-origin: 50% 50%;
-}
-.polaroid-frame.hero-polaroid-3 {
-  left: calc(var(--u) * 905);
-  top: calc(var(--u) * 560);
-  width: calc(var(--u) * 440);
-  height: calc(var(--u) * 360);
-  transform: rotate(-5deg);
-  z-index: 2;
-}
-.polaroid-frame.hero-polaroid-4 {
-  left: calc(var(--u) * 1235);
-  top: calc(var(--u) * 640);
-  width: calc(var(--u) * 420);
-  height: calc(var(--u) * 335);
-  transform: rotate(5.5deg);
-  z-index: 3;
-}
-.hero-polaroid-3 .polaroid-img-crop,
-.hero-polaroid-4 .polaroid-img-crop {
-  position: absolute;
-  left: calc(var(--u) * 20);
-  top: calc(var(--u) * 20);
-  width: calc(var(--u) * 400);
-  height: calc(var(--u) * 262);
-  border-radius: calc(var(--u) * 3);
-  overflow: hidden;
-  background: #1E2A22;
-}
-.hero-polaroid-4 .polaroid-img-crop {
-  width: calc(var(--u) * 380);
-  height: calc(var(--u) * 235);
-}
-.hero-polaroid-3 .polaroid-img-inner,
-.hero-polaroid-4 .polaroid-img-inner {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-@media (max-width: 992px) {
-  .polaroid-frame.hero-polaroid-3,
-  .polaroid-frame.hero-polaroid-4 { display: none; }
-}
 
 /* Foto baru pada polaroid hero 1 & 2: isi penuh jendela foto, tanpa distorsi */
 .polaroid-frame.hero-polaroid-1 .polaroid-img-inner,
@@ -2052,4 +1926,3 @@ body.reservasi-page .nav-acala { font-family: "Montserrat", sans-serif; }
 .skeleton-container { text-align: center; }
 .skeleton-container .polaroid-card { display: inline-block; vertical-align: top; margin: 12px; cursor: default; }
 .skeleton-card { pointer-events: none; }
-.polaroid-placeholder-wrap { width: 100%; }

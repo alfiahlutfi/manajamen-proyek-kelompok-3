@@ -64,16 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   MuatNomorWhatsApp();
 
-  // Muat data dari API. Skeleton halaman penuh dilepas begitu data area berhasil dimuat.
-  // Gagal: skeleton tetap tampil, pesan + "Muat ulang" di atasnya.
-  function muatAwalReservasi() {
-    return MuatDataAreaReservasi().then(() => {
-      if (!window.AcalaSkeleton) return;
-      if (isAreaLoadFailed) AcalaSkeleton.gagal("Gagal memuat data reservasi", muatAwalReservasi);
-      else AcalaSkeleton.sembunyi();
-    });
-  }
-  muatAwalReservasi();
+  // Tiap kartu dimuat sendiri: galeri area, jam operasional (pilihan jam), dan aturan reservasi.
+  // Skeleton / pesan gagal ada di kartu masing-masing, tidak ada skeleton halaman penuh.
+  MuatDataAreaReservasi();
   MuatDataJamOperasional();
   MuatDataAturanReservasi();
 });
@@ -155,13 +148,6 @@ function updateSubmitState() {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-function formatYYYYMMDD(d) {
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
 
 /**
  * Pasang Event Listener Form & Input Real-time
@@ -325,18 +311,6 @@ async function MuatDataAreaReservasi(forceError = false) {
 /**
  * Tangani jika foto area gagal memuat (404/broken) tanpa menghilangkan informasi kartu
  */
-function tanganiErrorFotoPolaroid(imgElement, namaArea) {
-  const wrapper = imgElement.closest('.polaroid-img-wrap');
-  if (wrapper) {
-    wrapper.innerHTML = `
-      <div class="polaroid-placeholder-wrap" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #8A8F88; background: #1A281E; padding: 10px; text-align: center;">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span style="font-size: 11px; margin-top: 6px;">Foto ${namaArea} gagal dimuat</span>
-      </div>
-    `;
-  }
-}
-
 function formatCaptionNama(nama) {
   if (!nama) return '';
   // Potong pada kata "Lantai" agar baris rapi seperti desain referensi

@@ -171,25 +171,24 @@
     const tujuan = idTujuan();
 
     try {
-      const url = BASE_URL + API_MAP["/events"];
-      const json = await Acala.getJSON(url);
-      let data = json && json.data;
-      if (!Array.isArray(data)) throw new Error("Format respons tidak sesuai kontrak.");
-      data = perbaikiPathGambar(data);
+      // Semua request data halaman Event melewati fetchData() di api.js.
+      // fetchData sudah menangani URL endpoint, parsing JSON, validasi respons,
+      // dan perbaikan path gambar.
+      const data = await fetchData("/events");
+
+      if (!Array.isArray(data)) {
+        throw new Error("Gagal mengambil data event atau format respons tidak sesuai kontrak.");
+      }
 
       if (saya !== nomor) return;
 
-      // Lepas skeleton halaman SEBELUM kartu dirender (supaya scroll ke kartu tujuan akurat)
-      if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();
       if (!data.length) return tampilkanKosong();
       tampilkanDaftar(data, tujuan);
     } catch (err) {
       if (saya !== nomor) return;
       console.error("Gagal memuat event:", err);
-      if (saya !== nomor) return;
-      // Gagal: skeleton halaman penuh tetap tampil, pesan + "Muat ulang" di atasnya
-      if (window.AcalaSkeleton) AcalaSkeleton.gagal("Gagal memuat event", muat);
-      else tampilkanGagal();
+      // Gagal: skeleton kartu event tetap tampil, pesan + "Muat Ulang" di atasnya
+      tampilkanGagal();
     }
   }
 

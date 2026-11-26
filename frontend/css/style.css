@@ -144,7 +144,6 @@ main { animation: masuk .35s ease both; }
   justify-content: center;
 }
 
-.nav-acala nav a.highlighted,
 .nav-acala nav a.aktif {
   color: #fce881 !important;
   font-weight: 600 !important;
@@ -363,8 +362,6 @@ main { animation: masuk .35s ease both; }
   .retak .jam-grid { gap: 20px 40px; }
 }
 
-.retak-svg, .lampu { display: none; }
-
 .retak h2 {
   font-family: "Montserrat", sans-serif;
   font-size: clamp(36px, 5vw, 50px);
@@ -460,9 +457,9 @@ main { animation: masuk .35s ease both; }
   -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 194 200' preserveAspectRatio='none'><path d='M22.9 20 L171.1 20 L149.5 180 L44.5 180 Z' fill='black' stroke='black' stroke-width='40' stroke-linejoin='round'/></svg>");
           mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 194 200' preserveAspectRatio='none'><path d='M22.9 20 L171.1 20 L149.5 180 L44.5 180 Z' fill='black' stroke='black' stroke-width='40' stroke-linejoin='round'/></svg>");
 }
-.best-card:hover::before, .best-card:focus-visible::before, .best-card.sorot::before { background: var(--kuning); }
+.best-card:hover::before, .best-card:focus-visible::before { background: var(--kuning); }
 /* Efek pop up: kartu membesar dari dasar, bentuk tidak berubah */
-.best-card:hover, .best-card:focus-visible, .best-card.sorot { transform: scale(1.2); z-index: 2; }
+.best-card:hover, .best-card:focus-visible { transform: scale(1.2); z-index: 2; }
 
 @media (max-width: 700px) {
   .best { padding: 18px 4vw 28px; }
@@ -473,7 +470,7 @@ main { animation: masuk .35s ease both; }
   .best-card h3 { font-size: 11px; padding: 0 4px; letter-spacing: 1px; }
   .best-card small { font-size: 10px; line-height: 14px; padding: 0 4px; }
   .best-card::before { height: 120px; }
-  .best-card:hover, .best-card:focus-visible, .best-card.sorot { transform: scale(1.06); }
+  .best-card:hover, .best-card:focus-visible { transform: scale(1.06); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -503,22 +500,39 @@ main { animation: masuk .35s ease both; }
 .btn-maps { display: inline-block; background: var(--hijau-tua); color: #8EA67E; padding: 10px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 3px; }
 .btn-maps:hover { opacity: 0.9; }
 .lokasi-map { flex: 1.2; display: flex; justify-content: center; }
-.lokasi-map iframe { width: 100%; max-width: 440px; height: 280px; border: 0; border-radius: 18px; display: block; }
+.lokasi-map iframe { width: 100%; max-width: 440px; height: 280px; border: 0; border-radius: 18px; display: none; }
+.lokasi-map.peta-ok iframe { display: block; }
+.lokasi-map.peta-ok .peta-state { display: none; }
 
-.lokasi-map.gagal-foto iframe { display: none; }
+#alamat.skel-teks { min-height: 4.8em; }
 
-.lokasi-map .peta-placeholder {
-  width: 100%;
-  max-width: 440px;
-  height: 280px;
-  padding: 24px;
-  box-sizing: border-box;
-  border-radius: 18px;
-  background: #E5E7EB;
-  object-fit: contain;
-  object-position: center;
-  display: block;
+/* Kotak status peta (kartu Lokasi berdiri sendiri): memuat / gagal memuat / Google Maps tidak dapat diakses */
+.peta-state {
+  box-sizing: border-box; width: 100%; max-width: 440px; height: 280px; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  background: #696969; color: #000; font-family: "Montserrat", sans-serif;
 }
+.peta-state p { margin: 0; }
+.peta-state__judul { font-size: 20px; font-weight: 700; letter-spacing: 4px; line-height: 1.3; }
+.peta-state__sub { font-size: 15px; font-weight: 600; letter-spacing: 3px; line-height: 1.4; }
+.peta-loader { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 52px; }
+.peta-loader i { display: block; animation: pulse .9s ease-in-out infinite; }
+.peta-loader i:first-child { width: 16px; height: 18px; border-radius: 50%; background: #141B34; }
+.peta-loader i:last-child { width: 14px; height: 9px; border-radius: 100% 0 100% 0; background: #3E7A3A; transform: rotate(-30deg); animation-delay: .3s; }
+.peta-state--gagal { gap: 56px; }
+.peta-state--gagal .peta-state__judul { font-size: 20px; font-weight: 400; letter-spacing: 4px; }
+.peta-state--gagal .btn-peta-ulang {
+  border: 0; border-radius: 0; padding: 10px 28px; background: var(--hijau-tua); color: #fff;
+  font: 700 18px/1.4 "Montserrat", sans-serif; letter-spacing: 3px; cursor: pointer;
+}
+.peta-state--gagal .btn-peta-ulang:hover { opacity: .9; }
+.peta-state--gagal .btn-peta-ulang:disabled { opacity: .6; cursor: wait; }
+/* Google Maps tidak dapat diakses: kotak biru muda berikon gambar (banner merah muncul terpisah) */
+.peta-state--akses {
+  border-radius: 18px;
+  background: #E3F1FE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 76'%3E%3Ccircle cx='80' cy='14' r='9' fill='%23C6DDFB'/%3E%3Cpath d='M0 76 L34 22 L58 56 L72 40 L100 76 Z' fill='%23C6DDFB'/%3E%3C/svg%3E") center / 58% auto no-repeat;
+}
+.peta-state--akses > * { display: none; }
 
 /* ========== FOOTER STYLES ========== */
 /* Ukuran memakai clamp(vw) supaya proporsi sama persis di semua lebar layar */
@@ -634,49 +648,7 @@ main { animation: masuk .35s ease both; }
   margin: 0 !important;
 }
 
-/* ========== SKELETON LOADING ========== */
-#skeleton { display: none; width: 100%; background: #d6d6d6; line-height: 0; }
-#skeleton img { width: 100%; height: auto; display: block; animation: pulse 0.5s ease-in-out infinite; }
-
-body.loading .nav-acala,
-body.loading main,
-body.loading .footer-section { display: none !important; }
-
-body.loading #skeleton { display: block !important; }
-body:not(.loading) #skeleton { display: none !important; }
-
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
-
-/* ========== SKELETON HALAMAN PENUH (navbar + isi + footer) ==========
-   Selama body.skel-aktif, navbar, isi <main>, dan footer asli disembunyikan
-   (tinggi 0, lebar tetap supaya JS halaman tetap bisa mengisinya di belakang layar)
-   dan diganti satu gambar skeleton penuh. Dilepas oleh js/skeleton.js. */
-.skel-halaman { display: none; width: 100%; line-height: 0; background: #d6d6d6; }
-.skel-halaman img { display: block; width: 100%; height: auto; animation: skelDenyut 1.2s ease-in-out infinite; }
-body.skel-aktif .skel-halaman { display: block; }
-body.skel-aktif .nav-acala,
-body.skel-aktif main,
-body.skel-aktif .footer-section {
-  height: 0 !important; min-height: 0 !important; overflow: hidden !important;
-  margin: 0 !important; padding: 0 !important; border: 0 !important;
-  visibility: hidden !important; animation: none !important;
-}
-@keyframes skelDenyut { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
-@media (prefers-reduced-motion: reduce) { .skel-halaman img { animation: none; } }
-
-/* Pesan gagal memuat (semua halaman): tampil di atas skeleton, dengan tombol Muat ulang */
-.skel-toast {
-  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2100;
-  display: flex; align-items: center; gap: 14px; padding: 12px 26px;
-  background: #FFFDDF; color: #141414; border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
-  font: 700 14px var(--font); letter-spacing: .08em; text-align: center;
-}
-.skel-toast button {
-  border: 0; background: none; padding: 0; cursor: pointer;
-  font: 600 12px var(--font); color: var(--hijau-tua); text-decoration: underline;
-}
-.skel-toast button:disabled { opacity: .5; cursor: wait; }
 
 /* ========== STATE: LOADING, GAGAL, OFFLINE ========== */
 .skel {
@@ -703,30 +675,6 @@ img.foto-gagal {
   object-fit: cover;
   background: #E5E7EB;
 }
-
-img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
-
-.btn-retry-foto,
-.best-card > .btn-retry-foto {
-  position: absolute;
-  transform: translateX(-50%);
-  z-index: 6;
-  padding: 6px 14px;
-  border-radius: 4px;
-  background: var(--hijau-tua);
-  color: #FFE77B;
-  font-family: var(--font);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  line-height: 1.4;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-}
-
-.btn-retry-foto:hover { opacity: .9; }
-.btn-retry-foto.sedang-memuat { opacity: .7; cursor: wait; pointer-events: none; }
 
 .foto-wrap.memuat img {
   color: transparent;
@@ -804,7 +752,7 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
   padding: 0 16px;
   background: #FF3A3A;
   color: #FFFFFF;
-  font: 400 clamp(14px, 1.7vw, 24px) / 1.3 var(--font);
+  font: 400 clamp(14px, 2.5vw, 36px) / 1.3 var(--font);
   text-align: center;
   cursor: pointer;
   pointer-events: auto;
@@ -877,63 +825,6 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
   color: var(--hijau-tua);
 }
 
-.failed-illustration {
-  position: relative;
-  width: 68px;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid currentColor;
-  border-radius: 16px;
-}
-
-.failed-illustration__shape {
-  position: relative;
-  width: 32px;
-  height: 24px;
-  border: 3px solid currentColor;
-  border-radius: 4px;
-}
-
-.failed-illustration__shape::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 4px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.failed-illustration__shape::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  left: 3px;
-  width: 22px;
-  height: 10px;
-  background: currentColor;
-  clip-path: polygon(0 100%, 40% 0, 65% 65%, 80% 35%, 100% 100%);
-}
-
-.failed-illustration__mark {
-  position: absolute;
-  top: -9px;
-  right: -9px;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  background: #D9534F;
-  color: #fff;
-  font-weight: 700;
-}
-
 .block-failed .failed-title {
   margin: 0;
   font-size: 18px;
@@ -988,14 +879,6 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
 
 .hero .block-failed { min-height: 180px; }
 
-#gagal-cafe,
-#gagal-lokasi {
-  background: var(--latar-tembok);
-  background-size: cover;
-  background-position: center;
-  background-color: #D9D9D9;
-}
-
 #offline {
   position: fixed;
   inset: 0;
@@ -1013,6 +896,10 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
 
 #offline[hidden] {
   display: none !important;
+}
+
+body:has(#offline:not([hidden])) {
+  overflow: hidden;
 }
 
 #offline h1 {
@@ -1137,102 +1024,34 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
 .media-state--failed { pointer-events: auto; }
 .media-state .btn-retry { position: relative; z-index: 1; cursor: pointer; }
 
-.btn-maps.btn-maps-gagal {
-  background-color: #fdf2f2;
-  border: 1.5px solid #f87171;
-  color: #991b1b;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 20px;
-  cursor: default;
-}
-
-.btn-maps.btn-maps-gagal .maps-error-text {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: normal;
-}
-
-/* ERROR STATE - OPERATING HOURS */
-.hours-error {
-  width: 100%;
-  min-height: 270px;
-  box-sizing: border-box;
-  padding: 32px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: #e8e8e8;
-  color: #2d5f2e;
-}
-
-.hours-error-icon {
-  width: 56px;
-  height: 56px;
-  margin-bottom: 20px;
-  color: #2d5f2e;
-}
-
-.hours-error h3 {
-  margin: 0 0 4px;
-  color: #2d5f2e;
-  font-family: inherit;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 3px;
-}
-
-.hours-error p {
-  max-width: 320px;
-  margin: 0 0 22px;
-  color: #2d5f2e;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-  line-height: 1.7;
-}
-
-.hours-reload-btn {
-  padding: 7px 16px;
-  border: 0;
-  border-radius: 0;
-  background: #2d5f2e;
-  color: #fff;
-  font-family: inherit;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-  cursor: pointer;
-}
-
-.hours-reload-btn:hover {
-  background: #1f4722;
-}
-
-@media (max-width: 480px) {
-  .hours-error {
-    min-height: 240px;
-    padding: 28px 16px;
-  }
-
-  .hours-error h3 {
-    font-size: 15px;
-    letter-spacing: 2px;
-  }
-
-  .hours-error p {
-    font-size: 9px;
-    letter-spacing: 1px;
-  }
-}
-
-/* ========== OUR SIGNATURE: skeleton & gagal memuat ========== */
+/* ========== OUR SIGNATURE: gagal memuat ========== */
 .best-list { position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+  .notif-kontak-gagal { transition: none; }
+}
+
+/* ========== SKELETON JAM OPERASIONAL (beranda) ==========
+   Memakai gambar assets/skeleton_jam.png (1196 x 483). */
+.retak.skel-jam {
+  max-width: none;
+  width: 100%;
+  aspect-ratio: 1196 / 483;
+  padding: 0;
+  border-radius: 0;
+  background: #696969 url("../assets/skeleton_jam.png") center / 100% 100% no-repeat;
+  animation: skelDenyut 1.2s ease-in-out infinite;
+}
+
+/* Isi asli disembunyikan; yang tampil hanya gambar skeleton */
+.retak.skel-jam > .retak-isi { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) { .retak.skel-jam { animation: none; } }
+
+/* ========== SKELETON PER KARTU (beranda) ==========
+   Tiap kartu punya skeleton sendiri dan tidak bergantung pada kartu lain:
+   carousel, deskripsi, jam operasional, menu pilihan, lokasi. */
 .best-card.best-skel { pointer-events: none; transform: none; justify-content: flex-end; }
-/* Desain skeleton: foto berupa kotak biru muda berikon gambar, nama & harga berupa balok putih */
 .best-skel__foto {
   height: 206px; aspect-ratio: 73 / 123; margin-bottom: 22px; border-radius: 0;
   background: #E1EEFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 76'%3E%3Ccircle cx='80' cy='14' r='9' fill='%23BBD3F5'/%3E%3Cpath d='M0 76 L34 22 L58 56 L72 40 L100 76 Z' fill='%23BBD3F5'/%3E%3C/svg%3E") center / 58% auto no-repeat;
@@ -1249,119 +1068,27 @@ img.foto-gagal.foto-memuat { animation: pulse .9s ease-in-out infinite; }
   .best-skel__teks.pendek { height: 12px; margin: 0; }
 }
 
-.best-list .best-gagal {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3;
-  width: min(380px, 92%); padding: 22px 20px; border-radius: 16px;
-  background: rgba(45, 95, 46, .94); box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
+/* Carousel: latar biru muda berikon gambar besar + tiga kartu kosong (tengah paling besar) */
+.hero.skel-hero { color: transparent; }
+.hero.skel-hero .hero-bg {
+  inset: 0; filter: none; background-color: #E4F0FE;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 76'%3E%3Ccircle cx='80' cy='14' r='9' fill='%23C6DDFB'/%3E%3Cpath d='M0 76 L34 22 L58 56 L72 40 L100 76 Z' fill='%23C6DDFB'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 50% 50%; background-size: auto 78%;
+  animation: pulse .9s ease-in-out infinite;
 }
-.best-list .best-gagal .failed-title { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 2px; color: #fff; }
-.best-list .best-gagal .failed-description { margin: 0; font-size: 13px; letter-spacing: normal; color: #fff; }
-
+.hero.skel-hero .hero-text { visibility: hidden; }
+.slide-skel {
+  position: absolute; bottom: 0; box-sizing: border-box; border: 1px solid #000; border-radius: 0;
+  background: #E4F0FE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 76'%3E%3Ccircle cx='80' cy='14' r='9' fill='%23C6DDFB'/%3E%3Cpath d='M0 76 L34 22 L58 56 L72 40 L100 76 Z' fill='%23C6DDFB'/%3E%3C/svg%3E") center / 60% auto no-repeat;
+}
+.slide-skel.kiri   { left: 0;     width: 29.5%; height: 66%; }
+.slide-skel.tengah { left: 33%;   width: 34.1%; height: 100%; z-index: 3; }
+.slide-skel.kanan  { left: 70.6%; width: 29.4%; height: 66%; }
+@media (max-width: 700px) {
+  .slide-skel.kiri   { left: 0;   width: 30%; height: 60%; }
+  .slide-skel.tengah { left: 20%; width: 60%; }
+  .slide-skel.kanan  { left: 70%; width: 30%; height: 60%; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .best-skel__foto, .best-skel__teks { animation: none; }
+  .best-skel__foto, .best-skel__teks, .hero.skel-hero .hero-bg, .peta-loader i { animation: none; }
 }
-
-/* ========== LATAR BERANDA: SATU GAMBAR UTUH ==========
-   Seperti halaman Reservasi: gray.png dipasang SEKALI di body (fixed),
-   section di atasnya dibuat transparan agar tidak ada sambungan/potongan. */
-body.beranda-page {
-  background-color: #D7D5CF;
-  background-image: url("../assets/gray.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-body.beranda-page .tembok,
-body.beranda-page .best-header-wrapper,
-body.beranda-page .lokasi-section {
-  background: transparent;
-}
-
-/* ========== RETAKAN TEMBOK ==========
-   1) Retakan tidak boleh keluar dari section (tidak masuk ke carousel).
-   2) Retakan dilebarkan ke arah luar sampai menyentuh sisi layar;
-      nilai --retak-skala dihitung js/beranda.js (pasangRetakan). */
-body.beranda-page .tembok { overflow: clip; }
-
-.foto-wrap .retak-probe {
-  position: absolute;
-  visibility: hidden;
-  pointer-events: none;
-  width: 70%;
-  aspect-ratio: 354 / 477;
-  top: -35%;
-}
-.foto-wrap.kiri .retak-probe  { left: -22%; }
-.foto-wrap.kanan .retak-probe { right: -22%; }
-
-body.beranda-page .foto-wrap.kiri::before {
-  transform-origin: right center;
-  transform: scaleX(var(--retak-skala, 1));
-}
-body.beranda-page .foto-wrap.kanan::before {
-  transform-origin: left center;
-  transform: translateX(calc(var(--retak-skala, 1) * 100%)) scaleX(calc(-1 * var(--retak-skala, 1)));
-}
-
-/* ========== JARAK ANTAR BLOK FOTO (About -> Reservasi) ==========
-   Ubah nilai clamp(min, tengah, maks) untuk mengatur lebar jaraknya. */
-body.beranda-page .blok + .blok {
-  margin-top: clamp(90px, 10vw, 170px);
-}
-
-/* ========== NOTIFIKASI KONTAK GAGAL DIMUAT ==========
-   Muncul di atas layar saat ikon kontak ditekan. Ukuran memakai clamp(vw)
-   agar proporsinya sama dengan desain (1440px -> tinggi 105px, teks 35px). */
-.notif-kontak-gagal {
-  position: fixed;
-  top: 66px; /* diatur ulang lewat JS agar pas di bawah navbar */
-  left: 0;
-  right: 0;
-  z-index: 900; /* di bawah navbar (z-index 1000) */
-  box-sizing: border-box;
-  min-height: clamp(52px, 7.3vw, 50px);
-  padding: 12px 5%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #FF3B3B;
-  color: #FFFFFF;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  font-size: clamp(15px, 2.43vw, 35px);
-  line-height: 1.2;
-  text-align: center;
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform .3s ease, opacity .3s ease;
-}
-
-.notif-kontak-gagal.tampil {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .notif-kontak-gagal { transition: none; }
-}
-
-/* ========== SKELETON JAM OPERASIONAL (beranda) ==========
-   Memakai potongan bagian jam operasional dari skeleton halaman penuh
-   (assets/skeleton_home.png -> assets/skeleton_jam.png, 1196 x 483). */
-.retak.skel-jam {
-  max-width: none;
-  width: 100%;
-  aspect-ratio: 1196 / 483;
-  padding: 0;
-  border-radius: 0;
-  background: #696969 url("../assets/skeleton_jam.png") center / 100% 100% no-repeat;
-  animation: skelDenyut 1.2s ease-in-out infinite;
-}
-
-/* Isi asli disembunyikan; yang tampil hanya gambar skeleton */
-.retak.skel-jam > .retak-isi { visibility: hidden; }
-
-@media (prefers-reduced-motion: reduce) { .retak.skel-jam { animation: none; } }

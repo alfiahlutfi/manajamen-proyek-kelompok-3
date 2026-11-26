@@ -183,8 +183,18 @@ async function fetchData(endpoint) {
         url += (url.includes("?") ? "&" : "?") + queryString;
     }
 
+    // Timeout cukup longgar untuk koneksi lambat seperti Fast 3G / Slow 3G.
+    // Request tidak dibatalkan hanya karena respons membutuhkan lebih dari 1 detik.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
+
     try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+            signal: controller.signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        });
 
         if (!res.ok) {
             console.warn(`API ${fileName} merespon status HTTP ${res.status}`);
@@ -193,8 +203,11 @@ async function fetchData(endpoint) {
 
         const json = await res.json();
 
-        if (!json.success) {
-            console.warn(`API ${fileName} mengembalikan pesan gagal:`, json.message);
+        if (!json || !json.success) {
+            console.warn(
+                `API ${fileName} mengembalikan pesan gagal:`,
+                json && json.message ? json.message : "Format respons tidak valid."
+            );
             return null;
         }
 
@@ -211,7 +224,13 @@ async function fetchData(endpoint) {
 
         return data;
     } catch (err) {
-        console.error(`Gagal koneksi ke endpoint ${endpoint}:`, err);
+        if (err && err.name === "AbortError") {
+            console.error(`Request API ${endpoint} melewati batas waktu 30 detik.`);
+        } else {
+            console.error(`Gagal koneksi ke endpoint ${endpoint}:`, err);
+        }
         return null;
+    } finally {
+        clearTimeout(timer);
     }
 }

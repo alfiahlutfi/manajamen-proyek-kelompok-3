@@ -6,16 +6,17 @@
 const PER_PAGE      = 6;                        // 6 produk per halaman
 const FALLBACK_IMG  = "assets/cafe-latte.png";  // Gambar fallback
 
-const ENDPOINT_MENU = "/menu";
 const FOLDER_GAMBAR = "assets/";
 
 const elKategori = document.getElementById("kategori-list");
 const elGrid     = document.getElementById("menu-grid");
 const elPager    = document.getElementById("menu-pager");
 
-let semuaMenu     = [];     
-let daftarKat     = [];     
+let listKategori  = [];     // [{ id, nama }] dari /menu-category
+let daftarKat     = [];     // nama kategori (urutan sidebar)
+let menuPerKat    = {};     // cache: nama kategori -> daftar menu (dimuat saat kategori dibuka)
 let kategoriAktif = "";
+let nomorMuatGrid = 0;      // mencegah hasil lama menimpa permintaan baru
 let halamanAktif  = 0;
 
 // ======================================================
@@ -77,7 +78,7 @@ function normalisasi(m) {
 }
 
 function jumlahHalaman() {
-  const total = semuaMenu.filter(m => m.kategori === kategoriAktif).length;
+  const total = (menuPerKat[kategoriAktif] || []).length;
   return Math.max(1, Math.ceil(total / PER_PAGE));
 }
 
@@ -103,6 +104,27 @@ function tampilkanSkeletonMenu() {
   elGrid.innerHTML = skeletonHTML;
 }
 
+// Pesan gagal di dalam kartu grid menu; skeleton kartu tetap tampil di bawahnya.
+function tampilkanGagalGrid(teks, onUlang) {
+  if (!elGrid) return;
+  tampilkanSkeletonMenu();
+  if (elPager) elPager.innerHTML = "";
+
+  const pesan = document.createElement("div");
+  pesan.className = "menu-gagal";
+  pesan.setAttribute("role", "alert");
+  pesan.style.cssText = "grid-column:1/-1; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; padding:12px 16px; background:#FF3A3A; color:#fff; font-weight:600; border-radius:12px;";
+  const span = document.createElement("span");
+  span.textContent = teks;
+  const tombol = document.createElement("button");
+  tombol.type = "button";
+  tombol.textContent = "Muat Ulang";
+  tombol.style.cssText = "border:0; border-radius:6px; padding:6px 16px; background:#fff; color:#FF3A3A; font-weight:700; cursor:pointer;";
+  tombol.addEventListener("click", () => { tombol.disabled = true; onUlang(); });
+  pesan.append(span, tombol);
+  elGrid.prepend(pesan);
+}
+
 function tampilkanSkeletonKategori() {
   if (!elKategori) return;
   let skelKatHTML = "";
@@ -112,42 +134,6 @@ function tampilkanSkeletonKategori() {
     `;
   }
   elKategori.innerHTML = skelKatHTML;
-}
-
-function tampilkanNotifikasiError(pesan) {
-  let banner = document.getElementById('top-error-notification');
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'top-error-notification';
-    banner.style.cssText = `
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100%);
-      width: 90%;
-      max-width: 400px;
-      background-color: #d9534f;
-      color: white;
-      text-align: center;
-      padding: 12px 20px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 14px;
-      z-index: 999999;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-      transition: transform 0.3s ease-in-out;
-    `;
-    document.body.appendChild(banner);
-  }
-  
-  banner.textContent = pesan;
-  banner.style.transform = 'translateX(-50%) translateY(0)';
-
-  // Notifikasi muncul sekilas, lalu bergeser ke atas setelah 4 detik
-  setTimeout(() => {
-    banner.style.transform = 'translateX(-50%) translateY(-150%)';
-  }, 4000);
 }
 
 function renderKategori() {
@@ -162,7 +148,7 @@ function renderKategori() {
 
 function renderProduk(animasi = false) {
   if (!elGrid) return;
-  const items = semuaMenu.filter(m => m.kategori === kategoriAktif);
+  const items = menuPerKat[kategoriAktif] || [];
   const mulai = halamanAktif * PER_PAGE;
   const tampil = items.slice(mulai, mulai + PER_PAGE);
 
@@ -400,7 +386,7 @@ async function pilihKategori(nama) {
   halamanAktif  = 0;
 
   renderKategori();
-  tampilkan(true);
+  await muatGridKategori(true);
 }
 
 if (elKategori) {
@@ -470,90 +456,86 @@ function ambilDaftar(respon) {
   return null;
 }
 
-async function muatMenu() {
-  // Skeleton tidak ditampilkan di awal: skeleton halaman muncul sendiri hanya bila pemuatan lambat/gagal
-  let gagal = false;   // true -> skeleton halaman dipertahankan di belakang notifikasi gagal
+// Grid menu = kartu sendiri: dimuat per kategori. Skeleton grid hanya tampil selama menu kategori
+// yang dibuka belum tiba; sidebar kategori tidak ikut berubah.
+async function muatGridKategori(animasi = false) {
+  const nama = kategoriAktif;
+  const kat  = listKategori.find(k => k.nama === nama);
+  const saya = ++nomorMuatGrid;
+  if (!kat) return;
 
-  try {
-    const rawKategori = await fetchData("/menu-category");
-    // fetchData mengembalikan null bila request gagal -> itu GAGAL, bukan "kategori kosong"
-    if (rawKategori === null) throw new Error("Kategori menu gagal dimuat");
-    const listKategori = ambilDaftar(rawKategori);
-
-    if (!listKategori || !listKategori.length) {
-      elGrid.innerHTML = '<p class="menu-status" style="grid-column:1/-1; text-align:center; padding:40px;">Kategori menu belum tersedia.</p>';
-      return;
-    }
-
-    daftarKat = listKategori.map(kat => kat.nama);
-
-    let semuaMenuGabungan = [];
-
-    await Promise.all(
-      listKategori.map(async (kat) => {
-        const rawMenuPerKat = await fetchData(`/menu?category_id=${kat.id}`);
-        if (rawMenuPerKat === null) throw new Error("Daftar menu gagal dimuat");
-        const menuPerKat = ambilDaftar(rawMenuPerKat);
-
-        if (Array.isArray(menuPerKat) && menuPerKat.length > 0) {
-          const normalized = menuPerKat.map(m => {
-            const itemNorm = normalisasi(m);
-            itemNorm.kategori = kat.nama;
-            return itemNorm;
-          });
-          semuaMenuGabungan = semuaMenuGabungan.concat(normalized);
-        }
-      })
-    );
-
-    semuaMenu = semuaMenuGabungan;
-
-    if (!daftarKat.length) {
-      elGrid.innerHTML = '<p class="menu-status" style="grid-column:1/-1; text-align:center; padding:40px;">Menu belum tersedia.</p>';
-      return;
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const kategoriDariUrl = urlParams.get('kategori');
-
-    // Parameter ?kategori= boleh berisi ID kategori (dari kartu Signature di beranda)
-    // atau nama kategori. ID dicocokkan lebih dulu, lalu nama.
-    let kategoriTujuan = "";
-    if (kategoriDariUrl) {
-      const cocok =
-        listKategori.find(k => String(k.id) === kategoriDariUrl) ||
-        listKategori.find(k => k.nama === kategoriDariUrl);
-      if (cocok) kategoriTujuan = cocok.nama;
-    }
-
-    if (kategoriTujuan && daftarKat.includes(kategoriTujuan)) {
-      kategoriAktif = kategoriTujuan;
-    } else if (!kategoriAktif || !daftarKat.includes(kategoriAktif)) {
-      kategoriAktif = daftarKat[0] || ""; 
-    }
-    
-    halamanAktif  = 0;
-    tampilkan(false);
-
-    // Data siap: lepas skeleton halaman sebelum menggulir daftar kategori
-    if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();
-
-    // Pastikan kategori aktif terlihat di daftar kategori
-    if (elKategori) elKategori.querySelector(".aktif")?.scrollIntoView({ block: "nearest" });
-
-  } catch (err) {
-    console.error("Gagal memuat data menu dan kategori:", err);
-
-    // KONDISI GAGAL: Pertahankan skeleton di kategori dan grid menu, lalu tampilkan notifikasi sekilas di atas
-    gagal = true;
-    tampilkanSkeletonKategori();
-    tampilkanSkeletonMenu();
-    // Skeleton halaman penuh tetap tampil, pesan + "Muat ulang" di atasnya
-    if (window.AcalaSkeleton) AcalaSkeleton.gagal("Gagal memuat Menu", muatMenu);
-  } finally {
-    // Selain gagal (termasuk "belum ada menu"), halaman asli tampil
-    if (!gagal && window.AcalaSkeleton) AcalaSkeleton.sembunyi();
+  // Sudah pernah dimuat: langsung tampil
+  if (menuPerKat[nama]) {
+    tampilkan(animasi);
+    return;
   }
+
+  tampilkanSkeletonMenu();
+  if (elPager) elPager.innerHTML = "";
+  elGrid.setAttribute("aria-busy", "true");
+
+  const rawMenu = await fetchData(`/menu?category_id=${kat.id}`);
+  if (saya !== nomorMuatGrid) return;   // pengguna sudah pindah kategori
+  elGrid.setAttribute("aria-busy", "false");
+
+  // fetchData mengembalikan null bila request gagal -> itu GAGAL, bukan "kategori kosong"
+  const daftar = rawMenu === null ? null : ambilDaftar(rawMenu);
+  if (!Array.isArray(daftar)) {
+    tampilkanGagalGrid("Gagal memuat menu", () => muatGridKategori(true));
+    return;
+  }
+
+  menuPerKat[nama] = daftar.map(m => {
+    const itemNorm = normalisasi(m);
+    itemNorm.kategori = nama;
+    return itemNorm;
+  });
+  tampilkan(animasi);
+}
+
+// Sidebar kategori = kartu sendiri. Gagal: skeleton sidebar + skeleton grid tetap tampil,
+// pesan + "Muat Ulang" di grid (grid tidak tahu kategori mana yang harus dimuat).
+async function muatMenu() {
+  tampilkanSkeletonKategori();
+  tampilkanSkeletonMenu();
+  if (elPager) elPager.innerHTML = "";
+  menuPerKat = {};
+
+  const rawKategori = await fetchData("/menu-category");
+  const listKat = rawKategori === null ? null : ambilDaftar(rawKategori);
+
+  if (!Array.isArray(listKat)) {
+    console.error("Gagal memuat kategori menu");
+    tampilkanGagalGrid("Gagal memuat menu", muatMenu);
+    return;
+  }
+
+  if (!listKat.length) {
+    elKategori.innerHTML = "";
+    elGrid.innerHTML = '<p class="menu-status" style="grid-column:1/-1; text-align:center; padding:40px;">Kategori menu belum tersedia.</p>';
+    return;
+  }
+
+  listKategori = listKat.map(k => ({ id: k.id, nama: k.nama }));
+  daftarKat = listKategori.map(k => k.nama);
+
+  // Parameter ?kategori= boleh berisi ID kategori (dari kartu Signature di beranda)
+  // atau nama kategori. ID dicocokkan lebih dulu, lalu nama.
+  const kategoriDariUrl = new URLSearchParams(window.location.search).get("kategori");
+  let kategoriTujuan = "";
+  if (kategoriDariUrl) {
+    const cocok =
+      listKat.find(k => String(k.id) === kategoriDariUrl) ||
+      listKat.find(k => k.nama === kategoriDariUrl);
+    if (cocok) kategoriTujuan = cocok.nama;
+  }
+  kategoriAktif = kategoriTujuan && daftarKat.includes(kategoriTujuan) ? kategoriTujuan : daftarKat[0];
+  halamanAktif = 0;
+
+  // Sidebar langsung tampil; grid menyusul begitu menunya tiba
+  renderKategori();
+  elKategori.querySelector(".aktif")?.scrollIntoView({ block: "nearest" });
+  await muatGridKategori(false);
 }
 
 // Jalankan pemuatan menu utama

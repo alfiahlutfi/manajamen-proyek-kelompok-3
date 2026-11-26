@@ -21,21 +21,20 @@
 
   <header id="navbar" class="nav-acala"></header>
 
-  <!-- Skeleton halaman penuh (navbar + isi + footer): tampil hanya bila pemuatan lambat atau gagal, diatur oleh js/skeleton.js -->
-  <div id="skel-halaman" class="skel-halaman" role="status" aria-label="Memuat halaman">
-    <img src="assets/skeleton_home.png" width="1440" height="5879" alt="" decoding="async">
-  </div>
-
   <main>
 
     <!-- HERO: carousel event -->
-    <section class="hero" id="event">
+    <section class="hero skel-hero" id="event" aria-busy="true">
       <div class="hero-bg" id="hero-bg"></div>
       <div class="hero-text">
         <h1 id="hero-judul"></h1>
         <a id="hero-btn" class="btn-hijau" href="#">Lihat Detail Event</a>
       </div>
-      <div class="hero-slider" id="hero-slider"></div>
+      <div class="hero-slider" id="hero-slider">
+        <span class="slide-skel kiri" aria-hidden="true"></span>
+        <span class="slide-skel tengah" aria-hidden="true"></span>
+        <span class="slide-skel kanan" aria-hidden="true"></span>
+      </div>
     </section>
 
     <!-- TENTANG -->
@@ -97,7 +96,28 @@
 
     <section class="best" aria-labelledby="best-judul">
       <p>Nikmati vibe santai dengan menu andalan Acala</p>
-      <div class="best-list" id="best-list"></div>
+      <div class="best-list" id="best-list" aria-busy="true">
+        <div class="best-card best-skel" aria-hidden="true">
+          <div class="best-skel__foto"></div>
+          <div class="best-skel__teks"></div>
+          <div class="best-skel__teks pendek"></div>
+        </div>
+        <div class="best-card best-skel" aria-hidden="true">
+          <div class="best-skel__foto"></div>
+          <div class="best-skel__teks"></div>
+          <div class="best-skel__teks pendek"></div>
+        </div>
+        <div class="best-card best-skel" aria-hidden="true">
+          <div class="best-skel__foto"></div>
+          <div class="best-skel__teks"></div>
+          <div class="best-skel__teks pendek"></div>
+        </div>
+        <div class="best-card best-skel" aria-hidden="true">
+          <div class="best-skel__foto"></div>
+          <div class="best-skel__teks"></div>
+          <div class="best-skel__teks pendek"></div>
+        </div>
+      </div>
     </section>
 
     <!-- LOKASI -->
@@ -105,12 +125,30 @@
       <div class="lokasi-container">
 
         <div class="lokasi-info">
-          <h2>Lokasi</h2>
-          <p id="alamat"></p>
-          <a id="btn-maps" class="btn-maps" href="#" target="_blank" rel="noopener noreferrer">Maps</a>
+            <h2>Lokasi</h2>
+
+            <p id="alamat">
+                Jl. Pasawahan, Pasawahan,
+                Kec. Pasawahan, Kabupaten Kuningan,
+                Jawa Barat 45559
+            </p>
+
+            <a
+                id="btn-maps"
+                class="btn-maps"
+                href="https://www.google.com/maps/search/?api=1&query=Jl.+Pasawahan,+Pasawahan,+Kuningan,+Jawa+Barat+45559"
+                target="_blank"
+                rel="noopener noreferrer">
+                Maps
+            </a>
         </div>
 
-        <div class="lokasi-map">
+        <div class="lokasi-map" id="peta-wadah">
+          <div class="peta-state peta-state--memuat" id="peta-state" role="status">
+            <span class="peta-loader" aria-hidden="true"><i></i><i></i></span>
+            <p class="peta-state__judul">Memuat Peta</p>
+            <p class="peta-state__sub">Harap Tunggu Sebentar</p>
+          </div>
           <iframe
             id="peta"
             title="Lokasi Cafe Acala"
@@ -129,10 +167,10 @@
   <!-- FOOTER GLOBAL (diisi otomatis oleh js/layout.js) -->
   <footer id="footer" class="footer-section"></footer>
 
-<!-- Urutan penting: api -> layout (navbar) -> beranda (isi halaman) -->
+<!-- Urutan penting: api -> layout (navbar) -> beranda (isi halaman). Skeleton diatur per kartu di beranda.js -->
+<script src="js/offline.js"></script>
 <script src="js/api.js"></script>
 <script src="js/layout.js"></script>
-<script src="js/skeleton.js"></script>
 <script src="js/beranda.js"></script>
 
 </body>
