@@ -5,6 +5,8 @@
 //     Opsional: &label=best_seller | signature | new   (menyaring menu pilihan berdasarkan label)
 //   ?category_id={id}   -> daftar menu berdasarkan kategori untuk halaman Menu (card 9.1.1).
 //   ?id={id}            -> detail satu menu untuk pop-up detail menu (card 9.2.1).
+// Card 14.6.3: menu pilihan (?featured=1) membaca menu pilihan yang disimpan admin (card 14.6.1), dan daftar nilai label
+// yang divalidasi dibaca dari enum kolom menu.label (sumber yang sama dengan API admin label_pilihan).
 // Jika featured=1 dan category_id dikirim bersamaan, mode featured yang dipakai.
 // Urutan prioritas mode: featured, category_id, id.
 // Mode lain (mis. daftar semua menu tanpa kategori) dikerjakan di card terpisah:
@@ -12,14 +14,12 @@
 
 require_once __DIR__ . '/../config/response.php';
 require_once __DIR__ . '/../config/database.php';
-
-const MAX_MENU_PILIHAN = 4;
-const LABEL_MENU       = ['best_seller', 'new', 'signature'];
+require_once __DIR__ . '/../config/menu_helper.php';   // daftar_enum_label() dan MENU_PILIHAN_MAX (maksimal 4 menu pilihan)
 
 /**
  * Menu pilihan = menu yang disimpan admin sebagai menu pilihan beranda (tabel menu_pilihan, card 14.6.1),
  * berstatus aktif, pada KATEGORI AKTIF, diurutkan sesuai kolom urutan lalu id (bukan urutan pemilihan admin),
- * maksimal MAX_MENU_PILIHAN. Semua menu pilihan berlabel sama, sehingga FE mengambil judul dari label menu pertama.
+ * maksimal MENU_PILIHAN_MAX. Semua menu pilihan berlabel sama, sehingga FE mengambil judul dari label menu pertama.
  * Kategori yang dinonaktifkan admin (card 14.2.1) hanya menyembunyikan menunya dari beranda; menu tampil lagi
  * saat kategori diaktifkan. Belum ada menu pilihan tersimpan -> daftar kosong (bukan error).
  * Card 4.4: respons memuat id menu dan id kategori (category_id); field lain tidak berubah.
@@ -29,8 +29,8 @@ function kirim_menu_pilihan(): void
     simulate_error('Menu pilihan gagal dimuat', 'MNU-5001');
 
     $label = $_GET['label'] ?? '';
-    if ($label !== '' && !in_array($label, LABEL_MENU, true)) {
-        respond(400, false, 'Label tidak valid. Gunakan best_seller, signature, atau new', null, 'MNU-4001');
+    if (!is_string($label)) {
+        $label = '__tidak_valid__';   // ?label[]=x dan sejenisnya: ditolak oleh validasi di bawah
     }
 
     $sql = 'SELECT m.id, m.category_id, m.label, m.foto, m.nama, m.harga
@@ -46,9 +46,20 @@ function kirim_menu_pilihan(): void
         $params[':label'] = $label;
     }
 
-    $sql .= ' ORDER BY m.urutan, m.id LIMIT ' . MAX_MENU_PILIHAN;
+    $sql .= ' ORDER BY m.urutan, m.id LIMIT ' . MENU_PILIHAN_MAX;
 
     try {
+        // Nilai label yang sah dibaca dari enum kolom menu.label (bukan daftar tetap di kode),
+        // sehingga label baru yang ditambahkan di database tidak ditolak di sini.
+        if ($label !== '') {
+            $labelSah = daftar_enum_label(db());
+            if (!in_array($label, $labelSah, true)) {
+                $terakhir = array_pop($labelSah);
+                $daftar   = $labelSah ? implode(', ', $labelSah) . ', atau ' . $terakhir : $terakhir;
+                respond(400, false, 'Label tidak valid. Gunakan ' . $daftar, null, 'MNU-4001');
+            }
+        }
+
         $stmt = db()->prepare($sql);
         $stmt->execute($params);
         $rows = $stmt->fetchAll();
@@ -71,7 +82,7 @@ function kirim_menu_pilihan(): void
 
         respond(200, true, 'Menu pilihan berhasil diambil', $data);
 
-    } catch (PDOException $e) {
+    } catch (Throwable $e) {
         error_log('[menu.php] ' . $e->getMessage());
         respond(500, false, 'Menu pilihan gagal dimuat', null, 'MNU-5002');
     }
