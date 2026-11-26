@@ -238,8 +238,7 @@ aside {
 /* ======================================================
    POSISI FOTO PRODUK (DIPERBESAR & CENTER SEMPURNA)
    ====================================================== */
-.menu-card .foto-menu,
-.menu-card .menu-img-wrapper {
+.menu-card .foto-menu {
   width: 100% !important;
   height: 170px !important; /* Diperbesar agar foto lebih ideal */
   display: flex !important;

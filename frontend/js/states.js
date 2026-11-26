@@ -5,59 +5,19 @@
   "use strict";
 
   const MIN_SKELETON = 1000;
-  const TIMEOUT = 1000;
+
+  // Batas waktu request data API. 30 detik memberi ruang untuk koneksi 3G.
+  const API_TIMEOUT = 30000;
+
+  // Batas waktu pemuatan foto/media dibuat terpisah dari request API.
+  const MEDIA_TIMEOUT = 30000;
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const isOffline = () => !navigator.onLine;
 
-  /* ---------- HALAMAN TIDAK ADA KONEKSI ---------- */
-
-  let offEl = null;
-
-  function showOffline() {
-    if (!offEl) {
-      offEl = document.createElement("div");
-      offEl.id = "offline";
-      offEl.setAttribute("role", "alert");
-
-      offEl.innerHTML = `
-        <img
-          src="assets/internet.svg"
-          alt=""
-          width="160"
-          height="160"
-        >
-        <h1>Tidak Ada Koneksi</h1>
-        <p>Harap periksa koneksimu, lalu muat ulang halaman.</p>
-        <button type="button" class="btn-solid">
-          Muat Ulang
-        </button>
-      `;
-
-      offEl.querySelector("button").addEventListener("click", () => {
-        if (!isOffline()) {
-          location.reload();
-        }
-      });
-
-      document.body.appendChild(offEl);
-    }
-
-    offEl.hidden = false;
-  }
-
-  function hideOffline() {
-    if (offEl) {
-      offEl.hidden = true;
-    }
-  }
-
-  window.addEventListener("offline", showOffline);
-
-  window.addEventListener("online", () => {
-    hideOffline();
-    location.reload();
-  });
+  /* ---------- HALAMAN TIDAK ADA KONEKSI ----------
+     Layar offline dikelola js/offline.js (aktif di semua halaman). */
+  const showOffline = () => { if (window.AcalaOffline) window.AcalaOffline.tampil(); };
 
   /* ---------- AMBIL DATA API ---------- */
 
@@ -68,7 +28,7 @@
     }
 
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT);
+    const timer = setTimeout(() => controller.abort(), API_TIMEOUT);
 
     try {
       const response = await fetch(url, {
@@ -89,6 +49,10 @@
     } catch (error) {
       if (isOffline()) {
         showOffline();
+      }
+
+      if (error && error.name === "AbortError") {
+        console.error("Request API melewati batas waktu 30 detik:", url);
       }
 
       // Error diteruskan agar section() dapat menampilkan
@@ -172,7 +136,7 @@
       try {
         const data = await loader();
 
-        // Skeleton tetap tampil minimal 3 detik.
+        // Skeleton dipertahankan minimal sesuai MIN_SKELETON.
         const remaining = MIN_SKELETON - (Date.now() - startedAt);
 
         if (remaining > 0) {
@@ -216,25 +180,6 @@
   }
 
   /* ---------- FOTO / IFRAME ---------- */
-
-  // Skeleton seluruh halaman (#skeleton) dipakai saat tombol "Muat Ulang" foto
-  // ditekan. Penghitung dipakai supaya beberapa foto yang di-retry bersamaan
-  // tidak saling mematikan skeleton.
-  let pageSkeletonCount = 0;
-
-  function pageSkeletonOn() {
-    if (!document.getElementById("skeleton")) return false;
-    pageSkeletonCount++;
-    document.body.classList.add("loading");
-    return true;
-  }
-
-  function pageSkeletonOff() {
-    pageSkeletonCount = Math.max(0, pageSkeletonCount - 1);
-    if (pageSkeletonCount === 0) {
-      document.body.classList.remove("loading");
-    }
-  }
 
   function media(el, source) {
     const host = el && el.parentElement;
@@ -306,18 +251,7 @@
 
     async function retry() {
       attempt++;
-
-      const scrollY = window.scrollY;
-      const pakaiSkeletonHalaman = pageSkeletonOn();
-
-      try {
-        await tryLoad();
-      } finally {
-        if (pakaiSkeletonHalaman) {
-          pageSkeletonOff();
-          window.scrollTo(0, scrollY);
-        }
-      }
+      await tryLoad();   // skeleton hanya di foto yang bersangkutan, bukan seluruh halaman
     }
 
     async function tryLoad() {
@@ -352,7 +286,7 @@
           timer = setTimeout(() => {
             cleanup();
             reject(new Error("Waktu memuat media habis."));
-          }, TIMEOUT);
+          }, MEDIA_TIMEOUT);
 
           // Saat Muat Ulang, tambahkan parameter agar browser benar-benar
           // meminta ulang (bukan memakai hasil gagal dari cache).
@@ -403,22 +337,11 @@
     return tryLoad();
   }
 
-  /* ---------- SELESAI LOADING HALAMAN ---------- */
-
-  function ready() {
-    if (window.selesaiMemuat) {
-      window.selesaiMemuat();
-    } else {
-      document.body.classList.remove("loading");
-    }
-  }
-
   window.Acala = {
     getJSON,
     once,
     section,
     media,
-    ready,
     showOffline
   };
 })();

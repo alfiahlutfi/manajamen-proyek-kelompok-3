@@ -2,7 +2,7 @@
    PENGATURAN
 ======================================================= */
 const PLACEHOLDER_FOTO = "assets/placeholder.png"; // Placeholder gambar
-const BATAS_WAKTU      = 5000;  // Batas tunggu per data / foto / peta (ms)
+const BATAS_WAKTU      = 5000;  // Batas tunggu per data / peta (ms). Foto tidak dibatasi waktu: lambat tidak sama dengan gagal
 
 /* =======================================================
    ESCAPE HTML (Mencegah XSS)
@@ -19,12 +19,6 @@ function esc(string) {
 /* =======================================================
    UTILITAS
 ======================================================= */
-// true bila data utama beranda (carousel, signature) gagal dimuat -> skeleton halaman penuh dipertahankan
-let gagalMuat = false;
-
-// Banner merah gagal memuat (data deskripsi / foto). Ditampung dulu, ditampilkan setelah skeleton halaman dilepas.
-const antrianBanner = [];
-
 function tunggu(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -59,14 +53,15 @@ function cariGambar(item, ...utama) {
 }
 
 // Isi teks. Kalau kosong, elemen ditandai .skel-teks (tampil sebagai skeleton teks).
-function isiTeks(el, nilai) {
+// jumlahBaris = banyak baris abu-abu skeleton untuk paragraf (0 = satu balok polos).
+function isiTeks(el, nilai, jumlahBaris = 4) {
   if (!el) return true;
   const teks = String(nilai || "").trim();
   el.textContent = teks;
   el.classList.toggle("skel-teks", !teks);
   // Paragraf kosong: skeleton berupa 4 baris abu-abu (sesuai desain)
   if (!teks && el.tagName === "P") {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < jumlahBaris; i++) {
       const baris = document.createElement("span");
       baris.className = "skel-baris";
       el.appendChild(baris);
@@ -84,7 +79,7 @@ function skeletonTombol(el, aktif) {
   else { tombol.removeAttribute("aria-disabled"); tombol.removeAttribute("tabindex"); }
 }
 
-// Banner merah penuh lebar di bawah navbar. Hilang sendiri setelah 6 detik atau saat diklik.
+// Banner merah penuh lebar di bawah navbar. Tampil saat satu kartu gagal dimuat; hilang sendiri atau saat diklik.
 function tampilkanBanner(teks) {
   let wadah = document.getElementById("banner-gagal-wadah");
   if (!wadah) {
@@ -114,32 +109,6 @@ function tampilkanBanner(teks) {
   setTimeout(tutup, 800);
 }
 
-function tampilkanAntrianBanner() {
-  antrianBanner.splice(0).forEach(tampilkanBanner);
-}
-
-// Tampilkan / hapus pesan gagal tepat setelah elemen "jangkar".
-function tampilPesan(jangkar, kunci, teks) {
-  if (!jangkar || !jangkar.parentElement) return;
-
-  const induk = jangkar.parentElement;
-  let p = induk.querySelector(`:scope > [data-pesan="${kunci}"]`);
-
-  if (!teks) {
-    if (p) p.remove();
-    return;
-  }
-
-  if (!p) {
-    p = document.createElement("p");
-    p.className = "pesan-gagal";
-    p.dataset.pesan = kunci;
-    p.setAttribute("role", "alert");
-    jangkar.insertAdjacentElement("afterend", p);
-  }
-  p.textContent = teks;
-}
-
 /* =======================================================
    FOTO: tampilkan foto, kalau gagal pakai placeholder
 ======================================================= */
@@ -155,15 +124,16 @@ function pasangFoto(figure, src, alt) {
     img.loading = "eager";
     figure.classList.remove("gagal-foto");
 
+    // Foto yang lambat dimuat TIDAK dianggap gagal: skeleton (kilau abu-abu) tetap tampil
+    // sampai foto selesai diunduh. Gagal hanya bila benar-benar error (file tidak ada, offline, rusak).
     let selesai = false;
-    let batas = null;
 
     const akhir = (berhasil) => {
       if (selesai) return;
       selesai = true;
-      clearTimeout(batas);
       img.onload = null;
       img.onerror = null;
+      figure.classList.remove("memuat");   // skeleton foto selesai (berhasil maupun gagal)
 
       if (!berhasil) {
         figure.classList.add("gagal-foto");
@@ -172,7 +142,6 @@ function pasangFoto(figure, src, alt) {
       resolve(berhasil);
     };
 
-    batas = setTimeout(() => akhir(false), BATAS_WAKTU);
     img.onload  = () => akhir(true);
     img.onerror = () => akhir(false);
 
@@ -266,36 +235,66 @@ function urlGoogleMaps(url) {
   }
 }
 
-function pasangPeta(wadah, iframe, url) {
+// Kotak status peta: memuat / gagal (data lokasi gagal, ada tombol Muat Ulang) /
+// akses (Google Maps tidak dapat diakses) / ok (peta tampil).
+function setPeta(jenis, onUlang) {
+  const wadah = document.getElementById("peta-wadah");
+  const state = document.getElementById("peta-state");
+  if (!wadah || !state) return;
+
+  wadah.classList.toggle("peta-ok", jenis === "ok");
+  state.className = "peta-state peta-state--" + jenis;
+  state.removeAttribute("aria-label");
+
+  if (jenis === "memuat") {
+    state.setAttribute("role", "status");
+    state.innerHTML = `
+      <span class="peta-loader" aria-hidden="true"><i></i><i></i></span>
+      <p class="peta-state__judul">Memuat Peta</p>
+      <p class="peta-state__sub">Harap Tunggu Sebentar</p>`;
+  } else if (jenis === "gagal") {
+    state.setAttribute("role", "alert");
+    state.innerHTML = `
+      <p class="peta-state__judul">Gagal Memuat Peta</p>
+      <button type="button" class="btn-peta-ulang">Muat Ulang</button>`;
+    const tombol = state.querySelector(".btn-peta-ulang");
+    tombol.addEventListener("click", () => {
+      tombol.disabled = true;
+      if (typeof onUlang === "function") onUlang();
+    });
+  } else {
+    state.setAttribute("role", "img");
+    state.setAttribute("aria-label", "Peta tidak tersedia");
+    state.innerHTML = "";
+  }
+}
+
+// Pasang iframe peta. Hasil true hanya bila Google Maps terjangkau DAN iframe selesai dimuat
+// sebelum batas waktu. Iframe tetap memicu "load" walau Google tidak terjangkau (yang tampil
+// halaman error browser), jadi jangkauannya dicek terpisah dengan permintaan ringan.
+function pasangPeta(iframe, url) {
   return new Promise(resolve => {
-    if (!wadah || !iframe) {
+    if (!iframe) {
       resolve(false);
       return;
     }
 
-    wadah.classList.remove("gagal-foto");
-    wadah.querySelectorAll(".peta-placeholder").forEach(el => el.remove());
-
     let selesai = false;
     let batas = null;
+    let terjangkau = null;   // null = belum diketahui
+    let termuat = false;
 
     const akhir = (berhasil) => {
       if (selesai) return;
       selesai = true;
       clearTimeout(batas);
       iframe.onload = null;
-
-      if (!berhasil) {
-        wadah.classList.add("gagal-foto");
-        iframe.removeAttribute("src");
-
-        const img = new Image();
-        img.className = "peta-placeholder";
-        img.src = PLACEHOLDER_FOTO;
-        img.alt = "Peta tidak tersedia";
-        wadah.appendChild(img);
-      }
+      if (!berhasil) iframe.removeAttribute("src");
       resolve(berhasil);
+    };
+    const periksa = () => {
+      if (terjangkau === false) akhir(false);
+      else if (terjangkau === true && termuat) akhir(true);
     };
 
     batas = setTimeout(() => akhir(false), BATAS_WAKTU);
@@ -304,81 +303,96 @@ function pasangPeta(wadah, iframe, url) {
       return;
     }
 
+    fetch(url, { mode: "no-cors", cache: "no-store" })
+      .then(() => { terjangkau = true; periksa(); })
+      .catch(() => { terjangkau = false; periksa(); });
+
     iframe.loading = "eager";
-    iframe.onload = () => akhir(true);
+    iframe.onload = () => { termuat = true; periksa(); };
     iframe.src = url;
   });
 }
 
 /* =======================================================
-   SKELETON HALAMAN PENUH
+   SKELETON PER KARTU
+   Tiap kartu beranda (carousel, deskripsi About, deskripsi Reservasi, jam operasional,
+   menu pilihan, lokasi) dimuat sendiri dan menampilkan skeleton / hasil / gagal sendiri.
+   Tidak ada skeleton halaman penuh dan tidak ada kartu yang menunggu kartu lain.
 ======================================================= */
+function mulaiSkeletonAwal() {
+  // Teks deskripsi & alamat: balok abu-abu sampai datanya tiba
+  const judulAbout = document.getElementById("judul-about");
+  const deskripsi  = document.getElementById("deskripsi");
+  const judulRes   = document.getElementById("judul-reservasi");
+  const deskripsiR = document.getElementById("deskripsi-reservasi");
+  isiTeks(judulAbout, "");
+  isiTeks(deskripsi, "");
+  isiTeks(judulRes, "");
+  isiTeks(deskripsiR, "");
+  skeletonTombol(deskripsi, true);
+  skeletonTombol(deskripsiR, true);
+  // Simpan teks awal alamat (dari HTML) supaya bisa dikembalikan bila data lokasi gagal dimuat
+  const alamatEl = document.getElementById("alamat");
+  if (alamatEl) {
+    alamatEl.dataset.teksAwal = alamatEl.textContent;
+    isiTeks(alamatEl, "", 0);
+  }
 
-/* =======================================================
-   BERANDA: ABOUT, RESERVASI, FOOTER, JAM OPERASIONAL
-======================================================= */
-async function tampilkanBeranda() {
-  await Promise.allSettled([isiBeranda(), isiLokasi()]);
+  // Foto About & Reservasi: kilau abu-abu sampai foto siap
+  document.querySelectorAll(".foto-wrap").forEach(f => f.classList.add("memuat"));
+
+  // Jam operasional: gambar skeleton sampai datanya tiba
+  skeletonJam(true);
 }
 
-async function isiBeranda() {
-  const [cafeData, hours, reservasiData] = await Promise.all([
-    ambil("/cafe"),
-    ambil("/operating-hours"),
-    ambil("/reservasi")
-  ]);
-
+/* =======================================================
+   ABOUT (profil cafe): kartu sendiri, data dari /cafe
+======================================================= */
+async function tampilkanAbout() {
+  const cafeData = await ambil("/cafe");
   const cafe = (Array.isArray(cafeData) ? cafeData[0] : cafeData) || null;
-  const reservasi = (Array.isArray(reservasiData) ? reservasiData[0] : reservasiData) || {};
-
   const c = cafe || {};
   const nama = c.nama || "Café Ácala";
 
-    // ----- ABOUT (PROFIL CAFE) -----
-  const judulAbout = document.getElementById("judul-about");
-  const deskripsi  = document.getElementById("deskripsi");
+  isiTeks(document.getElementById("judul-about"), c.judul_deskripsi || c.judul_about || c.judul);
+  const deskripsiOk = isiTeks(document.getElementById("deskripsi"), c.deskripsi_about || c.deskripsi);
 
-  // Judul: isi dari database. Kalau kosong/gagal, tampil skeleton teks.
-  isiTeks(judulAbout, c.judul_deskripsi || c.judul_about || c.judul);
+  // Gagal memuat data: yang tampil hanya skeleton (judul, baris teks, tombol) + banner
+  const gagal = !cafe || !deskripsiOk;
+  skeletonTombol(document.getElementById("deskripsi"), gagal);
+  if (gagal) tampilkanBanner("Gagal Memuat Data Deskripsi");
 
-  const deskripsiOk = isiTeks(deskripsi, c.deskripsi_about || c.deskripsi);
-  // Gagal memuat data deskripsi: yang tampil hanya skeleton (judul, baris teks, tombol) + banner
-  const aboutGagal = !cafe || !deskripsiOk;
-  skeletonTombol(deskripsi, aboutGagal);
-
-  // ----- RESERVASI -----
-  const judulReservasi     = document.getElementById("judul-reservasi");
-  const deskripsiReservasi = document.getElementById("deskripsi-reservasi");
-
-  isiTeks(judulReservasi, reservasi.judul || c.judul_reservasi);
-
-  const deskripsiResOk = isiTeks(deskripsiReservasi, reservasi.deskripsi || c.deskripsi_reservasi);
-  const reservasiGagal = !reservasiData || !deskripsiResOk;
-  skeletonTombol(deskripsiReservasi, reservasiGagal);
-  if (aboutGagal || reservasiGagal) antrianBanner.push("Gagal Memuat Data Deskripsi");
-
-  // ----- JAM OPERASIONAL -----
-  isiJamOperasional(hours, cafe);
-
-  // Foto dipasang bersamaan, tidak menahan teks
-  const srcAbout     = c.gambar_about || c.foto || "";
-  const srcReservasi = reservasi.foto || c.gambar_reservasi || "";
-  const [fotoAboutOk, fotoReservasiOk] = await Promise.all([
-    pasangFoto(document.querySelector(".foto-wrap.kiri"), srcAbout, "Tampak depan " + nama),
-    pasangFoto(document.querySelector(".foto-wrap.kanan"), srcReservasi, "Area indoor " + nama)
-  ]);
-  // Foto gagal dimuat: yang tampil placeholder (diatur pasangFoto) + banner.
-  // Kalau datanya sendiri yang gagal (tidak ada alamat foto), cukup banner data deskripsi.
-  if ((srcAbout && !fotoAboutOk) || (srcReservasi && !fotoReservasiOk)) {
-    antrianBanner.push("Gagal Memuat Foto");
-  }
+  // Foto dipasang setelah teks; tidak menahan kartu lain
+  const src = c.gambar_about || c.foto || "";
+  const fotoOk = await pasangFoto(document.querySelector(".foto-wrap.kiri"), src, "Tampak depan " + nama);
+  // Kalau datanya sendiri yang gagal (tidak ada alamat foto), cukup banner data deskripsi
+  if (src && !fotoOk) tampilkanBanner("Gagal Memuat Foto");
 }
 
 /* =======================================================
-   JAM OPERASIONAL
+   RESERVASI (deskripsi layanan): kartu sendiri, data dari /reservasi
+======================================================= */
+async function tampilkanReservasi() {
+  const data = await ambil("/reservasi");
+  const reservasi = (Array.isArray(data) ? data[0] : data) || null;
+  const r = reservasi || {};
+
+  isiTeks(document.getElementById("judul-reservasi"), r.judul);
+  const deskripsiOk = isiTeks(document.getElementById("deskripsi-reservasi"), r.deskripsi);
+
+  const gagal = !reservasi || !deskripsiOk;
+  skeletonTombol(document.getElementById("deskripsi-reservasi"), gagal);
+  if (gagal) tampilkanBanner("Gagal Memuat Data Deskripsi");
+
+  const src = r.foto || "";
+  const fotoOk = await pasangFoto(document.querySelector(".foto-wrap.kanan"), src, "Area indoor Café Ácala");
+  if (src && !fotoOk) tampilkanBanner("Gagal Memuat Foto");
+}
+
+/* =======================================================
+   JAM OPERASIONAL: kartu sendiri, data dari /operating-hours
    Gagal memuat: hanya bagian "Open Hours" yang tampil sebagai skeleton
-   (potongan dari skeleton halaman penuh, assets/skeleton_jam.png) +
-   notifikasi merah "Gagal Memuat Jam Operasional". Bagian lain tetap normal.
+   (assets/skeleton_jam.png) + banner merah "Gagal Memuat Jam Operasional".
 ======================================================= */
 function skeletonJam(aktif) {
   const kotak = document.querySelector(".jam-wrap .retak");
@@ -388,33 +402,24 @@ function skeletonJam(aktif) {
   else kotak.removeAttribute("aria-busy");
 }
 
-function isiJamOperasional(hours, cafe) {
+async function tampilkanJam() {
   const openHours = document.getElementById("open-hours");
   if (!openHours) return;
 
   // ?error=jam -> simulasi jam operasional gagal dimuat (untuk pengujian SQA)
   const simulasiGagal = new URLSearchParams(location.search).get("error") === "jam";
+  const hours = simulasiGagal ? null : await ambil("/operating-hours");
 
-  if (simulasiGagal || !hours || !Array.isArray(hours) || hours.length === 0) {
+  if (!hours || !Array.isArray(hours) || hours.length === 0) {
     openHours.innerHTML = "";
     skeletonJam(true);
-    antrianBanner.push("Gagal Memuat Jam Operasional");
+    tampilkanBanner("Gagal Memuat Jam Operasional");
     return;
   }
 
-  // Coba filter berdasarkan cafe_id, tetapi jika hasilnya kosong,
-  // gunakan seluruh data jam yang ada agar tetap bisa tampil di web.
-  let cafeHours = hours;
-  if (cafe && cafe.id) {
-    const terfilter = hours.filter(item => String(item.cafe_id || item.id_cafe || "") === String(cafe.id));
-    if (terfilter.length > 0) {
-      cafeHours = terfilter;
-    }
-  }
-
+  // API sudah hanya mengirim jam milik cafe utama, jadi tidak perlu data /cafe di sini
   skeletonJam(false);
-
-  openHours.innerHTML = kelompokJam(cafeHours).map(kelompok => `
+  openHours.innerHTML = kelompokJam(hours).map(kelompok => `
     <div>
       <h3>${esc(kelompok.label)}</h3>
       <p>${formatJam(kelompok.buka)} - ${formatJam(kelompok.tutup)}</p>
@@ -423,29 +428,37 @@ function isiJamOperasional(hours, cafe) {
 }
 
 /* =======================================================
-   LOKASI (location.php)
+   LOKASI (location.php): kartu sendiri
+   Peta punya tiga kondisi sesuai desain:
+   - memuat                      -> kotak abu-abu "Memuat Peta"
+   - data lokasi gagal dimuat    -> "Gagal Memuat Peta" + tombol Muat Ulang
+   - Google Maps tidak bisa dibuka (link/embed salah, offline, terlalu lama)
+                                 -> kotak biru muda + banner "Google Maps Tidak Dapat Diakses"
 ======================================================= */
 async function isiLokasi() {
+  setPeta("memuat");
+
   const lokasiData = await ambil("/lokasi");
   const lokasi = (Array.isArray(lokasiData) ? lokasiData[0] : lokasiData) || null;
   const l = lokasi || {};
 
-  const alamat  = document.getElementById("alamat");
-  const btnMaps = document.getElementById("btn-maps");
-  const peta    = document.getElementById("peta");
-
-  // Alamat
-  const alamatOk = isiTeks(alamat, l.alamat);
-
-  // Pesan gagal hanya jika data lokasi gagal diambil / alamat kosong
-  tampilPesan(
-    alamat,
-    "lokasi",
-    !lokasi || !alamatOk ? "Gagal memuat lokasi cafe" : ""
-  );
+  // Alamat: isi dari database. Bila kosong / gagal dimuat, kembali ke teks awal (tanpa skeleton).
+  const alamatEl = document.getElementById("alamat");
+  if (alamatEl) {
+    if (String(l.alamat || "").trim()) {
+      isiTeks(alamatEl, l.alamat, 0);
+    } else {
+      alamatEl.classList.remove("skel-teks");
+      alamatEl.textContent = alamatEl.dataset.teksAwal || "";
+    }
+  }
 
   // Tombol Maps
-  const linkMaps = String(l.link_maps || "").trim();
+  const btnMaps = document.getElementById("btn-maps");
+  const linkMaps = String(
+  l.link_maps ||
+  "https://www.google.com/maps/search/?api=1&query=Jl.+Pasawahan,+Pasawahan,+Kuningan,+Jawa+Barat+45559"
+).trim();
   const linkOk = urlGoogleMaps(linkMaps);
 
   if (btnMaps) {
@@ -461,30 +474,24 @@ async function isiLokasi() {
       btnMaps.style.pointerEvents = "none";
       btnMaps.style.opacity = "0.6";
     }
-
-    // BARU: pesan "Gagal membuka Google Maps" (hanya jika data lokasi
-    // berhasil dimuat tetapi link Google Maps-nya kosong / tidak valid)
-    tampilPesan(
-      btnMaps,
-      "maps",
-      lokasi && !linkOk ? "Gagal membuka Google Maps" : ""
-    );
   }
 
-  // Peta embed
+  // Data lokasi gagal dimuat: peta tidak punya alamat untuk dimuat
+  if (!lokasi) {
+    setPeta("gagal", isiLokasi);
+    return;
+  }
+
+  // Data ada, tetapi link Google Maps kosong / tidak valid
+  if (!linkOk) tampilkanBanner("Google Maps Tidak Dapat Diakses");
+
   const mapUrl = ambilUrlEmbed(l.link_maps_embed || l.maps_embed_url || l.peta_embed || "");
-  const wadahPeta = peta ? peta.parentElement : null;
+  const petaOk = await pasangPeta(document.getElementById("peta"), mapUrl);
 
-  if (wadahPeta) {
-    const petaOk = await pasangPeta(wadahPeta, peta, mapUrl);
-
-    // BARU: pesan "Gagal memuat peta" di bawah kotak peta.
-    // Alamat dan tombol Maps tidak terpengaruh, tetap tampil.
-    tampilPesan(
-      wadahPeta,
-      "peta",
-      petaOk ? "" : "Gagal memuat peta"
-    );
+  if (petaOk) {
+      setPeta("ok");
+  } else {
+      setPeta("gagal", isiLokasi);
   }
 }
 
@@ -493,8 +500,8 @@ async function isiLokasi() {
 ======================================================= */
 async function tampilkanHero() {
   const carousel = await ambil("/carousel");
-  if (carousel === null) gagalMuat = true;
 
+  const hero = document.getElementById("event");
   const judul = document.getElementById("hero-judul");
   const slider = document.getElementById("hero-slider");
   const bg = document.getElementById("hero-bg");
@@ -502,7 +509,18 @@ async function tampilkanHero() {
 
   if (!judul || !slider || !bg || !btn) return;
 
-  if (!carousel || carousel.length === 0) {
+  // Gagal memuat: skeleton carousel tetap tampil + banner merah
+  if (!Array.isArray(carousel)) {
+    tampilkanBanner("Gagal Memuat Foto Carousel");
+    return;
+  }
+
+  // Data tiba: skeleton carousel dilepas (tidak menunggu kartu lain)
+  hero.classList.remove("skel-hero");
+  hero.removeAttribute("aria-busy");
+  slider.innerHTML = "";
+
+  if (carousel.length === 0) {
     judul.textContent = "Café Ácala";
     slider.innerHTML = "";
     bg.innerHTML = "";
@@ -514,7 +532,7 @@ async function tampilkanHero() {
   const n = carousel.length;
   const teksHero = judul.parentElement;
   const kurangiGerak = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const DURASI = 4000;        // jeda otomatis antar event (ms)
+  const DURASI = 5000;        // jeda otomatis antar event (ms)
   const DURASI_GESER = 500;   // harus sama dengan transition .slide di style.css
   let i = 0;
   let timer;
@@ -528,6 +546,16 @@ async function tampilkanHero() {
     </button>
   `).join("");
   const kartu = Array.from(slider.querySelectorAll(".slide"));
+
+  // Foto carousel gagal dimuat: slide memakai placeholder (lihat handler error global) + banner
+  let fotoGagal = false;
+  kartu.forEach((el) => {
+    el.querySelector("img").addEventListener("error", () => {
+      if (fotoGagal) return;
+      fotoGagal = true;
+      tampilkanBanner("Gagal Memuat Foto Carousel");
+    });
+  });
 
   // Posisi kartu terhadap event aktif (i)
   function kelasPosisi(idx) {
@@ -660,65 +688,35 @@ async function tampilkanHero() {
 /* =======================================================
    SIGNATURE
 ======================================================= */
-const JUMLAH_SKELETON_SIGNATURE = 4;
-
-// Skeleton kartu menu pilihan (bentuk kartu sama dengan aslinya)
-function skeletonSignature(wadah) {
-  wadah.setAttribute("aria-busy", "true");
-  wadah.innerHTML = Array.from({ length: JUMLAH_SKELETON_SIGNATURE }, () => `
-    <div class="best-card best-skel" aria-hidden="true">
-      <div class="best-skel__foto"></div>
-      <div class="best-skel__teks"></div>
-      <div class="best-skel__teks pendek"></div>
-    </div>`).join("");
-}
-
-// Tampilkan / sembunyikan seluruh bagian Menu Pilihan (judul + kotak hijau)
-function aturBagianSignature(tampil) {
-  document.querySelector(".best-header-wrapper")?.toggleAttribute("hidden", !tampil);
-  document.querySelector("section.best")?.toggleAttribute("hidden", !tampil);
-}
-
+// Kartu menu pilihan: skeleton 4 kartu sudah ada di index.html. Gagal = skeleton tetap + banner merah.
 async function tampilkanSignature() {
   const wadah = document.getElementById("best-list");
   if (!wadah) return;
 
-  // Skeleton kartu tidak ditampilkan di awal (skeleton halaman muncul sendiri bila pemuatan lambat).
-  wadah.setAttribute("aria-busy", "true");
-
-  // Hanya menu berlabel "signature". API sudah membatasi jumlahnya (maksimal 4) dan mengurutkannya.
   const menu = await ambil("/menu?label=signature");
 
-  // Gagal: HANYA bagian Menu Pilihan yang terdampak. Skeleton tampil di bagian ini
-  // + notifikasi merah "Gagal Memuat Menu Pilihan". Bagian beranda lain tetap normal.
   if (!Array.isArray(menu)) {
-    aturBagianSignature(true);
-    skeletonSignature(wadah);
     wadah.setAttribute("aria-busy", "false");
-    antrianBanner.push("Gagal Memuat Menu Pilihan");
+    tampilkanBanner("Gagal Memuat Menu Pilihan");
     return;
   }
 
-  // Tidak ada menu pilihan: seluruh bagian Menu Pilihan disembunyikan
+  // Tampilkan SEMUA menu yang dikembalikan API (API sudah membatasi jumlahnya)
   if (menu.length === 0) {
-    aturBagianSignature(false);
-    wadah.innerHTML = "";
     wadah.setAttribute("aria-busy", "false");
+    wadah.innerHTML = `<p>Menu signature belum tersedia.</p>`;
     return;
   }
-
-  aturBagianSignature(true);
 
   // Klik kartu -> halaman menu dengan kategori menu tersebut langsung aktif
   wadah.innerHTML = menu.map(m => {
     const tujuan = m.category_id != null
       ? `menu.html?kategori=${encodeURIComponent(m.category_id)}`
       : "menu.html";
-    const nama = m.nama || "";
     return `
-    <a class="best-card" href="${tujuan}" title="${esc(nama)}">
-      <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(nama || "Menu")}" loading="lazy">
-      <h3><span>${esc(nama)}</span></h3>
+    <a class="best-card" href="${tujuan}">
+      <img src="${esc(cariGambar(m) || PLACEHOLDER_FOTO)}" alt="${esc(m.nama || "Menu")}" loading="lazy">
+      <h3>${esc(m.nama || "")}</h3>
       <small>${rupiahSingkat(m.harga)}</small>
     </a>`;
   }).join("");
@@ -726,63 +724,16 @@ async function tampilkanSignature() {
 }
 
 /* =======================================================
-   JALANKAN SEMUA (SKELETON PENUH AWAL / RELOAD)
+   JALANKAN SEMUA: setiap kartu berjalan sendiri-sendiri (paralel, tanpa saling menunggu)
 ======================================================= */
-function perluSkeletonPenuh() {
-  const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
-  const tipe = nav ? nav.type : "navigate";
-
-  let sudahBuka = false;
-  try {
-    sudahBuka = Boolean(sessionStorage.getItem("acala-sudah-buka"));
-    sessionStorage.setItem("acala-sudah-buka", "1");
-  } catch (err) {}
-
-  const namaFile = location.pathname.split("/").pop();
-  const alamatBeranda = namaFile === "" || /^index(\.html?|\.php)?$/i.test(namaFile);
-  if (!alamatBeranda || !document.getElementById("hero-slider")) return false;
-
-  if (tipe === "back_forward") return false;
-  if (tipe === "reload") return true;
-
-  try {
-    if (document.referrer && new URL(document.referrer).origin === location.origin) {
-      return false;
-    }
-  } catch (err) {}
-
-  return !sudahBuka;
-}
-
-async function mulaiBeranda() {
-  const body = document.body;
-  // Skeleton halaman penuh (navbar + isi + footer) hanya tampil bila data lambat dimuat
-  // (lihat js/skeleton.js). Elemennya sudah ada di index.html.
-  const penuh = Boolean(document.getElementById("skel-halaman"));
-
-  if (penuh) {
-    body.classList.add("memuat-awal");
-    if (window.AcalaSkeleton) AcalaSkeleton.tampil();
-  }
-
-  await Promise.allSettled([
-    tampilkanBeranda(),
-    tampilkanHero(),
-    tampilkanSignature()
-  ]);
-
-  if (!penuh) { tampilkanAntrianBanner(); return; }
-
-  // Gagal memuat: skeleton tetap tampil, pesan + "Muat ulang" di atasnya
-  if (gagalMuat && window.AcalaSkeleton) {
-    AcalaSkeleton.gagal("Gagal memuat Beranda", () => location.reload());
-    return;
-  }
-
-  if (window.AcalaSkeleton) AcalaSkeleton.sembunyi(); else body.classList.remove("skel-aktif");
-  body.classList.remove("memuat-awal");
-  body.classList.add("beranda-siap");
-  tampilkanAntrianBanner();
+function mulaiBeranda() {
+  mulaiSkeletonAwal();
+  tampilkanHero();
+  tampilkanAbout();
+  tampilkanReservasi();
+  tampilkanJam();
+  tampilkanSignature();
+  isiLokasi();
 }
 
 if (document.readyState === "loading") {

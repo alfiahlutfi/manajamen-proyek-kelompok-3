@@ -116,7 +116,6 @@ function pasangFoto(img, url, onSelesai) {
 ======================================================= */
 function tampilkanSkeleton() {
   hapusPesan();
-  if (window.AcalaSkeleton) AcalaSkeleton.tampil();   // skeleton halaman (gambar) tampil lagi saat muat ulang
   elHero.classList.remove("gagal");
   elHero.classList.add("memuat");               // banner putih (skeleton)
   elHero.classList.remove("siap");
@@ -178,7 +177,6 @@ function buatToast(teks, id, onUlang) {
 
 function tampilkanGagal() {
   hapusPesan();
-  if (window.AcalaSkeleton) AcalaSkeleton.tahan();    // skeleton halaman tetap tampil di belakang pesan
   document.body.appendChild(buatToast("Gagal memuat Gallery", "galeri-toast", muatGaleri));
   elArea.setAttribute("aria-busy", "false");
 }
@@ -415,18 +413,18 @@ async function muatGaleri() {
   const fotoBanner = semua[0] || null;
   daftarFoto = semua.slice(1);
 
-  // Banner dan foto dimuat bersamaan; tiap foto muncul begitu siap.
+  // Banner dan grid foto berdiri sendiri: grid tampil begitu data tiba (tiap foto muncul begitu
+  // siap), banner menunggu gambarnya sendiri tanpa menahan grid.
   hapusPesan();
   const heroSiap = pasangBanner(fotoBanner);
   renderGrid();
-
-  await Promise.race([heroSiap, tunggu(GAL_BATAS_HERO)]);
-  if (nomor !== nomorMuat) return;
-
-  if (window.AcalaSkeleton) AcalaSkeleton.sembunyi();   // skeleton halaman dilepas, galeri asli tampil
-  elHero.classList.remove("memuat");
-  elHero.classList.add("siap");                  // memicu animasi zoom banner + judul
   elArea.setAttribute("aria-busy", "false");
+
+  Promise.race([heroSiap, tunggu(GAL_BATAS_HERO)]).then(() => {
+    if (nomor !== nomorMuat) return;
+    elHero.classList.remove("memuat");
+    elHero.classList.add("siap");                // memicu animasi zoom banner + judul
+  });
 }
 
 muatGaleri();
